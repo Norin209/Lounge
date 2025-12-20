@@ -1,0 +1,16 @@
+[
+    { "name": "EMS Radiant Glow Vitamin Facial", "category": "Brightening Facial Services", "price": "$35", "duration": "45 min" },
+    { "name": "Microneedling Facial Spa", "category": "Brightening Facial Services", "price": "$30", "duration": "60 min" },
+    { "name": "Acne Extraction + EMS Acne Recovering Vitamin Facial", "category": "Acne Facial Services", "price": "$45", "duration": "55-70 min" },
+    { "name": "EMS Acne Recovering Vitamin Facial", "category": "Acne Facial Services", "price": "$35", "duration": "45-60 min" },
+    { "name": "Acne Extraction Facial", "category": "Acne Facial Services", "price": "$19", "duration": "45-60 min" },
+    { "name": "EMS Barrier Repair Vitamin Facial", "category": "Barrier Repair Facials", "price": "$35", "duration": "45-60 min" },
+    { "name": "Acne Extraction + EMS Barrier Repair Vitamin Facial", "category": "Barrier Repair Facials", "price": "$45", "duration": "45-60 min" },
+    { "name": "Acne Peel", "category": "Facial Peel Treatments", "price": "$35", "duration": "45-60 min" },
+    { "name": "Premium Glow Peel", "category": "Facial Peel Treatments", "price": "$70", "duration": "45 min" },
+    { "name": "ExoRegen Meso Therapy (Single Session)", "category": "Advanced Treatments", "price": "$320", "duration": "N/A" },
+    { "name": "ExoRegen Meso Therapy (3 Sessions)", "category": "Advanced Treatments", "price": "$799", "duration": "N/A" },
+    { "name": "PRP with EMS (Standard)", "category": "Advanced Treatments", "price": "$80", "duration": "N/A" },
+    { "name": "Microneedling - PRP", "category": "Advanced Treatments", "price": "$112", "duration": "N/A" },
+    { "name": "Meso-PRP", "category": "Advanced Treatments", "price": "$136", "duration": "N/A" }
+  ]

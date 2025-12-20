@@ -1,0 +1,14 @@
+[
+    { "name": "Basic Manicure", "category": "The Basics", "price": "$5", "duration": "N/A" },
+    { "name": "Basic Pedicure", "category": "The Basics", "price": "$5", "duration": "N/A" },
+    { "name": "Gel Manicure", "category": "Gel Polish", "price": "$10", "duration": "N/A" },
+    { "name": "Gel Pedicure", "category": "Gel Polish", "price": "$10", "duration": "N/A" },
+    { "name": "Gel Extension", "category": "Nail Extensions", "price": "$18", "duration": "N/A" },
+    { "name": "Extension Refill", "category": "Nail Extensions", "price": "$12", "duration": "N/A" },
+    { "name": "Gel Overlay", "category": "Nail Extensions", "price": "$15", "duration": "N/A" },
+    { "name": "Signature Spa Manicure", "category": "Hand and Foot Spa", "price": "$15", "duration": "50 min" },
+    { "name": "Signature Spa Pedicure", "category": "Hand and Foot Spa", "price": "$20", "duration": "60 min" },
+    { "name": "Premium Japanese Spa Manicure", "category": "Premium Spa", "price": "$30", "duration": "70 min" },
+    { "name": "Premium Japanese Spa Pedicure", "category": "Premium Spa", "price": "$35", "duration": "80 min" },
+    { "name": "Lash Extension", "category": "Lashes", "price": "$24+", "duration": "N/A" }
+  ]

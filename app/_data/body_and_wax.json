@@ -1,0 +1,20 @@
+[
+    { "name": "Cambodian Style Natural Scrub", "category": "Relaxation Body Scrubs", "price": "$25", "duration": "60 min" },
+    { "name": "Korean Style Exfoliating Scrub", "category": "Relaxation Body Scrubs", "price": "$70", "duration": "75-90 min" },
+    { "name": "Herbal Steam Coffee Detox", "category": "Relaxation Body Scrubs", "price": "$35", "duration": "75 min" },
+    { "name": "Herbal Steam Avocado Detox", "category": "Relaxation Body Scrubs", "price": "$35", "duration": "75 min" },
+    { "name": "Tan Removal Brightening Body Spa", "category": "Brightening Body Spa", "price": "$60", "duration": "75 min" },
+    { "name": "Sensitive Brightening Body Spa", "category": "Brightening Body Spa", "price": "$90", "duration": "90 min" },
+    { "name": "Premium Korean Brightening Body Spa Package", "category": "Brightening Body Spa", "price": "$110", "duration": "120-150 min" },
+    { "name": "Premium Japanese Whitening Body Spa Package", "category": "Brightening Body Spa", "price": "$110", "duration": "120-150 min" },
+    { "name": "Relaxation Oil Body Massage", "category": "Body Massage", "price": "$25", "duration": "60 min" },
+    { "name": "Body Massage + Steam + Scrub", "category": "Body Massage", "price": "$36", "duration": "120 min" },
+    { "name": "Body Massage + Steam + Shampoo", "category": "Body Massage", "price": "$45", "duration": "100 min" },
+    { "name": "Body Massage + Scrub + Wrapped", "category": "Body Massage", "price": "$40", "duration": "120 min" },
+    { "name": "Backne Peel", "category": "Back Acne Treatment", "price": "$60+", "duration": "45 min" },
+    { "name": "Backne Extraction Therapy", "category": "Back Acne Treatment", "price": "$38+", "duration": "60 min +" },
+    { "name": "Underarm Peel", "category": "Underarm Brightening", "price": "$25", "duration": "30 min" },
+    { "name": "Korean Underarm Brightening Spa", "category": "Underarm Brightening", "price": "$35", "duration": "30 min" },
+    { "name": "Brazilian Wax", "category": "Waxing Services", "price": "$30", "duration": "N/A" },
+    { "name": "Full Body Wax", "category": "Waxing Services", "price": "$78", "duration": "N/A" }
+  ]

@@ -1,0 +1,22 @@
+[
+    { "name": "Shampoo", "category": "Hair Styling", "price": "$5", "duration": "N/A" },
+    { "name": "Shampoo with Massage", "category": "Hair Styling", "price": "$25", "duration": "N/A" },
+    { "name": "Shampoo and Blow Dry", "category": "Hair Styling", "price": "$18", "duration": "N/A" },
+    { "name": "Hair Cut (Incl. Shampoo & Styling)", "category": "Hair Styling", "price": "$10", "duration": "N/A" },
+    { "name": "Straightening or Curling", "category": "Hair Styling", "price": "$10", "duration": "N/A" },
+    { "name": "Blow Out", "category": "Hair Styling", "price": "$7", "duration": "N/A" },
+    { "name": "Hairstyle/Braids/Up-dos", "category": "Hair Styling", "price": "$10", "duration": "N/A" },
+    { "name": "Frozen Flat Iron Cryotherapy", "category": "Hair Repair", "price": "$50", "duration": "N/A" },
+    { "name": "Hair Spa Treatment", "category": "Hair Repair", "price": "$30", "duration": "60 min" },
+    { "name": "Hair Scrub Treatment", "category": "Hair Repair", "price": "$40", "duration": "N/A" },
+    { "name": "Hair Gloss Protein Treatment", "category": "Hair Repair", "price": "$60", "duration": "45 min" },
+    { "name": "Vitamin Hair Spa Treatment", "category": "Hair Repair", "price": "$60", "duration": "N/A" },
+    { "name": "Permanent Hair Straightening", "category": "Straightening", "price": "$80+", "duration": "N/A" },
+    { "name": "Keratin Hair Treatment", "category": "Straightening", "price": "Starts from $50", "duration": "N/A" },
+    { "name": "Women's Full Head Color", "category": "Hair Coloring", "price": "$50 - $80", "duration": "N/A" },
+    { "name": "Men's Full Head Color", "category": "Hair Coloring", "price": "$25 - $35", "duration": "N/A" },
+    { "name": "Women's Root Touch Up", "category": "Hair Coloring", "price": "$25", "duration": "N/A" },
+    { "name": "Ombre or Balayage", "category": "Hair Coloring", "price": "$90 - $130", "duration": "N/A" },
+    { "name": "Highlights (1 piece)", "category": "Hair Coloring", "price": "$6 - $8", "duration": "N/A" },
+    { "name": "Women's 1x Bleach", "category": "Hair Coloring", "price": "$50 - $70", "duration": "N/A" }
+  ]
