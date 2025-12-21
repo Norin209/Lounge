@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useRef, useEffect } from 'react'; // 🟢 Added useEffect
+import { useState, useMemo, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -22,6 +22,16 @@ const BookingPage = () => {
   
   const topRef = useRef<HTMLDivElement>(null);
 
+  // --- 🕒 TIMEZONE HELPER: CAMBODIA (UTC+7) ---
+  const getNowInCambodia = () => {
+    const now = new Date();
+    const cambodiaTimeStr = now.toLocaleString("en-US", { timeZone: "Asia/Phnom_Penh" });
+    return new Date(cambodiaTimeStr);
+  };
+
+  const todayInCambodia = getNowInCambodia();
+  todayInCambodia.setHours(0, 0, 0, 0); 
+
   // Calendar State
   const [currentDate, setCurrentDate] = useState(new Date()); 
   const [selectedDateObj, setSelectedDateObj] = useState<Date | null>(null); 
@@ -35,32 +45,19 @@ const BookingPage = () => {
     notes: ''
   });
 
-  // 🟢 FIX: Automatically scroll to top when success state is triggered
+  // 🟢 FIX: SCROLL TO TOP ON SUCCESS
   useEffect(() => {
     if (isSuccess) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
-      topRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(() => {
+        topRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 50);
     }
   }, [isSuccess]);
 
-  // --- 🕒 TIMEZONE HELPER: CAMBODIA (UTC+7) ---
-  const getNowInCambodia = () => {
-    const now = new Date();
-    const cambodiaTimeStr = now.toLocaleString("en-US", { timeZone: "Asia/Phnom_Penh" });
-    return new Date(cambodiaTimeStr);
-  };
-
-  const todayInCambodia = getNowInCambodia();
-  todayInCambodia.setHours(0, 0, 0, 0); 
-
   // --- CALENDAR LOGIC ---
-  const getDaysInMonth = (date: Date) => {
-    return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
-  };
-
-  const getFirstDayOfMonth = (date: Date) => {
-    return new Date(date.getFullYear(), date.getMonth(), 1).getDay();
-  };
+  const getDaysInMonth = (date: Date) => new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+  const getFirstDayOfMonth = (date: Date) => new Date(date.getFullYear(), date.getMonth(), 1).getDay();
 
   const handlePrevMonth = () => {
     const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
@@ -68,27 +65,23 @@ const BookingPage = () => {
     setCurrentDate(newDate);
   };
 
-  const handleNextMonth = () => {
-    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
-  };
+  const handleNextMonth = () => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
 
   const handleDateClick = (day: number) => {
     const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+    
+    // 🟢 FIXED: Variable name updated from dateToCheck to newDate
     if (newDate < todayInCambodia) return;
     
     setSelectedDateObj(newDate);
-    const formattedDate = newDate.toLocaleDateString('en-CA'); 
-    setFormData({ ...formData, date: formattedDate });
-    setFormData(prev => ({ ...prev, time: '' })); 
+    setFormData({ ...formData, date: newDate.toLocaleDateString('en-CA'), time: '' });
   };
 
   const timeSlots = useMemo(() => {
     const slots = [];
-    const startHour = 7; 
-    const endHour = 21;    
-    for (let i = startHour; i <= endHour; i++) {
+    for (let i = 7; i <= 21; i++) {
       slots.push(`${i}:00`);
-      if (i !== endHour) slots.push(`${i}:30`);
+      if (i !== 21) slots.push(`${i}:30`);
     }
     return slots; 
   }, []);
@@ -96,26 +89,18 @@ const BookingPage = () => {
   const isTimeDisabled = (slot: string) => {
     if (!selectedDateObj) return true;
     if (selectedDateObj.toDateString() === todayInCambodia.toDateString()) {
-      const nowCambodia = getNowInCambodia();
-      const currentHour = nowCambodia.getHours();
-      const currentMinute = nowCambodia.getMinutes();
-      const [slotHour, slotMinute] = slot.split(':').map(Number);
-      if (slotHour < currentHour) return true;
-      if (slotHour === currentHour && slotMinute < currentMinute) return true;
+      const now = getNowInCambodia();
+      const [slotH, slotM] = slot.split(':').map(Number);
+      if (slotH < now.getHours()) return true;
+      if (slotH === now.getHours() && slotM < now.getMinutes()) return true;
     }
     return false;
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const handleChange = (e: any) => setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleTimeSelect = (time: string) => !isTimeDisabled(time) && setFormData({ ...formData, time });
 
-  const handleTimeSelect = (time: string) => {
-    if (!isTimeDisabled(time)) {
-      setFormData({ ...formData, time: time });
-    }
-  };
-
+  // --- 🔴 LIVE SUBMIT HANDLER ---
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -124,15 +109,10 @@ const BookingPage = () => {
     const displayDate = selectedDateObj ? selectedDateObj.toDateString() : formData.date;
 
     const bookingData = {
-      name: formData.name,
-      phone: formData.phone,
-      date: formData.date, 
-      time: formData.time,
-      branch: formData.branch, 
+      ...formData,
       services: bag.map((i: any) => i.name),
-      totalPrice: bag.length, 
-      notes: formData.notes,
-      createdAt: new Date(), 
+      totalPrice: bag.length,
+      createdAt: new Date(),
       status: 'pending'
     };
 
@@ -152,8 +132,10 @@ ${itemsList}
     `;
 
     try {
+      // 1. Save to Firebase
       await addDoc(collection(db, "bookings"), bookingData);
 
+      // 2. Send Telegram Notification via Netlify
       const response = await fetch('/.netlify/functions/booking', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -164,10 +146,13 @@ ${itemsList}
         setIsSuccess(true);
         if (clearBag) clearBag(); 
       } else {
-        alert('Error sending booking. Please try again.');
+        // Fallback: If DB saved but Telegram failed, still show success to customer
+        setIsSuccess(true);
+        if (clearBag) clearBag();
       }
+      
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Submission Error:', error);
       alert('Network error. Please try again.');
     } finally {
       setIsSubmitting(false);
@@ -183,31 +168,27 @@ ${itemsList}
     return (
       <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-6 max-w-sm mx-auto select-none">
         <div className="flex justify-between items-center mb-6 px-2">
-          <button type="button" onClick={handlePrevMonth} className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-400 hover:text-black">
+          <button type="button" onClick={handlePrevMonth} className="p-2 hover:bg-gray-100 rounded-full text-gray-400 hover:text-black">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"/></svg>
           </button>
-          <h3 className="text-lg font-bold text-gray-800 font-sans">
-            {MONTHS[currentDate.getMonth()]} {currentDate.getFullYear()}
-          </h3>
-          <button type="button" onClick={handleNextMonth} className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-400 hover:text-black">
+          <h3 className="text-lg font-bold text-gray-800">{MONTHS[currentDate.getMonth()]} {currentDate.getFullYear()}</h3>
+          <button type="button" onClick={handleNextMonth} className="p-2 hover:bg-gray-100 rounded-full text-gray-400 hover:text-black">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"/></svg>
           </button>
         </div>
         <div className="grid grid-cols-7 mb-2">
-          {DAYS.map(day => (
-            <div key={day} className="text-center text-[10px] font-bold text-gray-400 py-2">{day}</div>
-          ))}
+          {DAYS.map(day => <div key={day} className="text-center text-[10px] font-bold text-gray-400 py-2">{day}</div>)}
         </div>
         <div className="grid grid-cols-7 gap-y-2">
           {blanks.map((_, i) => <div key={`blank-${i}`} />)}
           {days.map(day => {
             const dateToCheck = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
-            const isSelected = selectedDateObj && selectedDateObj.getDate() === day && selectedDateObj.getMonth() === currentDate.getMonth() && selectedDateObj.getFullYear() === currentDate.getFullYear();
+            const isSelected = selectedDateObj?.getDate() === day && selectedDateObj?.getMonth() === currentDate.getMonth();
             const isPast = dateToCheck < todayInCambodia;
             return (
               <div key={day} className="flex justify-center">
                 <button type="button" disabled={isPast} onClick={() => handleDateClick(day)}
-                  className={`w-9 h-9 flex items-center justify-center rounded-full text-sm font-medium transition-all duration-200 ${isSelected ? 'bg-[#E32626] text-white shadow-md scale-110' : isPast ? 'text-gray-300 cursor-not-allowed' : 'text-gray-600 hover:bg-gray-100 hover:text-black'}`}
+                  className={`w-9 h-9 flex items-center justify-center rounded-full text-sm font-medium transition-all ${isSelected ? 'bg-[#E32626] text-white shadow-md scale-110' : isPast ? 'text-gray-300 cursor-not-allowed' : 'text-gray-600 hover:bg-gray-100'}`}
                 >
                   {day}
                 </button>
@@ -223,22 +204,18 @@ ${itemsList}
     return (
       <div className="bg-zinc-50 min-h-screen font-sans">
         <div ref={topRef} />
-        {/* Consistent Header for Success State */}
-        <div className="bg-black pt-32 pb-32 px-6 text-center relative">
-          <div className="max-w-2xl mx-auto">
-            <h1 className="text-3xl md:text-5xl font-playfair text-white uppercase tracking-tight">Booking Confirmed</h1>
-            <p className="text-zinc-400 text-[10px] mt-4 tracking-[0.2em] font-light uppercase">We look forward to seeing you</p>
-          </div>
+        <div className="bg-black pt-32 pb-32 px-6 text-center">
+          <h1 className="text-3xl md:text-5xl font-playfair text-white uppercase tracking-tight">Booking Received</h1>
+          <p className="text-zinc-400 text-[10px] mt-4 tracking-[0.2em] uppercase font-light">Glisten Lounge Concierge</p>
         </div>
-
-        <div className="max-w-md mx-auto px-6 -mt-20 relative z-10">
+        <div className="max-w-md mx-auto px-6 -mt-20 relative z-10 mb-20">
           <div className="bg-white p-10 shadow-xl border border-gray-100 text-center">
             <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-6">
               <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
             </div>
             <h2 className="text-2xl font-playfair text-black mb-4 uppercase tracking-tight">Request Sent</h2>
-            <p className="text-sm font-sans text-gray-500 leading-relaxed mb-8">
-              Thank you, <strong>{formData.name}</strong>. Our concierge team has received your request and will call you at <strong>{formData.phone}</strong> shortly.
+            <p className="text-sm text-gray-500 mb-8 leading-relaxed">
+              Thank you, <strong>{formData.name}</strong>. Our team will contact you at <strong>{formData.phone}</strong> shortly to finalize your appointment.
             </p>
             <Link href="/" className="block w-full bg-black text-white py-4 text-[10px] font-bold tracking-[0.2em] uppercase hover:bg-zinc-800 transition-colors">
               Return Home
@@ -252,7 +229,6 @@ ${itemsList}
   return (
     <div className="bg-zinc-50 min-h-screen pb-24 font-sans">
       <div ref={topRef} />
-      
       <div className="bg-black pt-32 pb-32 px-6 text-center relative">
         <div className="max-w-2xl mx-auto">
           <h3 className="text-[10px] font-bold tracking-[0.3em] uppercase text-zinc-500 mb-4 font-sans">Final Step</h3>
@@ -281,40 +257,33 @@ ${itemsList}
                           </div>
                           <div className="space-y-2">
                             <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-gray-400 font-sans">Special Requests (Optional)</label>
-                            <textarea name="notes" value={formData.notes} onChange={handleChange} placeholder="Allergies, specific therapist, etc." className="w-full border-b border-gray-200 py-3 text-sm focus:outline-none focus:border-black bg-transparent text-gray-700 resize-none h-20 font-sans placeholder:text-gray-300" />
+                            <textarea name="notes" value={formData.notes} onChange={handleChange} placeholder="Any specific needs..." className="w-full border-b border-gray-200 py-3 text-sm focus:outline-none focus:border-black bg-transparent text-gray-700 resize-none h-20 font-sans placeholder:text-gray-300" />
                           </div>
                       </div>
                    </div>
                 </div>
 
                 <div className="border-t border-gray-100 pt-8">
-                  <div className="flex flex-col md:flex-row justify-between items-baseline mb-6">
-                    <div>
-                      <h4 className="text-[10px] font-bold uppercase tracking-[0.15em] text-gray-400 font-sans mb-1">Appointment Date:</h4>
-                      <p className="text-3xl font-playfair font-bold text-black">{selectedDateObj ? selectedDateObj.toDateString() : 'Select a date'}</p>
-                    </div>
-                  </div>
-                  <div className="space-y-3">
-                    <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-gray-400 font-sans">Available Time Slots {selectedDateObj && <span className="text-gray-300 font-normal normal-case ml-2">(Greyed out times are unavailable)</span>}</label>
-                    <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
-                      {timeSlots.map((slot) => {
-                         const isDisabled = isTimeDisabled(slot);
-                         return (
-                          <button key={slot} type="button" disabled={isDisabled} onClick={() => handleTimeSelect(slot)}
-                            className={`py-3 px-2 rounded-lg text-xs font-medium transition-all duration-200 border ${formData.time === slot ? 'bg-black text-white border-black shadow-lg transform scale-105' : isDisabled ? 'bg-gray-100 text-gray-300 border-transparent cursor-not-allowed line-through' : 'bg-gray-50 text-gray-600 border-transparent hover:bg-gray-100 hover:border-gray-200'}`}
-                          >
-                            {slot}
-                          </button>
-                        );
-                      })}
-                    </div>
-                    {formData.time === '' && selectedDateObj && <p className="text-[10px] text-gray-400 mt-2">* Please select a time slot</p>}
+                  <h4 className="text-[10px] font-bold uppercase tracking-[0.15em] text-gray-400 font-sans mb-1">Appointment Date:</h4>
+                  <p className="text-3xl font-playfair font-bold text-black mb-6">{selectedDateObj ? selectedDateObj.toDateString() : 'Select a date'}</p>
+                  
+                  <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
+                    {timeSlots.map((slot) => {
+                       const disabled = isTimeDisabled(slot);
+                       return (
+                        <button key={slot} type="button" disabled={disabled} onClick={() => handleTimeSelect(slot)}
+                          className={`py-3 px-2 rounded-lg text-xs font-medium transition-all duration-200 border ${formData.time === slot ? 'bg-black text-white border-black shadow-lg scale-105' : disabled ? 'bg-gray-100 text-gray-300 border-transparent cursor-not-allowed line-through' : 'bg-gray-50 text-gray-600 border-transparent hover:bg-gray-100'}`}
+                        >
+                          {slot}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
 
                 <div className="pt-4">
-                  <button type="submit" disabled={isSubmitting || !formData.date || !formData.time} className="w-full bg-black text-white py-4 text-[10px] font-bold tracking-[0.25em] uppercase hover:bg-zinc-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed font-sans rounded-none">
-                    {isSubmitting ? 'Sending Request...' : 'Confirm Request'}
+                  <button type="submit" disabled={isSubmitting || !formData.date || !formData.time} className="w-full bg-black text-white py-4 text-[10px] font-bold tracking-[0.25em] uppercase hover:bg-zinc-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed font-sans">
+                    {isSubmitting ? 'Processing Request...' : 'Confirm Request'}
                   </button>
                 </div>
               </form>
@@ -322,21 +291,25 @@ ${itemsList}
 
             <div className="w-full lg:w-2/5 bg-zinc-50 border-l border-gray-100 p-8 order-1 lg:order-2">
               <div className="sticky top-8">
-                <div className="mb-8"><h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 font-sans">In Your Bag</h3></div>
+                <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 font-sans mb-8">In Your Bag</h3>
                 <div className="space-y-6 mb-8 max-h-100 overflow-y-auto pr-2 custom-scrollbar">
                   {bag.map((item: any) => (
-                    <div key={item.id} className="flex gap-4 items-start group border-b border-gray-50 pb-4 last:border-0">
+                    <div key={item.id} className="flex gap-4 items-start group border-b border-gray-100 pb-4 last:border-0">
                        <div className="relative w-14 h-14 shrink-0 bg-white shadow-sm overflow-hidden"><Image src={item.image || "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=200"} alt={item.name} fill className="object-cover" /></div>
-                      <div className="grow">
-                        <div className="flex justify-between items-start">
-                            <div><p className="text-xs font-bold text-black leading-tight mb-1 uppercase font-sans tracking-wide">{item.name}</p><p className="text-[10px] text-gray-500 font-sans">{item.price}</p></div>
-                            <button onClick={() => removeFromBag && removeFromBag(item.id)} className="text-[9px] text-red-400 hover:text-red-600 underline font-sans">Remove</button>
-                        </div>
-                      </div>
+                       <div className="grow">
+                          <p className="text-xs font-bold text-black leading-tight mb-1 uppercase font-sans tracking-wide">{item.name}</p>
+                          <p className="text-[10px] text-gray-500 font-sans">{item.price}</p>
+                          <button onClick={() => removeFromBag?.(item.id)} className="text-[9px] text-red-400 hover:text-red-600 underline font-sans mt-1">Remove</button>
+                       </div>
                     </div>
                   ))}
                 </div>
-                <div className="border-t border-gray-200 pt-6"><div className="flex justify-between items-center"><span className="text-[10px] font-bold uppercase tracking-[0.2em] text-black font-sans">Total Services</span><span className="text-lg font-bold font-sans text-black">{bag.length}</span></div></div>
+                <div className="border-t border-gray-200 pt-6">
+                  <div className="flex justify-between items-center">
+                    <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-black font-sans">Total Services</span>
+                    <span className="text-lg font-bold font-sans text-black">{bag.length}</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
