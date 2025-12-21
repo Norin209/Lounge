@@ -1,10 +1,7 @@
-'use client';
-
-import { useState } from 'react';
 import { db } from './firebase';
-import { collection, addDoc, writeBatch, doc } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
-// 📋 DATA EXTRACTED FROM YOUR PDF
+// 📋 YOUR REAL MASTER MENU DATA
 const servicesToUpload = [
   // --- 📦 PACKAGES ---
   { name: "1 Week Dream", price: "$128.00", category: "package", description: "Full revitalizing package including facial and body treatments." },
@@ -57,51 +54,28 @@ const servicesToUpload = [
   { name: "Motorbike Wash", price: "$2.50", category: "carwash", description: "Standard moto wash." }
 ];
 
-const UploadData = () => {
-  const [status, setStatus] = useState("idle");
+const treatmentPlaceholder = "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=800";
 
-  const handleUpload = async () => {
-    if (!confirm("This will upload all services to Firebase. Continue?")) return;
-    
-    setStatus("uploading");
-    
-    try {
-      let count = 0;
-      for (const service of servicesToUpload) {
-        // Add fields: isMonthlyPromo (default false), createdAt
-        await addDoc(collection(db, "services"), {
-          ...service,
-          isMonthlyPromo: false,
-          createdAt: new Date()
-        });
-        count++;
-        console.log(`Uploaded: ${service.name}`);
-      }
-      setStatus("success");
-      alert(`✅ Successfully uploaded ${count} services to the Database!`);
-    } catch (e) {
-      console.error(e);
-      setStatus("error");
-      alert("❌ Error uploading. Check console.");
+export const uploadServices = async () => {
+  try {
+    let count = 0;
+    for (const s of servicesToUpload) {
+      await addDoc(collection(db, "services"), {
+        ...s,
+        image: treatmentPlaceholder, 
+        isMonthlyPromo: false,
+        isSignature: false,
+        discountValue: '',
+        discountType: 'percent',
+        duration: '60 min',
+        createdAt: serverTimestamp()
+      });
+      count++;
     }
-  };
-
-  if (status === "success") return null; // Hide after success
-
-  return (
-    <div className="fixed bottom-4 right-4 z-50">
-      <button 
-        onClick={handleUpload}
-        disabled={status === "uploading"}
-        className={`
-          px-6 py-4 rounded-full font-bold shadow-2xl text-white transition-all transform hover:scale-105
-          ${status === "uploading" ? "bg-gray-400 cursor-wait" : "bg-red-600 hover:bg-red-700"}
-        `}
-      >
-        {status === "uploading" ? "Uploading..." : `⬆️ UPLOAD ${servicesToUpload.length} SERVICES TO DB`}
-      </button>
-    </div>
-  );
+    console.log(`✅ ${count} services uploaded successfully!`);
+    return { success: true, count };
+  } catch (error) {
+    console.error("Error uploading services:", error);
+    return { success: false, error };
+  }
 };
-
-export default UploadData;

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { auth } from '../_utils/firebase'; // Ensure this path matches your structure
+import { auth } from '../_utils/firebase'; 
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 
 export default function AdminLayout({
@@ -16,23 +16,19 @@ export default function AdminLayout({
   const router = useRouter();
   const pathname = usePathname();
 
-  // 🔒 SECURITY CHECK
+  // 🔒 SECURITY CHECK: Ensure only logged-in users access admin
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (!currentUser) {
-        // If not logged in, kick them to login page
         router.push('/login');
       } else {
-        // If logged in, let them stay
         setUser(currentUser);
         setLoading(false);
       }
     });
-
     return () => unsubscribe();
   }, [router]);
 
-  // 🚪 LOGOUT FUNCTION
   const handleLogout = async () => {
     try {
       await signOut(auth);
@@ -42,7 +38,6 @@ export default function AdminLayout({
     }
   };
 
-  // While checking security, show a loading spinner instead of the content
   if (loading) {
     return (
       <div className="h-screen w-full flex items-center justify-center bg-gray-100">
@@ -51,67 +46,64 @@ export default function AdminLayout({
     );
   }
 
-  // Helper to check active links
   const isActive = (path: string) => pathname === path;
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
+    <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row font-sans">
       
-      {/* 📱 MOBILE HEADER (Visible on Small Screens) */}
+      {/* 📱 MOBILE HEADER */}
       <div className="md:hidden bg-black text-white p-4 flex justify-between items-center sticky top-0 z-50 shadow-md">
         <span className="font-bold text-sm tracking-widest uppercase">Glisten Admin</span>
-        <div className="flex gap-4 text-xs font-bold tracking-wider">
-          <Link href="/admin/bookings" className={isActive('/admin/bookings') ? 'text-white' : 'text-gray-400'}>
-            Bookings
-          </Link>
-          <Link href="/admin/services" className={isActive('/admin/services') ? 'text-white' : 'text-gray-400'}>
-            Menu
-          </Link>
-          {/* 🔴 NEW MOBILE LOGOUT BUTTON */}
-          <button onClick={handleLogout} className="text-red-500 hover:text-red-400">
-            Logout
-          </button>
+        <div className="flex gap-4 text-[10px] font-bold tracking-wider uppercase">
+          <Link href="/admin/bookings" className={isActive('/admin/bookings') ? 'text-white' : 'text-gray-400'}>Bookings</Link>
+          <Link href="/admin/services" className={isActive('/admin/services') ? 'text-white' : 'text-gray-400'}>Menu</Link>
+          <Link href="/admin/products" className={isActive('/admin/products') ? 'text-white' : 'text-gray-400'}>Shop</Link>
         </div>
       </div>
 
-      {/* 🖥️ DESKTOP SIDEBAR (Visible on Large Screens) */}
-      <aside className="hidden md:flex flex-col w-64 bg-black text-white min-h-screen fixed left-0 top-0 p-6">
-        <div className="mb-10">
-          <h2 className="text-xl font-bold tracking-[0.2em] uppercase">Glisten</h2>
-          <p className="text-[10px] text-gray-400 tracking-widest uppercase mt-1">Management Console</p>
+      {/* 🖥️ DESKTOP SIDEBAR */}
+      <aside className="hidden md:flex flex-col w-64 bg-black text-white min-h-screen fixed left-0 top-0 p-8">
+        <div className="mb-12">
+          <h2 className="text-xl font-playfair font-bold tracking-[0.2em] uppercase">Glisten</h2>
+          <p className="text-[9px] text-gray-500 tracking-[0.3em] uppercase mt-2">Management</p>
         </div>
 
-        <nav className="flex flex-col gap-4 flex-1">
+        <nav className="flex flex-col gap-3 flex-1">
           <Link 
             href="/admin/bookings" 
-            className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${isActive('/admin/bookings') ? 'bg-white text-black font-bold' : 'text-gray-400 hover:text-white hover:bg-zinc-900'}`}
+            className={`flex items-center gap-4 px-4 py-3 rounded-lg transition-all ${isActive('/admin/bookings') ? 'bg-white text-black font-bold' : 'text-gray-400 hover:text-white hover:bg-zinc-900'}`}
           >
-            <span>📅</span>
-            <span className="text-xs uppercase tracking-widest">Bookings</span>
+            <span className="text-xs uppercase tracking-widest">📅 Bookings</span>
           </Link>
 
           <Link 
             href="/admin/services" 
-            className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${isActive('/admin/services') ? 'bg-white text-black font-bold' : 'text-gray-400 hover:text-white hover:bg-zinc-900'}`}
+            className={`flex items-center gap-4 px-4 py-3 rounded-lg transition-all ${isActive('/admin/services') ? 'bg-white text-black font-bold' : 'text-gray-400 hover:text-white hover:bg-zinc-900'}`}
           >
-            <span>💅</span>
-            <span className="text-xs uppercase tracking-widest">Services & Menu</span>
+            <span className="text-xs uppercase tracking-widest">💅 Services</span>
+          </Link>
+
+          {/* 🟢 NEW SHOP MANAGER LINK */}
+          <Link 
+            href="/admin/products" 
+            className={`flex items-center gap-4 px-4 py-3 rounded-lg transition-all ${isActive('/admin/products') ? 'bg-white text-black font-bold' : 'text-gray-400 hover:text-white hover:bg-zinc-900'}`}
+          >
+            <span className="text-xs uppercase tracking-widest">🧴 Apothecary</span>
           </Link>
         </nav>
 
-        {/* Desktop Logout */}
+        {/* Logout */}
         <button 
           onClick={handleLogout} 
-          className="flex items-center gap-3 px-4 py-3 text-red-500 hover:text-red-400 hover:bg-zinc-900 rounded-lg transition-all mt-auto"
+          className="flex items-center gap-4 px-4 py-4 text-red-500 hover:text-red-400 border-t border-zinc-800 transition-all mt-auto"
         >
-          <span>🚪</span>
-          <span className="text-xs font-bold uppercase tracking-widest">Logout</span>
+          <span className="text-[10px] font-bold uppercase tracking-[0.2em]">🚪 Logout</span>
         </button>
       </aside>
 
       {/* 📄 MAIN CONTENT AREA */}
-      <main className="flex-1 md:ml-64 p-4 md:p-8">
-        <div className="max-w-5xl mx-auto">
+      <main className="flex-1 md:ml-64 p-6 md:p-10">
+        <div className="max-w-6xl mx-auto">
           {children}
         </div>
       </main>
