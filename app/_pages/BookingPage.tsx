@@ -160,8 +160,8 @@ ${itemsList}
       // 1. Save to Firebase
       await addDoc(collection(db, "bookings"), bookingData);
 
-      // 2. Send Telegram Notification (VIA SECURE API)
-      const response = await fetch('/api/booking', {
+      // 2. Send Telegram Notification (POINTED TO THE NEW NETLIFY PATH)
+      const response = await fetch('/.netlify/functions/booking', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: telegramMessage })
