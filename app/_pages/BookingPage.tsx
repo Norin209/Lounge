@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useRef } from 'react'; // 🟢 Added useRef
+import { useState, useMemo, useRef, useEffect } from 'react'; // 🟢 Added useEffect
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -20,7 +20,6 @@ const BookingPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   
-  // 🟢 Created the scroll reference for Mobile/Desktop fixes
   const topRef = useRef<HTMLDivElement>(null);
 
   // Calendar State
@@ -35,6 +34,14 @@ const BookingPage = () => {
     branch: 'HV8C+9C8, Phnom Penh Hanoi Friendship Blvd (1019), Phnom Penh', 
     notes: ''
   });
+
+  // 🟢 FIX: Automatically scroll to top when success state is triggered
+  useEffect(() => {
+    if (isSuccess) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      topRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [isSuccess]);
 
   // --- 🕒 TIMEZONE HELPER: CAMBODIA (UTC+7) ---
   const getNowInCambodia = () => {
@@ -78,7 +85,7 @@ const BookingPage = () => {
   const timeSlots = useMemo(() => {
     const slots = [];
     const startHour = 7; 
-    const endHour = 21;   
+    const endHour = 21;    
     for (let i = startHour; i <= endHour; i++) {
       slots.push(`${i}:00`);
       if (i !== endHour) slots.push(`${i}:30`);
@@ -109,7 +116,6 @@ const BookingPage = () => {
     }
   };
 
-  // --- 🔴 SECURE SUBMIT HANDLER ---
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -155,10 +161,6 @@ ${itemsList}
       });
 
       if (response.ok) {
-        // 🟢 FIXED: Smooth scroll to top for both Desktop and Mobile Safari/Chrome
-        topRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-
         setIsSuccess(true);
         if (clearBag) clearBag(); 
       } else {
@@ -219,18 +221,29 @@ ${itemsList}
 
   if (isSuccess) {
     return (
-      <div className="bg-zinc-50 min-h-screen flex items-center justify-center px-6">
-        <div className="max-w-md w-full bg-white p-10 shadow-xl border border-gray-100 text-center">
-          <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-6">
-            <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
+      <div className="bg-zinc-50 min-h-screen font-sans">
+        <div ref={topRef} />
+        {/* Consistent Header for Success State */}
+        <div className="bg-black pt-32 pb-32 px-6 text-center relative">
+          <div className="max-w-2xl mx-auto">
+            <h1 className="text-3xl md:text-5xl font-playfair text-white uppercase tracking-tight">Booking Confirmed</h1>
+            <p className="text-zinc-400 text-[10px] mt-4 tracking-[0.2em] font-light uppercase">We look forward to seeing you</p>
           </div>
-          <h2 className="text-2xl font-playfair text-black mb-4">Request Sent</h2>
-          <p className="text-sm font-sans text-gray-500 leading-relaxed mb-8">
-            Thank you, <strong>{formData.name}</strong>. Our concierge team has received your request and will call you at <strong>{formData.phone}</strong> shortly.
-          </p>
-          <Link href="/" className="block w-full bg-black text-white py-4 text-[10px] font-bold tracking-[0.2em] uppercase hover:bg-zinc-800 transition-colors">
-            Return Home
-          </Link>
+        </div>
+
+        <div className="max-w-md mx-auto px-6 -mt-20 relative z-10">
+          <div className="bg-white p-10 shadow-xl border border-gray-100 text-center">
+            <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-6">
+              <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            <h2 className="text-2xl font-playfair text-black mb-4 uppercase tracking-tight">Request Sent</h2>
+            <p className="text-sm font-sans text-gray-500 leading-relaxed mb-8">
+              Thank you, <strong>{formData.name}</strong>. Our concierge team has received your request and will call you at <strong>{formData.phone}</strong> shortly.
+            </p>
+            <Link href="/" className="block w-full bg-black text-white py-4 text-[10px] font-bold tracking-[0.2em] uppercase hover:bg-zinc-800 transition-colors">
+              Return Home
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -238,7 +251,6 @@ ${itemsList}
 
   return (
     <div className="bg-zinc-50 min-h-screen pb-24 font-sans">
-      {/* 🟢 Invisible anchor for scroll logic */}
       <div ref={topRef} />
       
       <div className="bg-black pt-32 pb-32 px-6 text-center relative">
@@ -317,8 +329,8 @@ ${itemsList}
                        <div className="relative w-14 h-14 shrink-0 bg-white shadow-sm overflow-hidden"><Image src={item.image || "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=200"} alt={item.name} fill className="object-cover" /></div>
                       <div className="grow">
                         <div className="flex justify-between items-start">
-                           <div><p className="text-xs font-bold text-black leading-tight mb-1 uppercase font-sans tracking-wide">{item.name}</p><p className="text-[10px] text-gray-500 font-sans">{item.price}</p></div>
-                           <button onClick={() => removeFromBag && removeFromBag(item.id)} className="text-[9px] text-red-400 hover:text-red-600 underline font-sans">Remove</button>
+                            <div><p className="text-xs font-bold text-black leading-tight mb-1 uppercase font-sans tracking-wide">{item.name}</p><p className="text-[10px] text-gray-500 font-sans">{item.price}</p></div>
+                            <button onClick={() => removeFromBag && removeFromBag(item.id)} className="text-[9px] text-red-400 hover:text-red-600 underline font-sans">Remove</button>
                         </div>
                       </div>
                     </div>
