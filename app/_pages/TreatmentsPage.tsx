@@ -24,7 +24,6 @@ interface ServiceItem {
   duration?: string;
 }
 
-// 🟢 1. ADD "PROMOTIONS" TO TABS
 const tabs = ["PROMOTIONS", "NAILS & LASHES", "HAIR", "FACIALS", "BODY & WAX", "PACKAGES"];
 
 const TreatmentsPage = () => {
@@ -54,6 +53,14 @@ const TreatmentsPage = () => {
     fetchServices();
   }, []);
 
+  // 🟢 1. FORCE SCROLL RESET ON TAB CHANGE
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      // Use direct assignment for instant jump (better UX when content changes)
+      scrollContainerRef.current.scrollLeft = 0; 
+    }
+  }, [activeTab]);
+
   // CALCULATE PRICE
   const getCalculatedPrice = (item: ServiceItem) => {
     const originalPrice = parseFloat(item.price.replace(/[^0-9.]/g, ''));
@@ -72,31 +79,23 @@ const TreatmentsPage = () => {
     return item.promoPrice || item.price;
   };
 
-  // 🟢 2. UPDATE FILTER LOGIC
   const filteredItems = useMemo(() => {
     return services.filter(item => {
       const cat = item.category?.toLowerCase() || "";
       
       switch (activeTab) {
         case "PROMOTIONS": 
-          // Show items that are marked as a monthly promo
           return item.isMonthlyPromo === true; 
-          
         case "NAILS & LASHES": 
           return cat.includes('nail') || cat.includes('lash');
-          
         case "HAIR": 
           return cat.includes('hair');
-          
         case "FACIALS": 
           return cat.includes('facial') || cat.includes('face');
-          
         case "BODY & WAX": 
           return cat.includes('body') || cat.includes('wax') || cat.includes('massage') || cat.includes('scrub');
-          
         case "PACKAGES": 
           return cat.includes('package');
-          
         default: 
           return false;
       }
