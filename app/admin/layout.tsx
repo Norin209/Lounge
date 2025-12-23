@@ -30,11 +30,13 @@ export default function AdminLayout({
   }, [router]);
 
   const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      router.push('/login');
-    } catch (error) {
-      console.error("Logout Error:", error);
+    if (confirm("Log out of Admin Dashboard?")) {
+      try {
+        await signOut(auth);
+        router.push('/login');
+      } catch (error) {
+        console.error("Logout Error:", error);
+      }
     }
   };
 
@@ -51,17 +53,43 @@ export default function AdminLayout({
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row font-sans">
       
-      {/* 📱 MOBILE HEADER */}
-      <div className="md:hidden bg-black text-white p-4 flex justify-between items-center sticky top-0 z-50 shadow-md">
-        <span className="font-bold text-sm tracking-widest uppercase">Glisten Admin</span>
-        <div className="flex gap-4 text-[10px] font-bold tracking-wider uppercase">
-          <Link href="/admin/bookings" className={isActive('/admin/bookings') ? 'text-white' : 'text-gray-400'}>Bookings</Link>
-          <Link href="/admin/services" className={isActive('/admin/services') ? 'text-white' : 'text-gray-400'}>Menu</Link>
-          <Link href="/admin/products" className={isActive('/admin/products') ? 'text-white' : 'text-gray-400'}>Shop</Link>
+      {/* 📱 MOBILE HEADER (Redesigned for easy Logout) */}
+      <div className="md:hidden bg-black text-white sticky top-0 z-50 shadow-md">
+        {/* Top Row: Brand & Logout */}
+        <div className="flex justify-between items-center p-4 border-b border-gray-800">
+          <span className="font-bold text-sm tracking-widest uppercase">Glisten Admin</span>
+          <button 
+            onClick={handleLogout} 
+            className="text-[10px] font-bold uppercase text-red-400 border border-red-900/50 bg-red-900/10 px-3 py-1.5 rounded hover:bg-red-900/30 transition-all"
+          >
+            Logout ➜
+          </button>
+        </div>
+
+        {/* Bottom Row: Navigation Tabs */}
+        <div className="flex justify-around items-center p-3 bg-zinc-900 text-[10px] font-bold tracking-wider uppercase">
+          <Link 
+            href="/admin/bookings" 
+            className={`transition-colors ${isActive('/admin/bookings') ? 'text-white border-b-2 border-white pb-0.5' : 'text-gray-500 hover:text-gray-300'}`}
+          >
+            Bookings
+          </Link>
+          <Link 
+            href="/admin/services" 
+            className={`transition-colors ${isActive('/admin/services') ? 'text-white border-b-2 border-white pb-0.5' : 'text-gray-500 hover:text-gray-300'}`}
+          >
+            Menu
+          </Link>
+          <Link 
+            href="/admin/products" 
+            className={`transition-colors ${isActive('/admin/products') ? 'text-white border-b-2 border-white pb-0.5' : 'text-gray-500 hover:text-gray-300'}`}
+          >
+            Shop
+          </Link>
         </div>
       </div>
 
-      {/* 🖥️ DESKTOP SIDEBAR */}
+      {/* 🖥️ DESKTOP SIDEBAR (Unchanged) */}
       <aside className="hidden md:flex flex-col w-64 bg-black text-white min-h-screen fixed left-0 top-0 p-8">
         <div className="mb-12">
           <h2 className="text-xl font-playfair font-bold tracking-[0.2em] uppercase">Glisten</h2>
@@ -83,7 +111,6 @@ export default function AdminLayout({
             <span className="text-xs uppercase tracking-widest">💅 Services</span>
           </Link>
 
-          {/* 🟢 NEW SHOP MANAGER LINK */}
           <Link 
             href="/admin/products" 
             className={`flex items-center gap-4 px-4 py-3 rounded-lg transition-all ${isActive('/admin/products') ? 'bg-white text-black font-bold' : 'text-gray-400 hover:text-white hover:bg-zinc-900'}`}
@@ -102,7 +129,7 @@ export default function AdminLayout({
       </aside>
 
       {/* 📄 MAIN CONTENT AREA */}
-      <main className="flex-1 md:ml-64 p-6 md:p-10">
+      <main className="flex-1 md:ml-64 p-4 md:p-10">
         <div className="max-w-6xl mx-auto">
           {children}
         </div>
