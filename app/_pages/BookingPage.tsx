@@ -3,10 +3,6 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-
-// ---------------------------------------------------------
-// 🔴 IMPORTS
-// ---------------------------------------------------------
 import { useBag } from '../_context/BagContext'; 
 import { db } from '../_utils/firebase'; 
 import { collection, addDoc } from 'firebase/firestore'; 
@@ -22,7 +18,7 @@ const BookingPage = () => {
   
   const topRef = useRef<HTMLDivElement>(null);
 
-  // --- 🕒 TIMEZONE HELPER: CAMBODIA (UTC+7) ---
+  // --- 🕒 TIMEZONE HELPER ---
   const getNowInCambodia = () => {
     const now = new Date();
     const cambodiaTimeStr = now.toLocaleString("en-US", { timeZone: "Asia/Phnom_Penh" });
@@ -45,7 +41,6 @@ const BookingPage = () => {
     notes: ''
   });
 
-  // 🟢 FIX: SCROLL TO TOP ON SUCCESS
   useEffect(() => {
     if (isSuccess) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -54,6 +49,18 @@ const BookingPage = () => {
       }, 50);
     }
   }, [isSuccess]);
+
+  // 🟢 PRICE HELPER
+  const parsePrice = (priceStr: string) => {
+    if (!priceStr) return 0;
+    const num = parseFloat(priceStr.toString().replace(/[^0-9.]/g, ''));
+    return isNaN(num) ? 0 : num;
+  };
+
+  // 🟢 CALCULATE TOTAL
+  const finalTotal = useMemo(() => {
+    return bag.reduce((sum: number, item: any) => sum + parsePrice(item.price), 0);
+  }, [bag]);
 
   // --- CALENDAR LOGIC ---
   const getDaysInMonth = (date: Date) => new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
@@ -69,10 +76,7 @@ const BookingPage = () => {
 
   const handleDateClick = (day: number) => {
     const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
-    
-    // 🟢 FIXED: Variable name updated from dateToCheck to newDate
     if (newDate < todayInCambodia) return;
-    
     setSelectedDateObj(newDate);
     setFormData({ ...formData, date: newDate.toLocaleDateString('en-CA'), time: '' });
   };
@@ -100,57 +104,37 @@ const BookingPage = () => {
   const handleChange = (e: any) => setFormData({ ...formData, [e.target.name]: e.target.value });
   const handleTimeSelect = (time: string) => !isTimeDisabled(time) && setFormData({ ...formData, time });
 
-  // --- 🔴 LIVE SUBMIT HANDLER ---
+  // --- SUBMIT HANDLER ---
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    const itemsList = bag.map((i: any) => `- ${i.name} (${i.price})`).join('\n');
-    const displayDate = selectedDateObj ? selectedDateObj.toDateString() : formData.date;
-
     const bookingData = {
       ...formData,
-      services: bag.map((i: any) => i.name),
-      totalPrice: bag.length,
+      services: bag.map((i: any) => ({ 
+        name: i.name, 
+        price: i.price,
+        category: i.category || 'Standard' // Save category too
+      })),
+      totalPrice: finalTotal.toFixed(2), 
       createdAt: new Date(),
       status: 'pending'
     };
 
-    const telegramMessage = `
-🛎 *NEW BOOKING REQUEST* 🛎
-
-👤 *Customer:* ${formData.name}
-📞 *Phone:* ${formData.phone}
-📅 *Date:* ${displayDate}
-⏰ *Time:* ${formData.time}
-📍 *Location:* ${formData.branch}
-
-🛒 *Services Requested:*
-${itemsList}
-
-📝 *Notes:* ${formData.notes || 'None'}
-    `;
-
     try {
-      // 1. Save to Firebase
       await addDoc(collection(db, "bookings"), bookingData);
-
-      // 2. Send Telegram Notification via Netlify
-      const response = await fetch('/.netlify/functions/booking', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: telegramMessage })
-      });
-
-      if (response.ok) {
-        setIsSuccess(true);
-        if (clearBag) clearBag(); 
-      } else {
-        // Fallback: If DB saved but Telegram failed, still show success to customer
-        setIsSuccess(true);
-        if (clearBag) clearBag();
-      }
       
+      // Send Telegram (Optional)
+      try {
+        await fetch('/.netlify/functions/booking', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: `New Booking: ${formData.name} - $${finalTotal.toFixed(2)}` })
+        });
+      } catch (err) { console.log("Telegram notification skipped"); }
+
+      setIsSuccess(true);
+      if (clearBag) clearBag(); 
     } catch (error) {
       console.error('Submission Error:', error);
       alert('Network error. Please try again.');
@@ -215,7 +199,7 @@ ${itemsList}
             </div>
             <h2 className="text-2xl font-playfair text-black mb-4 uppercase tracking-tight">Request Sent</h2>
             <p className="text-sm text-gray-500 mb-8 leading-relaxed">
-              Thank you, <strong>{formData.name}</strong>. Our team will contact you at <strong>{formData.phone}</strong> shortly to finalize your appointment.
+              Thank you, <strong>{formData.name}</strong>. Our team will contact you at <strong>{formData.phone}</strong> shortly.
             </p>
             <Link href="/" className="block w-full bg-black text-white py-4 text-[10px] font-bold tracking-[0.2em] uppercase hover:bg-zinc-800 transition-colors">
               Return Home
@@ -256,7 +240,7 @@ ${itemsList}
                             <input required name="phone" type="tel" value={formData.phone} onChange={handleChange} placeholder="e.g. 012 345 678" className="w-full border-b border-gray-200 py-3 text-sm focus:outline-none focus:border-black transition-colors bg-transparent placeholder:text-gray-300 font-sans" />
                           </div>
                           <div className="space-y-2">
-                            <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-gray-400 font-sans">Special Requests (Optional)</label>
+                            <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-gray-400 font-sans">Special Requests</label>
                             <textarea name="notes" value={formData.notes} onChange={handleChange} placeholder="Any specific needs..." className="w-full border-b border-gray-200 py-3 text-sm focus:outline-none focus:border-black bg-transparent text-gray-700 resize-none h-20 font-sans placeholder:text-gray-300" />
                           </div>
                       </div>
@@ -283,7 +267,7 @@ ${itemsList}
 
                 <div className="pt-4">
                   <button type="submit" disabled={isSubmitting || !formData.date || !formData.time} className="w-full bg-black text-white py-4 text-[10px] font-bold tracking-[0.25em] uppercase hover:bg-zinc-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed font-sans">
-                    {isSubmitting ? 'Processing Request...' : 'Confirm Request'}
+                    {isSubmitting ? 'Processing...' : `Confirm Request • $${finalTotal.toFixed(2)}`}
                   </button>
                 </div>
               </form>
@@ -291,25 +275,49 @@ ${itemsList}
 
             <div className="w-full lg:w-2/5 bg-zinc-50 border-l border-gray-100 p-8 order-1 lg:order-2">
               <div className="sticky top-8">
-                <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 font-sans mb-8">In Your Bag</h3>
+                <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 font-sans mb-8">Summary</h3>
+                
+                {/* ITEMS LIST */}
                 <div className="space-y-6 mb-8 max-h-100 overflow-y-auto pr-2 custom-scrollbar">
-                  {bag.map((item: any) => (
-                    <div key={item.id} className="flex gap-4 items-start group border-b border-gray-100 pb-4 last:border-0">
-                       <div className="relative w-14 h-14 shrink-0 bg-white shadow-sm overflow-hidden"><Image src={item.image || "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=200"} alt={item.name} fill className="object-cover" /></div>
-                       <div className="grow">
-                          <p className="text-xs font-bold text-black leading-tight mb-1 uppercase font-sans tracking-wide">{item.name}</p>
-                          <p className="text-[10px] text-gray-500 font-sans">{item.price}</p>
-                          <button onClick={() => removeFromBag?.(item.id)} className="text-[9px] text-red-400 hover:text-red-600 underline font-sans mt-1">Remove</button>
-                       </div>
-                    </div>
-                  ))}
+                  {bag.map((item: any) => {
+                    const isPackage = item.category?.toLowerCase() === 'package';
+                    return (
+                      <div key={item.id} className="flex gap-4 items-start group border-b border-gray-100 pb-4 last:border-0">
+                        <div className="relative w-14 h-14 shrink-0 bg-white shadow-sm overflow-hidden">
+                          <Image src={item.image || "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=200"} alt={item.name} fill className="object-cover" />
+                        </div>
+                        <div className="grow">
+                            <div className="flex flex-wrap items-center gap-2 mb-1">
+                                <p className="text-xs font-bold text-black leading-tight uppercase font-sans tracking-wide">{item.name}</p>
+                                
+                                {/* 🟢 VISUAL BADGES FOR PROMO TYPE */}
+                                {isPackage && (
+                                  <span className="bg-[#D4AF37] text-white text-[8px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">
+                                    Package
+                                  </span>
+                                )}
+                            </div>
+                            
+                            <p className="text-[10px] text-gray-400 uppercase font-sans tracking-wide mb-1">
+                                {item.category || 'Treatment'}
+                            </p>
+
+                            <p className="text-[11px] font-bold text-black font-sans">{item.price}</p>
+                            <button onClick={() => removeFromBag?.(item.id)} className="text-[9px] text-red-400 hover:text-red-600 underline font-sans mt-2">Remove</button>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
-                <div className="border-t border-gray-200 pt-6">
-                  <div className="flex justify-between items-center">
-                    <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-black font-sans">Total Services</span>
-                    <span className="text-lg font-bold font-sans text-black">{bag.length}</span>
+
+                {/* 🟢 TOTALS SECTION */}
+                <div className="border-t border-gray-200 pt-6 space-y-2">
+                  <div className="flex justify-between items-center pt-2">
+                    <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-black font-sans">Total Est.</span>
+                    <span className="text-xl font-bold font-playfair text-black">${finalTotal.toFixed(2)}</span>
                   </div>
                 </div>
+
               </div>
             </div>
           </div>

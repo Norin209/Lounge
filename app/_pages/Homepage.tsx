@@ -6,7 +6,7 @@ import Promotions from "../_components/Promotions";
 import TreatmentsPreview from "../_components/TreatmentsPreview";
 import TreatmentMenu from "../_components/TreatmentMenu";
 import ProductShowcase from "../_components/ProductShowcase";
-import Testimonials from "../_components/Testimonials";
+//import Testimonials from "../_components/Testimonials";//
 
 const Homepage = () => {
   return (
@@ -16,7 +16,6 @@ const Homepage = () => {
       <TreatmentsPreview /> 
       <TreatmentMenu />
       <ProductShowcase />
-      <Testimonials />
     </>
   );
 };

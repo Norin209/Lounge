@@ -24,7 +24,8 @@ interface ServiceItem {
   duration?: string;
 }
 
-const tabs = ["NAILS & LASHES", "HAIR", "FACIALS", "BODY & WAX", "PACKAGES"];
+// 🟢 1. ADD "PROMOTIONS" TO TABS
+const tabs = ["PROMOTIONS", "NAILS & LASHES", "HAIR", "FACIALS", "BODY & WAX", "PACKAGES"];
 
 const TreatmentsPage = () => {
   const [activeTab, setActiveTab] = useState(tabs[0]);
@@ -32,7 +33,7 @@ const TreatmentsPage = () => {
   const [loading, setLoading] = useState(true);
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const tabContainerRef = useRef<HTMLDivElement>(null); // 🆕 Added for tabs
+  const tabContainerRef = useRef<HTMLDivElement>(null); 
   const { addToBag, bag } = useBag();
 
   useEffect(() => {
@@ -71,16 +72,33 @@ const TreatmentsPage = () => {
     return item.promoPrice || item.price;
   };
 
+  // 🟢 2. UPDATE FILTER LOGIC
   const filteredItems = useMemo(() => {
     return services.filter(item => {
       const cat = item.category?.toLowerCase() || "";
+      
       switch (activeTab) {
-        case "NAILS & LASHES": return cat.includes('nail') || cat.includes('lash');
-        case "HAIR": return cat.includes('hair');
-        case "FACIALS": return cat.includes('facial') || cat.includes('face');
-        case "BODY & WAX": return cat.includes('body') || cat.includes('wax') || cat.includes('massage') || cat.includes('scrub');
-        case "PACKAGES": return cat.includes('package');
-        default: return false;
+        case "PROMOTIONS": 
+          // Show items that are marked as a monthly promo
+          return item.isMonthlyPromo === true; 
+          
+        case "NAILS & LASHES": 
+          return cat.includes('nail') || cat.includes('lash');
+          
+        case "HAIR": 
+          return cat.includes('hair');
+          
+        case "FACIALS": 
+          return cat.includes('facial') || cat.includes('face');
+          
+        case "BODY & WAX": 
+          return cat.includes('body') || cat.includes('wax') || cat.includes('massage') || cat.includes('scrub');
+          
+        case "PACKAGES": 
+          return cat.includes('package');
+          
+        default: 
+          return false;
       }
     });
   }, [activeTab, services]);
@@ -107,7 +125,6 @@ const TreatmentsPage = () => {
     }
   };
 
-  // 🆕 Scroll Tabs Logic
   const scrollTabs = (direction: 'left' | 'right') => {
     if (tabContainerRef.current) {
       const amount = 150;
@@ -141,13 +158,10 @@ const TreatmentsPage = () => {
         </div>
       </section>
 
-      {/* ✅ FIXED: Outer Sticky Wrapper */}
+      {/* Sticky Nav */}
       <nav className="sticky top-0 z-20 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm">
-        
-        {/* ✅ FIXED: Inner Relative Wrapper for Arrows */}
         <div className="relative max-w-7xl mx-auto px-6 py-6 group">
-            
-          {/* Left Arrow */}
+          
           <button 
             onClick={() => scrollTabs('left')}
             className="md:hidden absolute left-0 top-0 bottom-0 z-20 bg-linear-to-r from-white via-white to-transparent w-12 flex items-center justify-start pl-4 text-black hover:text-gray-600"
@@ -155,7 +169,6 @@ const TreatmentsPage = () => {
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
           </button>
 
-          {/* Tab Scroll Container */}
           <div 
              ref={tabContainerRef}
              className="flex overflow-x-auto justify-start md:justify-center gap-8 hide-scrollbar px-2 md:px-0 scroll-smooth"
@@ -167,7 +180,6 @@ const TreatmentsPage = () => {
             ))}
           </div>
 
-          {/* Right Arrow */}
           <button 
             onClick={() => scrollTabs('right')}
             className="md:hidden absolute right-0 top-0 bottom-0 z-20 bg-linear-to-l from-white via-white to-transparent w-12 flex items-center justify-end pr-4 text-black hover:text-gray-600"
@@ -245,7 +257,11 @@ const TreatmentsPage = () => {
               );
             })
           ) : (
-             <div className="w-full col-span-full text-center text-gray-400 py-20 italic">Treatments not found in this category.</div>
+             <div className="w-full col-span-full text-center text-gray-400 py-20 italic">
+               {activeTab === "PROMOTIONS" 
+                 ? "No special promotions available at this time." 
+                 : "Treatments not found in this category."}
+             </div>
           )}
         </div>
 
