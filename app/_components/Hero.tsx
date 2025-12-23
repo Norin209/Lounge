@@ -28,10 +28,6 @@ const Hero = () => {
           A Sanctuary for <br />
           <span className="italic text-white/90">Mind, Body & Soul</span>
         </h1>
-
-        <button className="hidden md:inline-block group border border-white px-10 py-4 text-sm font-bold tracking-[0.2em] uppercase transition-all duration-300 hover:bg-white hover:text-black">
-          Discover More
-        </button>
       </div>
       
       {/* Scroll Indicator */}
