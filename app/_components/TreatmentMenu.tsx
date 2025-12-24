@@ -17,14 +17,12 @@ interface TreatmentItem {
   duration?: string;
   description?: string;
   image?: string;
-  // 🟢 NEW FIELDS FOR PROMOS
   promoPrice?: string;      
   isMonthlyPromo?: boolean; 
   discountValue?: string;
   discountType?: 'percent' | 'fixed';
 }
 
-// 🟢 1. ADD PROMOTIONS TAB
 const tabs = ["PROMOTIONS", "NAILS & LASHES", "HAIR", "FACIALS", "BODY & WAX", "PACKAGES"];
 
 const TreatmentMenu = () => {
@@ -60,7 +58,6 @@ const TreatmentMenu = () => {
     }
   }, [activeTab]);
 
-  // 🟢 2. PRICE CALCULATOR (Same as Treatments Page)
   const getCalculatedPrice = (item: TreatmentItem) => {
     const originalPrice = parseFloat(item.price.replace(/[^0-9.]/g, ''));
     if (isNaN(originalPrice)) return item.price; 
@@ -100,7 +97,6 @@ const TreatmentMenu = () => {
     }
   };
   
-  // 🟢 3. UPDATED FILTER LOGIC
   const filteredItems = useMemo(() => {
     return services.filter(item => {
       const cat = item.category?.toLowerCase() || "";
@@ -129,7 +125,8 @@ const TreatmentMenu = () => {
       </div>
 
       {/* Sticky Tabs Wrapper */}
-      <div className="sticky top-0 z-30 bg-zinc-100 border-b border-gray-300 shadow-sm">
+      {/* 🔴 FIXED: Changed z-30 to z-1 to prevent mobile menu overlap */}
+      <div className="sticky top-0 z-1 bg-zinc-100 border-b border-gray-300 shadow-sm">
         <div className="relative max-w-7xl mx-auto px-6 py-4 group">
           
           <button 
@@ -182,7 +179,7 @@ const TreatmentMenu = () => {
                   <div key={item.id} className="group shrink-0 w-72 snap-start flex flex-col h-full">
                     <div className="relative aspect-square overflow-hidden mb-4 bg-white shadow-sm shrink-0">
                       
-                      {/* 🟢 4. PROMO BADGE */}
+                      {/* PROMO BADGE */}
                       {hasPromo && (
                         <div className="absolute top-2 right-2 z-10 bg-[#D4AF37] text-white text-[9px] font-bold px-2 py-1 uppercase tracking-widest shadow-sm">
                           {item.discountType === 'percent' ? `${item.discountValue}% OFF` : `SAVE $${item.discountValue}`}
@@ -201,7 +198,7 @@ const TreatmentMenu = () => {
                             onClick={() => addToBag({
                               id: item.id,
                               name: item.name,
-                              price: finalPrice, // 🟢 USE CALCULATED PRICE
+                              price: finalPrice, 
                               category: item.category,
                               duration: item.duration || '60 min',
                               image: displayImage
@@ -218,7 +215,7 @@ const TreatmentMenu = () => {
                       <div className="flex justify-between items-start">
                          <h4 className="text-sm text-gray-900 font-medium tracking-wide">{item.name}</h4>
                          
-                         {/* 🟢 5. PRICE DISPLAY (With Strikethrough) */}
+                         {/* PRICE DISPLAY */}
                          <div className="text-right whitespace-nowrap ml-2">
                              {hasPromo ? (
                                <>

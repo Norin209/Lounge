@@ -10,7 +10,9 @@ import { collection, getDocs } from 'firebase/firestore';
 // --- CONFIGURATION ---
 const HERO_IMAGE = "https://images.unsplash.com/photo-1600334129128-685c5582fd35?q=80&w=2000&auto=format&fit=crop";
 const PLACEHOLDER_IMG = "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=800&auto=format&fit=crop";
-const TABS = ["PROMOTIONS", "NAILS & LASHES", "HAIR", "FACIALS", "BODY & WAX", "PACKAGES"];
+
+// 🟢 UPDATED: Added "SIGNATURE" after Promotions
+const TABS = ["PROMOTIONS", "SIGNATURE", "NAILS & LASHES", "HAIR", "FACIALS", "BODY & WAX", "PACKAGES"];
 
 interface ServiceItem {
   id: string;
@@ -24,6 +26,7 @@ interface ServiceItem {
   description?: string;
   image?: string;
   duration?: string;
+  isSignature?: boolean; // 🟢 UPDATED: Added field for filtering
 }
 
 const TreatmentsPage = () => {
@@ -32,7 +35,7 @@ const TreatmentsPage = () => {
   const [services, setServices] = useState<ServiceItem[]>([]); 
   const [loading, setLoading] = useState(true);
   
-  // DEFAULT: 'list' (The "OG" small style)
+  // DEFAULT: 'list' (Small OG Style)
   const [viewMode, setViewMode] = useState<'list' | 'grid' | 'carousel'>('list');
   const [showScrollTop, setShowScrollTop] = useState(false);
 
@@ -63,7 +66,6 @@ const TreatmentsPage = () => {
   // --- SCROLL HANDLING ---
   useEffect(() => {
     const handleScroll = () => {
-      // Show button after scrolling down 400px
       setShowScrollTop(window.scrollY > 400);
     };
     window.addEventListener('scroll', handleScroll);
@@ -126,6 +128,7 @@ const TreatmentsPage = () => {
       const cat = item.category?.toLowerCase() || "";
       switch (activeTab) {
         case "PROMOTIONS": return item.isMonthlyPromo === true; 
+        case "SIGNATURE": return item.isSignature === true; // 🟢 UPDATED: Filter logic
         case "NAILS & LASHES": return cat.includes('nail') || cat.includes('lash');
         case "HAIR": return cat.includes('hair');
         case "FACIALS": return cat.includes('facial') || cat.includes('face');
@@ -164,7 +167,8 @@ const TreatmentsPage = () => {
       {/* --- HERO SECTION --- */}
       <section className="relative h-[45vh] md:h-[50vh] w-full flex items-center justify-center overflow-hidden">
         <Image src={HERO_IMAGE} alt="Header" fill priority className="object-cover brightness-[0.4]" />
-        <div className="relative z-10 text-center px-6">
+        {/* z-0 to avoid overlap */}
+        <div className="relative z-0 text-center px-6">
           <h1 className="text-3xl md:text-5xl font-playfair text-white mb-4 uppercase tracking-[0.3em]">Our Menu</h1>
           <div className="w-12 h-px bg-white/50 mx-auto mb-4" />
           <p className="text-white/70 text-[9px] md:text-[10px] tracking-[0.4em] uppercase font-light">Luxury Cambodian Wellness</p>
@@ -172,9 +176,10 @@ const TreatmentsPage = () => {
       </section>
 
       {/* --- STICKY NAV --- */}
-      <nav className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm transition-all">
+      {/* z-1 to avoid overlap */}
+      <nav className="sticky top-0 z-1 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm transition-all">
         <div className="relative max-w-7xl mx-auto px-4 py-4">
-          <button onClick={() => scrollTabs('left')} className="md:hidden absolute left-0 top-0 bottom-0 z-20 bg-gradient-to-r from-white via-white/80 to-transparent w-10 flex items-center justify-center text-black">
+          <button onClick={() => scrollTabs('left')} className="md:hidden absolute left-0 top-0 bottom-0 z-20 bg-linear-to-r from-white via-white/80 to-transparent w-10 flex items-center justify-center text-black">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
           </button>
 
@@ -192,7 +197,7 @@ const TreatmentsPage = () => {
             ))}
           </div>
 
-          <button onClick={() => scrollTabs('right')} className="md:hidden absolute right-0 top-0 bottom-0 z-20 bg-gradient-to-l from-white via-white/80 to-transparent w-10 flex items-center justify-center text-black">
+          <button onClick={() => scrollTabs('right')} className="md:hidden absolute right-0 top-0 bottom-0 z-20 bg-linear-to-l from-white via-white/80 to-transparent w-10 flex items-center justify-center text-black">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </button>
         </div>
@@ -201,12 +206,11 @@ const TreatmentsPage = () => {
       {/* --- MAIN CONTENT --- */}
       <main className="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-16 relative">
         
-        {/* --- VIEW TOGGLE ICONS (LEFT SIDE & BOTH DEVICES) --- */}
-        {/* Changed justify-end to justify-start (Left) and removed md:hidden (Shows on Desktop) */}
+        {/* --- VIEW TOGGLE ICONS --- */}
         <div className="flex justify-start mb-6">
           <div className="flex border border-gray-200 rounded-lg p-1 gap-1 bg-white shadow-sm">
             
-            {/* 1. LIST (Small OG Style) */}
+            {/* 1. LIST */}
             <button 
               onClick={() => setViewMode('list')} 
               className={`p-2 rounded transition-colors ${viewMode === 'list' ? 'bg-black text-white' : 'text-gray-300 hover:text-black'}`}
@@ -216,7 +220,7 @@ const TreatmentsPage = () => {
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
             </button>
             
-            {/* 2. GRID (Double E-commerce Style) */}
+            {/* 2. GRID */}
             <button 
               onClick={() => setViewMode('grid')} 
               className={`p-2 rounded transition-colors ${viewMode === 'grid' ? 'bg-black text-white' : 'text-gray-300 hover:text-black'}`}
@@ -226,7 +230,7 @@ const TreatmentsPage = () => {
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
             </button>
             
-            {/* 3. CAROUSEL (Horizontal Swipe) */}
+            {/* 3. CAROUSEL */}
             <button 
               onClick={() => setViewMode('carousel')} 
               className={`p-2 rounded transition-colors ${viewMode === 'carousel' ? 'bg-black text-white' : 'text-gray-300 hover:text-black'}`}
@@ -250,14 +254,14 @@ const TreatmentsPage = () => {
           </>
         )}
 
-        {/* --- DYNAMIC CONTAINER (Updated for Desktop Support) --- */}
+        {/* --- DYNAMIC CONTAINER --- */}
         <div 
           ref={scrollContainerRef}
           className={`
             transition-all duration-300
-            ${/* LIST: 1 Col Mobile, 2 Col Desktop (Wide Cards) */ viewMode === 'list' ? 'flex flex-col gap-4 md:grid md:grid-cols-2 md:gap-6 lg:grid-cols-2' : ''}
-            ${/* GRID: 2 Col Mobile, 4 Col Desktop (Tall Cards) */ viewMode === 'grid' ? 'grid grid-cols-2 gap-3 md:gap-8 md:grid-cols-3 xl:grid-cols-4' : ''}
-            ${/* CAROUSEL: Horizontal Scroll on ALL devices */ viewMode === 'carousel' ? 'flex flex-nowrap overflow-x-auto gap-4 snap-x snap-mandatory pb-8 hide-scrollbar md:pb-8' : ''}
+            ${/* LIST: 1 Col Mobile, 2 Col Desktop */ viewMode === 'list' ? 'flex flex-col gap-4 md:grid md:grid-cols-2 md:gap-6 lg:grid-cols-2' : ''}
+            ${/* GRID: 2 Col Mobile, 4 Col Desktop */ viewMode === 'grid' ? 'grid grid-cols-2 gap-3 md:gap-8 md:grid-cols-3 xl:grid-cols-4' : ''}
+            ${/* CAROUSEL */ viewMode === 'carousel' ? 'flex flex-nowrap overflow-x-auto gap-4 snap-x snap-mandatory pb-8 hide-scrollbar md:pb-8' : ''}
           `}
         >
           
@@ -285,7 +289,7 @@ const TreatmentsPage = () => {
                   <div className={`
                     relative bg-gray-50 shrink-0
                     ${/* List Size (Small OG style) */ isList ? 'w-28 md:w-40 h-full rounded-md' : ''}
-                    ${/* Grid/Carousel Size */ !isList ? 'w-full aspect-[4/5]' : ''}
+                    ${/* Grid/Carousel Size */ !isList ? 'w-full aspect-4/5' : ''}
                   `}>
                     {hasPromo && (
                       <div className="absolute top-0 left-0 z-10 bg-[#D4AF37] text-white text-[8px] font-bold px-2 py-1 uppercase tracking-widest shadow-sm">
@@ -369,7 +373,6 @@ const TreatmentsPage = () => {
       </main>
 
       {/* --- PHYSICAL BACK TO TOP BUTTON --- */}
-      {/* Changed from circle to a "Pill" shape with text */}
       <button 
         onClick={scrollToTop}
         className={`fixed bottom-6 right-6 z-40 bg-black text-white px-6 py-3 rounded-full shadow-xl flex items-center gap-2 transition-all duration-500 transform hover:bg-gray-800 ${showScrollTop ? 'translate-y-0 opacity-100' : 'translate-y-16 opacity-0'}`}

@@ -16,6 +16,12 @@ const BookingPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   
+  // 🟢 PROMO STATE
+  const [showPromoInput, setShowPromoInput] = useState(false);
+  const [promoCode, setPromoCode] = useState('');
+  const [discountApplied, setDiscountApplied] = useState(0); // value in %
+  const [promoError, setPromoError] = useState('');
+  
   const topRef = useRef<HTMLDivElement>(null);
 
   // --- 🕒 TIMEZONE HELPER ---
@@ -57,10 +63,24 @@ const BookingPage = () => {
     return isNaN(num) ? 0 : num;
   };
 
-  // 🟢 CALCULATE TOTAL
-  const finalTotal = useMemo(() => {
+  // 🟢 CALCULATE TOTALS
+  const subtotal = useMemo(() => {
     return bag.reduce((sum: number, item: any) => sum + parsePrice(item.price), 0);
   }, [bag]);
+
+  const discountAmount = (subtotal * discountApplied) / 100;
+  const finalTotal = subtotal - discountAmount;
+
+  // 🟢 PROMO CODE LOGIC
+  const handleApplyPromo = () => {
+    if (promoCode.trim().toUpperCase() === 'GLISTEN20') {
+      setDiscountApplied(20);
+      setPromoError('');
+    } else {
+      setDiscountApplied(0);
+      setPromoError('Invalid code');
+    }
+  };
 
   // --- CALENDAR LOGIC ---
   const getDaysInMonth = (date: Date) => new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
@@ -104,32 +124,59 @@ const BookingPage = () => {
   const handleChange = (e: any) => setFormData({ ...formData, [e.target.name]: e.target.value });
   const handleTimeSelect = (time: string) => !isTimeDisabled(time) && setFormData({ ...formData, time });
 
-  // --- SUBMIT HANDLER ---
+  // --- SUBMIT HANDLER (FIXED FOR TELEGRAM DETAILS) ---
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
+    const displayDate = selectedDateObj ? selectedDateObj.toDateString() : formData.date;
+
+    // 1. Generate text list of items for Telegram
+    const itemsList = bag.map((i: any) => `- ${i.name} (${i.price})`).join('\n');
+
+    // 2. Construct the Detailed Telegram Message
+    const telegramMessage = `
+🔔 *NEW BOOKING REQUEST* 🔔
+
+👤 *Customer:* ${formData.name}
+📞 *Phone:* ${formData.phone}
+📅 *Date:* ${displayDate}
+⏰ *Time:* ${formData.time}
+📍 *Location:* ${formData.branch}
+
+🛒 *Services Requested:*
+${itemsList}
+
+💰 *Total Est:* $${finalTotal.toFixed(2)}
+${discountApplied > 0 ? `🏷️ *Promo Applied:* ${promoCode} (${discountApplied}%)` : ''}
+
+📝 *Notes:* ${formData.notes || "None"}
+    `;
+
+    // 3. Prepare Data for Firestore
     const bookingData = {
       ...formData,
       services: bag.map((i: any) => ({ 
         name: i.name, 
-        price: i.price,
-        category: i.category || 'Standard' // Save category too
+        price: i.price 
       })),
       totalPrice: finalTotal.toFixed(2), 
+      discountCode: discountApplied > 0 ? promoCode : null,
       createdAt: new Date(),
       status: 'pending'
     };
 
     try {
+      // Save to Firebase
       await addDoc(collection(db, "bookings"), bookingData);
       
-      // Send Telegram (Optional)
+      // Send Detailed Telegram Notification
       try {
         await fetch('/.netlify/functions/booking', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: `New Booking: ${formData.name} - $${finalTotal.toFixed(2)}` })
+          // 🔴 sending the detailed message now
+          body: JSON.stringify({ message: telegramMessage })
         });
       } catch (err) { console.log("Telegram notification skipped"); }
 
@@ -279,39 +326,66 @@ const BookingPage = () => {
                 
                 {/* ITEMS LIST */}
                 <div className="space-y-6 mb-8 max-h-100 overflow-y-auto pr-2 custom-scrollbar">
-                  {bag.map((item: any) => {
-                    const isPackage = item.category?.toLowerCase() === 'package';
-                    return (
-                      <div key={item.id} className="flex gap-4 items-start group border-b border-gray-100 pb-4 last:border-0">
-                        <div className="relative w-14 h-14 shrink-0 bg-white shadow-sm overflow-hidden">
-                          <Image src={item.image || "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=200"} alt={item.name} fill className="object-cover" />
-                        </div>
-                        <div className="grow">
-                            <div className="flex flex-wrap items-center gap-2 mb-1">
-                                <p className="text-xs font-bold text-black leading-tight uppercase font-sans tracking-wide">{item.name}</p>
-                                
-                                {/* 🟢 VISUAL BADGES FOR PROMO TYPE */}
-                                {isPackage && (
-                                  <span className="bg-[#D4AF37] text-white text-[8px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">
-                                    Package
-                                  </span>
-                                )}
-                            </div>
-                            
-                            <p className="text-[10px] text-gray-400 uppercase font-sans tracking-wide mb-1">
-                                {item.category || 'Treatment'}
-                            </p>
+                  {bag.map((item: any) => (
+                    <div key={item.id} className="flex gap-4 items-start group border-b border-gray-100 pb-4 last:border-0">
+                       <div className="relative w-14 h-14 shrink-0 bg-white shadow-sm overflow-hidden">
+                         <Image src={item.image || "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=200"} alt={item.name} fill className="object-cover" />
+                       </div>
+                       <div className="grow">
+                          <p className="text-xs font-bold text-black leading-tight mb-1 uppercase font-sans tracking-wide">{item.name}</p>
+                          <p className="text-[10px] text-gray-500 font-sans">{item.price}</p>
+                          <button onClick={() => removeFromBag?.(item.id)} className="text-[9px] text-red-400 hover:text-red-600 underline font-sans mt-1">Remove</button>
+                       </div>
+                    </div>
+                  ))}
+                </div>
 
-                            <p className="text-[11px] font-bold text-black font-sans">{item.price}</p>
-                            <button onClick={() => removeFromBag?.(item.id)} className="text-[9px] text-red-400 hover:text-red-600 underline font-sans mt-2">Remove</button>
-                        </div>
+                {/* 🟢 PROMO CODE SECTION */}
+                <div className="mb-6">
+                  {!showPromoInput && !discountApplied ? (
+                    <button 
+                      onClick={() => setShowPromoInput(true)} 
+                      className="text-[10px] font-bold uppercase tracking-widest text-black underline hover:text-gray-600"
+                    >
+                      Have a promo code?
+                    </button>
+                  ) : (
+                    <div className="bg-white p-4 border border-gray-200">
+                      <div className="flex gap-2">
+                        <input 
+                          type="text" 
+                          value={promoCode}
+                          onChange={(e) => setPromoCode(e.target.value)}
+                          placeholder="GLISTEN20"
+                          className="w-full text-xs border border-gray-200 p-2 uppercase tracking-wide focus:outline-none focus:border-black"
+                        />
+                        <button 
+                          onClick={handleApplyPromo}
+                          className="bg-black text-white text-[10px] font-bold px-4 uppercase tracking-widest"
+                        >
+                          Apply
+                        </button>
                       </div>
-                    );
-                  })}
+                      {promoError && <p className="text-[10px] text-red-500 mt-2 font-bold">{promoError}</p>}
+                      {discountApplied > 0 && <p className="text-[10px] text-green-600 mt-2 font-bold">Code Applied: {discountApplied}% Off</p>}
+                    </div>
+                  )}
                 </div>
 
                 {/* 🟢 TOTALS SECTION */}
                 <div className="border-t border-gray-200 pt-6 space-y-2">
+                  <div className="flex justify-between items-center text-gray-500">
+                    <span className="text-[10px] uppercase tracking-[0.2em] font-sans">Subtotal</span>
+                    <span className="text-xs font-sans">${subtotal.toFixed(2)}</span>
+                  </div>
+                  
+                  {discountApplied > 0 && (
+                    <div className="flex justify-between items-center text-green-600">
+                      <span className="text-[10px] uppercase tracking-[0.2em] font-sans">Discount</span>
+                      <span className="text-xs font-sans">-${discountAmount.toFixed(2)}</span>
+                    </div>
+                  )}
+
                   <div className="flex justify-between items-center pt-2">
                     <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-black font-sans">Total Est.</span>
                     <span className="text-xl font-bold font-playfair text-black">${finalTotal.toFixed(2)}</span>
