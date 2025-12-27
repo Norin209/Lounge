@@ -7,7 +7,6 @@ import { useBag } from '../_context/BagContext';
 import { db } from '../_utils/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 
-// --- CONFIGURATION ---
 const HERO_IMAGE = "https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=2070&auto=format&fit=crop";
 const PLACEHOLDER_IMG = "https://images.unsplash.com/photo-1612196808214-b7e239e5f6b7?q=80&w=800&auto=format&fit=crop";
 
@@ -28,7 +27,6 @@ interface ProductItem {
 }
 
 const ProductPage = () => {
-  // --- STATE ---
   const [activeTab, setActiveTab] = useState(TABS[0]);
   const [products, setProducts] = useState<ProductItem[]>([]); 
   const [loading, setLoading] = useState(true);
@@ -36,12 +34,10 @@ const ProductPage = () => {
   const [viewMode, setViewMode] = useState<'list' | 'grid' | 'carousel'>('list');
   const [showScrollTop, setShowScrollTop] = useState(false);
 
-  // --- REFS ---
   const tabContainerRef = useRef<HTMLDivElement>(null); 
   const scrollContainerRef = useRef<HTMLDivElement>(null); 
   const { addToBag, bag } = useBag();
 
-  // --- FETCH DATA ---
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -60,8 +56,6 @@ const ProductPage = () => {
     fetchProducts();
   }, []);
 
-  // --- SCROLL HANDLING ---
-  // 🟢 FIXED: Removed all "Smart Scroll" logic. Now only checks Back-to-Top visibility.
   useEffect(() => {
     const handleScroll = () => {
       setShowScrollTop(window.scrollY > 400);
@@ -70,7 +64,6 @@ const ProductPage = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Reset content scroll when tabs change
   useEffect(() => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollTo({ left: 0, behavior: 'smooth' });
@@ -79,7 +72,6 @@ const ProductPage = () => {
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
-  // Tab Scroller
   const scrollTabs = (direction: 'left' | 'right') => {
     if (tabContainerRef.current) {
       const amount = 150;
@@ -91,7 +83,6 @@ const ProductPage = () => {
     }
   };
 
-  // Carousel Scroller
   const scrollCarousel = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {
       const amount = 300;
@@ -103,7 +94,6 @@ const ProductPage = () => {
     }
   };
 
-  // --- PRICING ---
   const getCalculatedPrice = (item: ProductItem) => {
     const originalPrice = parseFloat(item.price.replace(/[^0-9.]/g, ''));
     if (isNaN(originalPrice)) return item.price; 
@@ -151,7 +141,6 @@ const ProductPage = () => {
   return (
     <div className="bg-white min-h-screen pb-24 relative">
       
-      {/* --- HERO SECTION --- */}
       <section className="relative h-[45vh] md:h-[50vh] w-full flex items-center justify-center overflow-hidden">
         <Image src={HERO_IMAGE} alt="Header" fill priority className="object-cover brightness-[0.4]" />
         <div className="relative z-0 text-center px-6">
@@ -161,8 +150,6 @@ const ProductPage = () => {
         </div>
       </section>
 
-      {/* --- STICKY NAV --- */}
-      {/* 🟢 FIXED: Removed 'translate' classes. Simply sticky at z-1, identical to your Menu Page. */}
       <div className="sticky top-0 z-1 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
         <div className="relative max-w-7xl mx-auto px-4 py-4 group">
           
@@ -205,10 +192,8 @@ const ProductPage = () => {
         </div>
       </div>
 
-      {/* --- MAIN CONTENT --- */}
       <main className="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-16 relative">
         
-        {/* --- VIEW TOGGLE ICONS --- */}
         <div className="flex justify-start mb-6">
           <div className="flex border border-gray-200 rounded-lg p-1 gap-1 bg-white shadow-sm">
             <button 
@@ -235,7 +220,6 @@ const ProductPage = () => {
           </div>
         </div>
 
-        {/* --- CAROUSEL ARROWS --- */}
         {viewMode === 'carousel' && (
           <>
             <button onClick={() => scrollCarousel('left')} className="absolute left-2 top-1/2 -translate-y-1/2 z-10 p-2 bg-white/80 backdrop-blur rounded-full shadow-md text-black border border-gray-100 hover:bg-white transition-colors">
@@ -247,7 +231,6 @@ const ProductPage = () => {
           </>
         )}
 
-        {/* --- DYNAMIC CONTAINER --- */}
         <div 
           ref={scrollContainerRef}
           className={`
@@ -273,15 +256,13 @@ const ProductPage = () => {
                   key={item.id} 
                   className={`
                     group bg-white rounded-lg border border-gray-100 shadow-sm overflow-hidden md:hover:shadow-md transition-shadow
-                    ${/* 🟢 FIXED: min-h-36 per your screenshot */
-                      isList ? 'flex flex-row p-3 items-stretch min-h-36 h-auto' : 'flex flex-col'}
+                    ${isList ? 'flex flex-row p-3 items-stretch min-h-36 h-auto' : 'flex flex-col'}
                     ${isCarousel ? 'w-72 md:w-80 shrink-0 snap-start' : 'w-full'}
                   `}
                 >
                   <div className={`
                     relative bg-gray-50 shrink-0
-                    ${/* 🟢 FIXED: aspect-4/5 per your screenshot */
-                      isList ? 'w-28 md:w-40 self-start rounded-md aspect-4/5' : ''}
+                    ${isList ? 'w-28 md:w-40 self-start rounded-md aspect-4/5' : ''}
                     ${!isList ? 'w-full aspect-4/5' : ''}
                   `}>
                     {hasPromo && (
@@ -292,7 +273,8 @@ const ProductPage = () => {
                     
                     <Image src={displayImage} alt={item.name} fill className="object-cover transition-transform duration-700 md:group-hover:scale-105" />
                     
-                    <div className="hidden md:flex absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-end pb-4 justify-center px-4">
+                    {/* 🟢 CHANGED: md:flex -> xl:flex */}
+                    <div className="hidden xl:flex absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-end pb-4 justify-center px-4">
                       {isInBag ? (
                         <Link href="/book" className="w-full bg-black text-white py-3 text-[10px] font-bold tracking-[0.2em] uppercase text-center">View Bag</Link>
                       ) : (
@@ -334,9 +316,10 @@ const ProductPage = () => {
                     <div className="flex justify-between items-center mt-auto">
                       <span className="text-[8px] uppercase tracking-widest text-gray-400 font-medium">{item.size || "100ml"}</span>
                       
+                      {/* 🟢 CHANGED: md:hidden -> xl:hidden */}
                       <button 
                         onClick={() => isInBag ? null : handleAddToBag(item)}
-                        className={`md:hidden text-[9px] font-bold uppercase tracking-widest rounded-sm transition-all
+                        className={`xl:hidden text-[9px] font-bold uppercase tracking-widest rounded-sm transition-all
                           ${isInBag ? 'bg-gray-100 text-gray-400 cursor-default border-transparent px-3 py-2' : 
                             (isGrid ? 'w-full mt-2 py-2 border border-gray-200 active:bg-black active:text-white' : 'bg-black text-white px-3 py-2 active:scale-95')
                           }
@@ -358,7 +341,6 @@ const ProductPage = () => {
         </div>
       </main>
 
-      {/* --- BACK TO TOP --- */}
       <button 
         onClick={scrollToTop}
         className={`fixed bottom-6 right-6 z-40 bg-black text-white px-6 py-3 rounded-full shadow-xl flex items-center gap-2 transition-all duration-500 transform hover:bg-gray-800 ${showScrollTop ? 'translate-y-0 opacity-100' : 'translate-y-16 opacity-0'}`}

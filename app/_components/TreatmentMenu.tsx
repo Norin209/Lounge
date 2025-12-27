@@ -125,7 +125,6 @@ const TreatmentMenu = () => {
       </div>
 
       {/* Sticky Tabs Wrapper */}
-      {/* 🔴 FIXED: Changed z-30 to z-1 to prevent mobile menu overlap */}
       <div className="sticky top-0 z-1 bg-zinc-100 border-b border-gray-300 shadow-sm">
         <div className="relative max-w-7xl mx-auto px-6 py-4 group">
           
@@ -179,7 +178,6 @@ const TreatmentMenu = () => {
                   <div key={item.id} className="group shrink-0 w-72 snap-start flex flex-col h-full">
                     <div className="relative aspect-square overflow-hidden mb-4 bg-white shadow-sm shrink-0">
                       
-                      {/* PROMO BADGE */}
                       {hasPromo && (
                         <div className="absolute top-2 right-2 z-10 bg-[#D4AF37] text-white text-[9px] font-bold px-2 py-1 uppercase tracking-widest shadow-sm">
                           {item.discountType === 'percent' ? `${item.discountValue}% OFF` : `SAVE $${item.discountValue}`}
@@ -188,7 +186,8 @@ const TreatmentMenu = () => {
 
                       <Image src={displayImage} alt={item.name} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
                       
-                      <div className="absolute inset-0 bg-black/10 md:bg-black/20 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex items-end pb-4 justify-center px-4">
+                      {/* 🟢 CHANGED: md:bg-black/20 -> xl:bg-black/20 and md:opacity-0 -> xl:opacity-0 */}
+                      <div className="absolute inset-0 bg-black/10 xl:bg-black/20 opacity-100 xl:opacity-0 xl:group-hover:opacity-100 transition-opacity duration-300 flex items-end pb-4 justify-center px-4">
                         {isInBag ? (
                           <Link href="/book" className="w-full bg-black text-white py-2 text-[10px] font-bold tracking-[0.2em] uppercase shadow-lg text-center">
                             View Bag
@@ -215,7 +214,6 @@ const TreatmentMenu = () => {
                       <div className="flex justify-between items-start">
                          <h4 className="text-sm text-gray-900 font-medium tracking-wide">{item.name}</h4>
                          
-                         {/* PRICE DISPLAY */}
                          <div className="text-right whitespace-nowrap ml-2">
                              {hasPromo ? (
                                <>

@@ -7,7 +7,6 @@ import { useBag } from '../_context/BagContext';
 import { db } from '../_utils/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 
-// --- CONFIGURATION ---
 const HERO_IMAGE = "https://images.unsplash.com/photo-1600334129128-685c5582fd35?q=80&w=2000&auto=format&fit=crop";
 const PLACEHOLDER_IMG = "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=800&auto=format&fit=crop";
 
@@ -29,7 +28,6 @@ interface ServiceItem {
 }
 
 const TreatmentsPage = () => {
-  // --- STATE ---
   const [activeTab, setActiveTab] = useState(TABS[0]);
   const [services, setServices] = useState<ServiceItem[]>([]); 
   const [loading, setLoading] = useState(true);
@@ -37,12 +35,10 @@ const TreatmentsPage = () => {
   const [viewMode, setViewMode] = useState<'list' | 'grid' | 'carousel'>('list');
   const [showScrollTop, setShowScrollTop] = useState(false);
 
-  // --- REFS ---
   const tabContainerRef = useRef<HTMLDivElement>(null); 
   const scrollContainerRef = useRef<HTMLDivElement>(null); 
   const { addToBag, bag } = useBag();
 
-  // --- FETCH DATA ---
   useEffect(() => {
     const fetchServices = async () => {
       try {
@@ -61,8 +57,6 @@ const TreatmentsPage = () => {
     fetchServices();
   }, []);
 
-  // --- SCROLL HANDLING ---
-  // Pure static sticky behavior (Matches Menu)
   useEffect(() => {
     const handleScroll = () => {
       setShowScrollTop(window.scrollY > 400);
@@ -71,7 +65,6 @@ const TreatmentsPage = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Reset carousel when changing tabs/view
   useEffect(() => {
     if (viewMode === 'carousel' && scrollContainerRef.current) {
       scrollContainerRef.current.scrollTo({ left: 0, behavior: 'smooth' });
@@ -160,7 +153,6 @@ const TreatmentsPage = () => {
   return (
     <div className="bg-white min-h-screen pb-24 relative">
       
-      {/* --- HERO SECTION --- */}
       <section className="relative h-[45vh] md:h-[50vh] w-full flex items-center justify-center overflow-hidden">
         <Image src={HERO_IMAGE} alt="Header" fill priority className="object-cover brightness-[0.4]" />
         <div className="relative z-0 text-center px-6">
@@ -170,8 +162,6 @@ const TreatmentsPage = () => {
         </div>
       </section>
 
-      {/* --- STICKY NAV --- */}
-      {/* 🟢 MATCHES MENU: z-1, solid bg-white */}
       <nav className="sticky top-0 z-1 bg-white border-b border-gray-100 shadow-sm">
         <div className="relative max-w-7xl mx-auto px-4 py-4 group">
           
@@ -208,10 +198,8 @@ const TreatmentsPage = () => {
         </div>
       </nav>
 
-      {/* --- MAIN CONTENT --- */}
       <main className="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-16 relative">
         
-        {/* --- VIEW TOGGLE ICONS --- */}
         <div className="flex justify-start mb-6">
           <div className="flex border border-gray-200 rounded-lg p-1 gap-1 bg-white shadow-sm">
             <button 
@@ -238,7 +226,6 @@ const TreatmentsPage = () => {
           </div>
         </div>
 
-        {/* --- CAROUSEL ARROWS --- */}
         {viewMode === 'carousel' && (
           <>
             <button onClick={() => scrollCarousel('left')} className="absolute left-2 top-1/2 -translate-y-1/2 z-10 p-2 bg-white/80 backdrop-blur rounded-full shadow-md text-black border border-gray-100 hover:bg-white transition-colors">
@@ -250,7 +237,6 @@ const TreatmentsPage = () => {
           </>
         )}
 
-        {/* --- DYNAMIC CONTAINER --- */}
         <div 
           ref={scrollContainerRef}
           className={`
@@ -274,19 +260,16 @@ const TreatmentsPage = () => {
                   key={item.id} 
                   className={`
                     group bg-white rounded-lg border border-gray-100 shadow-sm overflow-hidden md:hover:shadow-md transition-shadow
-                    ${/* 🟢 FIXED: Updated to standard Tailwind */
-                      isList ? 'flex flex-row p-3 items-stretch min-h-36 h-auto' : 'flex flex-col'}
+                    ${isList ? 'flex flex-row p-3 items-stretch min-h-36 h-auto' : 'flex flex-col'}
                     ${isCarousel ? 'w-72 md:w-80 shrink-0 snap-start' : 'w-full'}
                   `}
                 >
                   <div className={`
                     relative bg-gray-50 shrink-0
-                    ${/* 🟢 FIXED: Updated to standard Tailwind */
-                      isList ? 'w-28 md:w-40 self-start rounded-md aspect-4/5' : ''}
+                    ${isList ? 'w-28 md:w-40 self-start rounded-md aspect-4/5' : ''}
                     ${!isList ? 'w-full aspect-4/5' : ''}
                   `}>
                     
-                    {/* 🔴 FIXED: MATCHING MENU BADGE LOGIC & POSITION */}
                     {hasPromo && (
                       <div className="absolute top-2 right-2 z-10 bg-[#D4AF37] text-white text-[8px] font-bold px-2 py-1 uppercase tracking-widest shadow-sm">
                         {item.discountType === 'percent' ? `${item.discountValue}% OFF` : `SAVE $${item.discountValue}`}
@@ -295,7 +278,8 @@ const TreatmentsPage = () => {
                     
                     <Image src={item.image || PLACEHOLDER_IMG} alt={item.name} fill className="object-cover transition-transform duration-700 md:group-hover:scale-105" />
                     
-                    <div className="hidden md:flex absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-end pb-4 justify-center px-4">
+                    {/* 🟢 CHANGED: md:flex -> xl:flex */}
+                    <div className="hidden xl:flex absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-end pb-4 justify-center px-4">
                       {isInBag ? (
                         <Link href="/book" className="w-full bg-black text-white py-3 text-[10px] font-bold tracking-[0.2em] uppercase text-center">View Bag</Link>
                       ) : (
@@ -337,9 +321,10 @@ const TreatmentsPage = () => {
                     <div className="flex justify-between items-center mt-auto">
                       <span className="text-[8px] uppercase tracking-widest text-gray-400 font-medium">{item.duration || "60 min"}</span>
                       
+                      {/* 🟢 CHANGED: md:hidden -> xl:hidden */}
                       <button 
                         onClick={() => isInBag ? null : handleAddToBag(item)}
-                        className={`md:hidden text-[9px] font-bold uppercase tracking-widest rounded-sm transition-all
+                        className={`xl:hidden text-[9px] font-bold uppercase tracking-widest rounded-sm transition-all
                           ${isInBag ? 'bg-gray-100 text-gray-400 cursor-default border-transparent px-3 py-2' : 
                             (isGrid ? 'w-full mt-2 py-2 border border-gray-200 active:bg-black active:text-white' : 'bg-black text-white px-3 py-2 active:scale-95')
                           }
@@ -361,7 +346,6 @@ const TreatmentsPage = () => {
         </div>
       </main>
 
-      {/* --- BACK TO TOP --- */}
       <button 
         onClick={scrollToTop}
         className={`fixed bottom-6 right-6 z-40 bg-black text-white px-6 py-3 rounded-full shadow-xl flex items-center gap-2 transition-all duration-500 transform hover:bg-gray-800 ${showScrollTop ? 'translate-y-0 opacity-100' : 'translate-y-16 opacity-0'}`}

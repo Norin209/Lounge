@@ -70,7 +70,6 @@ const TreatmentsPreview = () => {
   if (loading) return null; 
 
   return (
-    // 🟢 UPDATED: Changed bg-zinc-100 to bg-white
     <section className="py-20 bg-white text-center">
       <div className="max-w-2xl mx-auto mb-12 px-6">
         <h3 className="text-xs font-bold tracking-[0.2em] uppercase text-gray-400 mb-4">Our Menu</h3>
@@ -87,7 +86,6 @@ const TreatmentsPreview = () => {
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
         </button>
 
-        {/* 🟢 UPDATED: Removed md:justify-center to align items to the start */}
         <div 
           ref={scrollContainerRef}
           className="flex overflow-x-auto hide-scrollbar snap-x snap-mandatory gap-6 pb-4"
@@ -109,8 +107,8 @@ const TreatmentsPreview = () => {
                       className="object-cover transition-transform duration-700 group-hover:scale-110" 
                     />
                     
-                    {/* Desktop Hover Button */}
-                    <div className="hidden md:flex absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-end pb-4 justify-center px-4">
+                    {/* 🟢 CHANGED: 'md:flex' -> 'xl:flex' (Only show hover effect on LARGE desktops) */}
+                    <div className="hidden xl:flex absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-end pb-4 justify-center px-4">
                       {isInBag ? (
                          <Link href="/book" className="w-full bg-white text-black py-2 text-[10px] font-bold tracking-[0.2em] uppercase shadow-lg text-center">
                            View Bag
@@ -129,7 +127,6 @@ const TreatmentsPreview = () => {
                   <div className="space-y-1 flex flex-col grow text-left">
                     <div className="flex justify-between items-start">
                        <h4 className="text-sm text-gray-900 font-medium tracking-wide">{item.name}</h4>
-                       {/* Price */}
                        <span className="text-xs text-gray-900 font-bold ml-2 whitespace-nowrap">{item.price}</span>
                     </div>
                     
@@ -137,8 +134,8 @@ const TreatmentsPreview = () => {
                       {item.description || "A luxurious treatment designed to restore balance and harmony to your body."}
                     </p>
 
-                    {/* Mobile Button */}
-                    <div className="md:hidden mt-auto pt-3">
+                    {/* 🟢 CHANGED: 'md:hidden' -> 'xl:hidden' (Show this button on iPad Pro/Tablets) */}
+                    <div className="xl:hidden mt-auto pt-3">
                        <button 
                          onClick={() => isInBag ? null : handleAddToBag(item)}
                          className={`w-full py-2 text-[10px] font-bold tracking-[0.2em] uppercase transition-colors shadow-sm ${
