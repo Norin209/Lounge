@@ -10,6 +10,7 @@ import { collection, getDocs } from 'firebase/firestore';
 // --- CONFIGURATION ---
 const HERO_IMAGE = "https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=2070&auto=format&fit=crop";
 const PLACEHOLDER_IMG = "https://images.unsplash.com/photo-1612196808214-b7e239e5f6b7?q=80&w=800&auto=format&fit=crop";
+
 const TABS = ["ALL", "BODY CARE", "AROMATHERAPY", "APOTHECARY", "WELLNESS"];
 
 interface ProductItem {
@@ -23,7 +24,7 @@ interface ProductItem {
   discountType?: 'percent' | 'fixed';
   description?: string;
   image?: string;
-  size?: string; // Products usually have size instead of duration
+  size?: string;
 }
 
 const ProductPage = () => {
@@ -32,7 +33,6 @@ const ProductPage = () => {
   const [products, setProducts] = useState<ProductItem[]>([]); 
   const [loading, setLoading] = useState(true);
   
-  // DEFAULT: 'list' (Small OG Style)
   const [viewMode, setViewMode] = useState<'list' | 'grid' | 'carousel'>('list');
   const [showScrollTop, setShowScrollTop] = useState(false);
 
@@ -61,6 +61,7 @@ const ProductPage = () => {
   }, []);
 
   // --- SCROLL HANDLING ---
+  // 🟢 FIXED: Removed all "Smart Scroll" logic. Now only checks Back-to-Top visibility.
   useEffect(() => {
     const handleScroll = () => {
       setShowScrollTop(window.scrollY > 400);
@@ -69,20 +70,19 @@ const ProductPage = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Reset scroll when tab changes
+  // Reset content scroll when tabs change
   useEffect(() => {
-    if (viewMode === 'carousel' && scrollContainerRef.current) {
-      scrollContainerRef.current.scrollLeft = 0;
-    } else if (window.scrollY > 500) {
-      window.scrollTo({ top: 450, behavior: 'smooth' });
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo({ left: 0, behavior: 'smooth' });
     }
   }, [activeTab, viewMode]);
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
+  // Tab Scroller
   const scrollTabs = (direction: 'left' | 'right') => {
     if (tabContainerRef.current) {
-      const amount = 200;
+      const amount = 150;
       const current = tabContainerRef.current.scrollLeft;
       tabContainerRef.current.scrollTo({
         left: direction === 'left' ? current - amount : current + amount,
@@ -91,6 +91,7 @@ const ProductPage = () => {
     }
   };
 
+  // Carousel Scroller
   const scrollCarousel = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {
       const amount = 300;
@@ -131,7 +132,7 @@ const ProductPage = () => {
       name: item.name,
       price: getCalculatedPrice(item),
       category: item.category,
-      duration: item.size || 'N/A', // Map size to duration for the bag context
+      duration: item.size || 'N/A', 
       image: item.image || PLACEHOLDER_IMG 
     });
   };
@@ -153,7 +154,6 @@ const ProductPage = () => {
       {/* --- HERO SECTION --- */}
       <section className="relative h-[45vh] md:h-[50vh] w-full flex items-center justify-center overflow-hidden">
         <Image src={HERO_IMAGE} alt="Header" fill priority className="object-cover brightness-[0.4]" />
-        {/* z-0 to avoid overlap */}
         <div className="relative z-0 text-center px-6">
           <h1 className="text-3xl md:text-5xl font-playfair text-white mb-4 uppercase tracking-[0.3em]">The Boutique</h1>
           <div className="w-12 h-px bg-white/50 mx-auto mb-4" />
@@ -162,14 +162,27 @@ const ProductPage = () => {
       </section>
 
       {/* --- STICKY NAV --- */}
-      {/* z-1 to avoid overlap */}
-      <nav className="sticky top-0 z-1 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm transition-all">
-        <div className="relative max-w-7xl mx-auto px-4 py-4">
-          <button onClick={() => scrollTabs('left')} className="md:hidden absolute left-0 top-0 bottom-0 z-20 bg-linear-to-r from-white via-white/80 to-transparent w-10 flex items-center justify-center text-black">
+      {/* 🟢 FIXED: Removed 'translate' classes. Simply sticky at z-1, identical to your Menu Page. */}
+      <div className="sticky top-0 z-1 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
+        <div className="relative max-w-7xl mx-auto px-4 py-4 group">
+          
+          <button 
+            onClick={() => scrollTabs('left')} 
+            className="md:hidden absolute left-0 top-0 bottom-0 z-20 bg-linear-to-r from-white via-white/80 to-transparent w-10 flex items-center justify-center text-black hover:text-gray-600"
+          >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
           </button>
 
-          <div ref={tabContainerRef} className="flex overflow-x-auto justify-start md:justify-center gap-6 md:gap-10 hide-scrollbar px-6 scroll-smooth">
+          <div 
+            ref={tabContainerRef} 
+            className="flex overflow-x-auto overflow-y-hidden
+            justify-start md:justify-center
+            gap-6 md:gap-10
+            hide-scrollbar px-6 scroll-smooth
+            [touch-action:pan-x]
+            overscroll-x-contain
+            [-webkit-overflow-scrolling:touch]"
+          >
             {TABS.map((tab) => (
               <button 
                 key={tab} 
@@ -183,11 +196,14 @@ const ProductPage = () => {
             ))}
           </div>
 
-          <button onClick={() => scrollTabs('right')} className="md:hidden absolute right-0 top-0 bottom-0 z-20 bg-linear-to-l from-white via-white/80 to-transparent w-10 flex items-center justify-center text-black">
+          <button 
+            onClick={() => scrollTabs('right')} 
+            className="md:hidden absolute right-0 top-0 bottom-0 z-20 bg-linear-to-l from-white via-white/80 to-transparent w-10 flex items-center justify-center text-black hover:text-gray-600"
+          >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </button>
         </div>
-      </nav>
+      </div>
 
       {/* --- MAIN CONTENT --- */}
       <main className="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-16 relative">
@@ -195,32 +211,23 @@ const ProductPage = () => {
         {/* --- VIEW TOGGLE ICONS --- */}
         <div className="flex justify-start mb-6">
           <div className="flex border border-gray-200 rounded-lg p-1 gap-1 bg-white shadow-sm">
-            
-            {/* 1. LIST */}
             <button 
               onClick={() => setViewMode('list')} 
               className={`p-2 rounded transition-colors ${viewMode === 'list' ? 'bg-black text-white' : 'text-gray-300 hover:text-black'}`}
-              aria-label="List View"
               title="List View"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
             </button>
-            
-            {/* 2. GRID */}
             <button 
               onClick={() => setViewMode('grid')} 
               className={`p-2 rounded transition-colors ${viewMode === 'grid' ? 'bg-black text-white' : 'text-gray-300 hover:text-black'}`}
-              aria-label="Grid View"
               title="Grid View"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
             </button>
-            
-            {/* 3. CAROUSEL */}
             <button 
               onClick={() => setViewMode('carousel')} 
               className={`p-2 rounded transition-colors ${viewMode === 'carousel' ? 'bg-black text-white' : 'text-gray-300 hover:text-black'}`}
-              aria-label="Carousel View"
               title="Carousel View"
             >
              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="7" width="20" height="10" rx="2" ry="2"></rect></svg>
@@ -250,7 +257,6 @@ const ProductPage = () => {
             ${viewMode === 'carousel' ? 'flex flex-nowrap overflow-x-auto gap-4 snap-x snap-mandatory pb-8 hide-scrollbar md:pb-8' : ''}
           `}
         >
-          
           {filteredItems.length > 0 ? (
             filteredItems.map((item) => {
               const isInBag = bag.some(b => b.id === item.id);
@@ -260,7 +266,6 @@ const ProductPage = () => {
               const isGrid = viewMode === 'grid';
               const isCarousel = viewMode === 'carousel';
 
-              // Image Fallback
               const displayImage = item.image && item.image.trim() !== '' ? item.image : PLACEHOLDER_IMG;
 
               return (
@@ -268,15 +273,15 @@ const ProductPage = () => {
                   key={item.id} 
                   className={`
                     group bg-white rounded-lg border border-gray-100 shadow-sm overflow-hidden md:hover:shadow-md transition-shadow
-                    ${isList ? 'flex flex-row p-3 items-stretch h-32 md:h-40' : 'flex flex-col'}
+                    ${/* 🟢 FIXED: min-h-36 per your screenshot */
+                      isList ? 'flex flex-row p-3 items-stretch min-h-36 h-auto' : 'flex flex-col'}
                     ${isCarousel ? 'w-72 md:w-80 shrink-0 snap-start' : 'w-full'}
                   `}
                 >
-                  
-                  {/* --- IMAGE AREA --- */}
                   <div className={`
                     relative bg-gray-50 shrink-0
-                    ${isList ? 'w-28 md:w-40 h-full rounded-md' : ''}
+                    ${/* 🟢 FIXED: aspect-4/5 per your screenshot */
+                      isList ? 'w-28 md:w-40 self-start rounded-md aspect-4/5' : ''}
                     ${!isList ? 'w-full aspect-4/5' : ''}
                   `}>
                     {hasPromo && (
@@ -287,7 +292,6 @@ const ProductPage = () => {
                     
                     <Image src={displayImage} alt={item.name} fill className="object-cover transition-transform duration-700 md:group-hover:scale-105" />
                     
-                    {/* Desktop Hover Overlay */}
                     <div className="hidden md:flex absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-end pb-4 justify-center px-4">
                       {isInBag ? (
                         <Link href="/book" className="w-full bg-black text-white py-3 text-[10px] font-bold tracking-[0.2em] uppercase text-center">View Bag</Link>
@@ -297,13 +301,11 @@ const ProductPage = () => {
                     </div>
                   </div>
                   
-                  {/* --- TEXT CONTENT --- */}
                   <div className={`
                     flex flex-col grow justify-between
                     ${isList ? 'pl-4 py-1' : 'p-3 md:p-4'}
                   `}>
                     <div>
-                      {/* Title & Price */}
                       <div className="flex justify-between items-start mb-1">
                         <h3 className={`font-bold text-black uppercase tracking-wider leading-tight pr-1 line-clamp-2 ${isList ? 'text-[11px] md:text-[13px]' : 'text-[11px] md:text-[13px]'}`}>
                           {item.name}
@@ -321,7 +323,6 @@ const ProductPage = () => {
                         </div>
                       </div>
 
-                      {/* Description */}
                       <p className={`
                         text-gray-500 leading-relaxed font-light line-clamp-2 mb-2
                         ${isList ? 'text-[10px] md:text-[11px] block' : 'hidden md:block text-[11px]'}
@@ -330,11 +331,9 @@ const ProductPage = () => {
                       </p>
                     </div>
 
-                    {/* Footer Row */}
                     <div className="flex justify-between items-center mt-auto">
                       <span className="text-[8px] uppercase tracking-widest text-gray-400 font-medium">{item.size || "100ml"}</span>
                       
-                      {/* Mobile Button */}
                       <button 
                         onClick={() => isInBag ? null : handleAddToBag(item)}
                         className={`md:hidden text-[9px] font-bold uppercase tracking-widest rounded-sm transition-all
@@ -359,7 +358,7 @@ const ProductPage = () => {
         </div>
       </main>
 
-      {/* --- PHYSICAL BACK TO TOP BUTTON --- */}
+      {/* --- BACK TO TOP --- */}
       <button 
         onClick={scrollToTop}
         className={`fixed bottom-6 right-6 z-40 bg-black text-white px-6 py-3 rounded-full shadow-xl flex items-center gap-2 transition-all duration-500 transform hover:bg-gray-800 ${showScrollTop ? 'translate-y-0 opacity-100' : 'translate-y-16 opacity-0'}`}
