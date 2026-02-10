@@ -1,8 +1,8 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { getAuth } from "firebase/auth"; // 🆕 1. Import Auth
+import { getAuth } from "firebase/auth";
+import { getStorage } from "firebase/storage"; // 🆕 Enabled for all hub uploads
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyAgzsd35x5IRakHBCdNM57pXWJwYnx0NR8",
   authDomain: "glistenlounge-f217f.firebaseapp.com",
@@ -13,14 +13,9 @@ const firebaseConfig = {
   measurementId: "G-6QR1M74ERB"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
-// Initialize Firestore (Database)
 const db = getFirestore(app);
+const auth = getAuth(app);
+const storage = getStorage(app); // 🆕 Initialize Storage
 
-// Initialize Authentication (Security)
-const auth = getAuth(app); // 🆕 2. Turn on Auth
-
-// Export the database AND auth so other files can use them
-export { db, auth }; // 🆕 3. Export Auth
+export { db, auth, storage };

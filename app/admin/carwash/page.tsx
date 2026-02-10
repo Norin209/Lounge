@@ -3,24 +3,28 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image'; 
 import { db, storage } from '../../_utils/firebase'; 
-import { collection, getDocs, updateDoc, deleteDoc, doc, addDoc, serverTimestamp, getDoc, setDoc } from 'firebase/firestore'; // 🆕 Added getDoc/setDoc
+import { collection, getDocs, updateDoc, deleteDoc, doc, addDoc, serverTimestamp, getDoc, setDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'; 
-import { uploadServices } from '../../_utils/uploadServices'; 
 
-const treatmentPlaceholder = "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=800";
+const washPlaceholder = "https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?q=80&w=800";
 
-// 🟢 DEFAULT CATEGORIES (Matches your original hardcoded list)
-const DEFAULT_CATS = [
-  { id: 'facial', label: 'Facial' },
-  { id: 'body', label: 'Body' },
-  { id: 'nails', label: 'Nails' },
-  { id: 'hair', label: 'Hair' },
-  { id: 'wax', label: 'Wax' },
-  { id: 'package', label: 'Packages' },
-  { id: 'carwash', label: 'Car Wash' },
+// 🟢 INTERNAL SEED DATA
+const mockWashData = [
+  { name: "Premium Foam Wash", price: "$10.00", category: "wash", duration: "30 min", description: "Full exterior foam wash." },
+  { name: "Interior Deep Clean", price: "$25.00", category: "detailing", duration: "60 min", description: "Vacuum, wipe down, and scent." },
+  { name: "Motul Oil Change", price: "$19.00", category: "oilchange", duration: "20 min", description: "1L Synthetic Oil." },
+  { name: "VIP Full Package", price: "$35.00", category: "detailing", duration: "90 min", description: "Wash + Wax + Interior." }
 ];
 
-export default function ServicesPage() {
+// 🟢 DEFAULT CATEGORIES
+const DEFAULT_CATS = [
+  { id: 'wash', label: 'Wash' },
+  { id: 'detailing', label: 'Detailing' },
+  { id: 'oilchange', label: 'Oil Change' },
+  { id: 'packages', label: 'Packages' },
+];
+
+export default function AdminCarWash() {
   const [services, setServices] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -33,7 +37,7 @@ export default function ServicesPage() {
   const [newCatName, setNewCatName] = useState('');
 
   const [newItem, setNewItem] = useState({ 
-    name: '', price: '', category: 'facial', duration: '60 min', 
+    name: '', price: '', category: 'wash', duration: '30 min', 
     isMonthlyPromo: false, isSignature: false, 
     discountValue: '', discountType: 'percent', image: '',
     description: '' 
@@ -43,14 +47,14 @@ export default function ServicesPage() {
   const [activeFilter, setActiveFilter] = useState('all');
 
   useEffect(() => { 
-    fetchCategories(); // 🆕 Fetch categories on load
+    fetchCategories(); 
     fetchServices(); 
   }, []);
 
   // 🟢 1. FETCH CATEGORIES
   const fetchCategories = async () => {
     try {
-      const docRef = doc(db, "settings", "service_categories");
+      const docRef = doc(db, "settings", "carwash_categories");
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         setCategories([{ id: 'all', label: 'View All' }, ...docSnap.data().list]);
@@ -65,7 +69,7 @@ export default function ServicesPage() {
   const saveCategories = async () => {
     if (tempCats.length === 0) return alert("Need at least 1 category");
     try {
-        await setDoc(doc(db, "settings", "service_categories"), { list: tempCats });
+        await setDoc(doc(db, "settings", "carwash_categories"), { list: tempCats });
         setCategories([{ id: 'all', label: 'View All' }, ...tempCats]);
         setShowCatModal(false);
     } catch (error) {
@@ -76,11 +80,11 @@ export default function ServicesPage() {
   const fetchServices = async () => {
     if (!isRefreshing && loading) setLoading(true);
     try {
-      const q = await getDocs(collection(db, "services"));
+      const q = await getDocs(collection(db, "carwash"));
       const list = q.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setServices(list);
     } catch (error) {
-      console.error("Error fetching services:", error);
+      console.error("Error fetching car wash services:", error);
     } finally {
       setLoading(false);
       setIsRefreshing(false);
@@ -92,24 +96,16 @@ export default function ServicesPage() {
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    if (file.size > 2 * 1024 * 1024) {
-      alert("Image is too large. Please use a file under 2MB to keep the site fast.");
-      return;
-    }
+    if (file.size > 2 * 1024 * 1024) { alert("Image is too large. Please use a file under 2MB."); return; }
 
     setIsUploading(true);
     try {
-      const storageRef = ref(storage, `services/${Date.now()}_${file.name}`);
+      const storageRef = ref(storage, `carwash/${Date.now()}_${file.name}`);
       await uploadBytes(storageRef, file);
       const url = await getDownloadURL(storageRef);
       setNewItem({ ...newItem, image: url });
-    } catch (error) {
-      console.error("Upload Error:", error);
-      alert("Failed to upload image.");
-    } finally {
-      setIsUploading(false);
-    }
+    } catch (error) { alert("Failed to upload image."); } 
+    finally { setIsUploading(false); }
   };
 
   const calculateFinalPrice = (priceStr: string, val: string, type: string) => {
@@ -122,50 +118,35 @@ export default function ServicesPage() {
   };
 
   const toggleStatus = async (id: string, field: string, currentValue: boolean) => {
-    await updateDoc(doc(db, "services", id), { [field]: !currentValue });
+    await updateDoc(doc(db, "carwash", id), { [field]: !currentValue });
     fetchServices(); 
   };
 
-  const startEditing = (service: any) => {
-    setEditingId(service.id);
-    setNewItem({ ...service });
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const cancelEditing = () => {
-    setEditingId(null);
-    setNewItem({ name: '', price: '', category: 'facial', duration: '60 min', isMonthlyPromo: false, isSignature: false, discountValue: '', discountType: 'percent', image: '', description: '' });
-  };
+  const startEditing = (service: any) => { setEditingId(service.id); setNewItem({ ...service }); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+  const cancelEditing = () => { setEditingId(null); setNewItem({ name: '', price: '', category: 'wash', duration: '30 min', isMonthlyPromo: false, isSignature: false, discountValue: '', discountType: 'percent', image: '', description: '' }); };
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (editingId) {
-      await updateDoc(doc(db, "services", editingId), newItem);
-    } else {
-      await addDoc(collection(db, "services"), { ...newItem, createdAt: serverTimestamp() });
-    }
-    cancelEditing();
-    fetchServices();
+    if (editingId) await updateDoc(doc(db, "carwash", editingId), newItem);
+    else await addDoc(collection(db, "carwash"), { ...newItem, createdAt: serverTimestamp() });
+    cancelEditing(); fetchServices();
   };
 
   const handleUploadData = async () => {
-    if (!confirm("This will upload the MASTER MENU to Firebase. Continue?")) return;
+    if (!confirm("Add MOCK WASH SERVICES to Database?")) return;
     setLoading(true);
-    const result = await uploadServices();
-    if (result.success) {
-      alert(`✅ Successfully added ${result.count} services!`);
-      fetchServices();
-    } else {
-      alert("❌ Error uploading data.");
-    }
+    try {
+      for (const s of mockWashData) { await addDoc(collection(db, "carwash"), { ...s, createdAt: serverTimestamp() }); }
+      alert(`✅ Added ${mockWashData.length} services!`); fetchServices();
+    } catch (e) { alert("Error uploading."); }
     setLoading(false);
   };
 
-  const filteredServices = activeFilter === 'all' ? services : services.filter(s => s.category?.toLowerCase() === activeFilter);
+  const filteredServices = activeFilter === 'all' ? services : services.filter(s => s.category?.toLowerCase() === activeFilter.toLowerCase());
   const inputStyle = "w-full bg-white border border-gray-300 text-black text-sm rounded-lg p-2.5 outline-none appearance-none rounded-none";
   const selectStyle = `${inputStyle} bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%207l5%205%205-5%22%20stroke%3D%22%236b7280%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[center_right_0.5rem]`;
 
-  if (loading) return <div className="p-8 text-center text-xs uppercase tracking-widest text-gray-400">Loading Menu...</div>;
+  if (loading) return <div className="p-8 text-center text-xs uppercase tracking-widest text-gray-400">Loading Car Wash...</div>;
 
   return (
     <div className="space-y-8 pb-20 font-sans text-left relative">
@@ -195,7 +176,6 @@ export default function ServicesPage() {
                   <input placeholder="New Category..." value={newCatName} onChange={e => setNewCatName(e.target.value)} className="flex-1 border p-2 text-sm rounded" />
                   <button onClick={() => { 
                       if(newCatName) { 
-                          // Generate ID only for NEW items
                           setTempCats([...tempCats, { id: newCatName.toLowerCase().replace(/[^a-z0-9]/g, ''), label: newCatName }]); 
                           setNewCatName(''); 
                       } 
@@ -210,8 +190,8 @@ export default function ServicesPage() {
       {/* HEADER */}
       <div className="bg-black text-white p-6 md:p-8 rounded-xl flex flex-col md:flex-row justify-between items-center shadow-lg gap-4 text-center md:text-left">
         <div>
-          <h1 className="text-xl md:text-2xl font-bold uppercase tracking-wider">Services Manager</h1>
-          <p className="text-[10px] text-gray-400 uppercase tracking-[0.2em]">Treatment & Menu Control</p>
+          <h1 className="text-xl md:text-2xl font-bold uppercase tracking-wider">Car Wash Manager</h1>
+          <p className="text-[10px] text-gray-400 uppercase tracking-[0.2em]">Services & Detailing</p>
         </div>
         
         <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto">
@@ -219,7 +199,7 @@ export default function ServicesPage() {
              {isRefreshing ? 'Loading...' : 'Refresh ↻'}
            </button>
            <button onClick={handleUploadData} className="w-full md:w-auto bg-white/10 text-white text-[10px] font-bold px-4 py-3 rounded-lg border border-white/20 hover:bg-white/20 transition-all">
-             UPLOAD MASTER MENU
+             SEED WASH DATA
            </button>
         </div>
       </div>
@@ -229,13 +209,12 @@ export default function ServicesPage() {
         <div className="flex justify-between items-center mb-6 pb-2 border-b border-gray-100">
           <h3 className="font-bold text-lg text-black">{editingId ? '✏️ Edit Service' : 'Add New Service'}</h3>
           <div className="flex gap-2 items-center">
-             {/* 🟢 EDIT CATEGORIES BUTTON (Placed here per request) */}
+             {/* 🟢 EDIT CATEGORIES BUTTON */}
              <button onClick={() => { setTempCats(categories.filter(c => c.id !== 'all')); setShowCatModal(true); }} className="text-[10px] font-bold uppercase bg-black text-white px-3 py-2 rounded hover:bg-gray-800">Edit Categories</button>
              {editingId && <button onClick={cancelEditing} className="text-xs text-red-500 font-bold underline">Cancel Edit</button>}
           </div>
         </div>
         <form onSubmit={handleFormSubmit} className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
-           {/* IMAGE INPUTS */}
            <div className="md:col-span-12">
              <label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">
                {isUploading ? "Uploading Image..." : "Service Image (Upload or URL)"}
@@ -246,7 +225,7 @@ export default function ServicesPage() {
              </div>
            </div>
 
-           <div className="md:col-span-3"><label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">Service Name</label><input value={newItem.name} onChange={e=>setNewItem({...newItem, name: e.target.value})} className={inputStyle} placeholder="e.g. Gold Facial" /></div>
+           <div className="md:col-span-3"><label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">Service Name</label><input value={newItem.name} onChange={e=>setNewItem({...newItem, name: e.target.value})} className={inputStyle} placeholder="e.g. VIP Wash" /></div>
            <div className="md:col-span-2"><label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">Price</label><input value={newItem.price} onChange={e=>setNewItem({...newItem, price: e.target.value})} className={inputStyle} placeholder="$0.00" /></div>
            <div className="md:col-span-3"><label className="text-[10px] font-bold text-red-500 uppercase block mb-1">Discount</label><div className="flex gap-2"><input type="number" value={newItem.discountValue} onChange={e=>setNewItem({...newItem, discountValue: e.target.value})} className={`${inputStyle} w-2/3`} placeholder="0" /><select value={newItem.discountType} onChange={e=>setNewItem({...newItem, discountType: e.target.value})} className={`${selectStyle} w-1/3 px-1 text-center`}><option value="percent">% Off</option><option value="fixed">$ Off</option></select></div></div>
            <div className="md:col-span-2 text-center pb-2"><p className="text-[10px] text-gray-400 uppercase font-bold">Final Price</p><p className="text-xl font-bold text-green-600">{calculateFinalPrice(newItem.price, newItem.discountValue, newItem.discountType)}</p></div>
@@ -254,8 +233,8 @@ export default function ServicesPage() {
            {/* 🟢 DYNAMIC CATEGORY SELECT */}
            <div className="md:col-span-3"><label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">Category</label><select value={newItem.category} onChange={e=>setNewItem({...newItem, category: e.target.value})} className={selectStyle}>{categories.filter(c => c.id !== 'all').map(c => <option key={c.id} value={c.id}>{c.label}</option>)}</select></div>
            
-           <div className="md:col-span-2"><label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">Duration</label><input value={newItem.duration} onChange={e=>setNewItem({...newItem, duration: e.target.value})} className={inputStyle} placeholder="60 min" /></div>
-           <div className="md:col-span-7"><label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">Treatment Description</label><input value={newItem.description} onChange={e=>setNewItem({...newItem, description: e.target.value})} className={inputStyle} placeholder="Describe benefits..." /></div>
+           <div className="md:col-span-2"><label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">Duration</label><input value={newItem.duration} onChange={e=>setNewItem({...newItem, duration: e.target.value})} className={inputStyle} placeholder="30 min" /></div>
+           <div className="md:col-span-7"><label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">Service Description</label><input value={newItem.description} onChange={e=>setNewItem({...newItem, description: e.target.value})} className={inputStyle} placeholder="Describe details..." /></div>
            <button disabled={isUploading} className={`md:col-span-12 w-full text-white font-bold py-4 uppercase text-xs tracking-widest ${isUploading ? 'bg-gray-400' : (editingId ? 'bg-amber-600' : 'bg-black')}`}>
              {isUploading ? 'Wait for upload...' : (editingId ? 'Update Service' : 'Add Service +')}
            </button>
@@ -281,7 +260,7 @@ export default function ServicesPage() {
                   <td className="px-6 py-4">
                     <div className="w-12 h-12 relative rounded border border-gray-100 overflow-hidden">
                       <Image 
-                        src={s.image || treatmentPlaceholder} 
+                        src={s.image || washPlaceholder} 
                         alt="" 
                         fill 
                         sizes="48px" 
@@ -298,7 +277,7 @@ export default function ServicesPage() {
                   </td>
                   <td className="px-6 py-4 text-right space-x-4">
                     <button onClick={() => startEditing(s)} className="text-blue-500 font-bold uppercase text-[10px]">Edit</button>
-                    <button onClick={async () => { if(confirm('Delete?')) { await deleteDoc(doc(db, "services", s.id)); fetchServices(); } }} className="text-gray-300 hover:text-red-500 font-bold uppercase text-[10px]">Del</button>
+                    <button onClick={async () => { if(confirm('Delete?')) { await deleteDoc(doc(db, "carwash", s.id)); fetchServices(); } }} className="text-gray-300 hover:text-red-500 font-bold uppercase text-[10px]">Del</button>
                   </td>
                 </tr>
               ))}

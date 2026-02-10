@@ -3,25 +3,30 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image'; 
 import { db, storage } from '../../_utils/firebase'; 
-import { collection, getDocs, updateDoc, deleteDoc, doc, addDoc, serverTimestamp, getDoc, setDoc } from 'firebase/firestore'; // 🆕 Added getDoc/setDoc
+import { collection, getDocs, updateDoc, deleteDoc, doc, addDoc, serverTimestamp, getDoc, setDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'; 
-import { uploadServices } from '../../_utils/uploadServices'; 
 
-const treatmentPlaceholder = "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=800";
+const cafePlaceholder = "https://images.unsplash.com/photo-1509042239860-f550ce710b93?q=80&w=800";
 
-// 🟢 DEFAULT CATEGORIES (Matches your original hardcoded list)
-const DEFAULT_CATS = [
-  { id: 'facial', label: 'Facial' },
-  { id: 'body', label: 'Body' },
-  { id: 'nails', label: 'Nails' },
-  { id: 'hair', label: 'Hair' },
-  { id: 'wax', label: 'Wax' },
-  { id: 'package', label: 'Packages' },
-  { id: 'carwash', label: 'Car Wash' },
+// 🟢 INTERNAL SEED DATA
+const mockCafeData = [
+  { name: "Iced Americano", price: "$3.50", category: "coffee", description: "Double shot espresso over ice." },
+  { name: "Matcha Latte", price: "$4.50", category: "matcha", description: "Premium Japanese matcha with milk." },
+  { name: "Croissant", price: "$2.50", category: "pastry", description: "Buttery, flaky french pastry." },
+  { name: "Passion Fruit Tea", price: "$3.75", category: "tea", description: "Refreshing fruit tea." }
 ];
 
-export default function ServicesPage() {
-  const [services, setServices] = useState<any[]>([]);
+// 🟢 DEFAULT CAFE CATEGORIES
+const DEFAULT_CATS = [
+  { id: 'coffee', label: 'Coffee' },
+  { id: 'tea', label: 'Tea' },
+  { id: 'matcha', label: 'Matcha' },
+  { id: 'pastry', label: 'Pastry' },
+  { id: 'food', label: 'Food' },
+];
+
+export default function AdminCafe() {
+  const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isUploading, setIsUploading] = useState(false); 
@@ -33,24 +38,23 @@ export default function ServicesPage() {
   const [newCatName, setNewCatName] = useState('');
 
   const [newItem, setNewItem] = useState({ 
-    name: '', price: '', category: 'facial', duration: '60 min', 
+    name: '', price: '', category: 'coffee', description: '', 
     isMonthlyPromo: false, isSignature: false, 
-    discountValue: '', discountType: 'percent', image: '',
-    description: '' 
+    discountValue: '', discountType: 'percent', image: ''
   });
 
   const [editingId, setEditingId] = useState<string | null>(null);
   const [activeFilter, setActiveFilter] = useState('all');
 
   useEffect(() => { 
-    fetchCategories(); // 🆕 Fetch categories on load
-    fetchServices(); 
+    fetchCategories(); 
+    fetchItems(); 
   }, []);
 
   // 🟢 1. FETCH CATEGORIES
   const fetchCategories = async () => {
     try {
-      const docRef = doc(db, "settings", "service_categories");
+      const docRef = doc(db, "settings", "cafe_categories");
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         setCategories([{ id: 'all', label: 'View All' }, ...docSnap.data().list]);
@@ -65,7 +69,7 @@ export default function ServicesPage() {
   const saveCategories = async () => {
     if (tempCats.length === 0) return alert("Need at least 1 category");
     try {
-        await setDoc(doc(db, "settings", "service_categories"), { list: tempCats });
+        await setDoc(doc(db, "settings", "cafe_categories"), { list: tempCats });
         setCategories([{ id: 'all', label: 'View All' }, ...tempCats]);
         setShowCatModal(false);
     } catch (error) {
@@ -73,43 +77,35 @@ export default function ServicesPage() {
     }
   };
 
-  const fetchServices = async () => {
+  const fetchItems = async () => {
     if (!isRefreshing && loading) setLoading(true);
     try {
-      const q = await getDocs(collection(db, "services"));
+      const q = await getDocs(collection(db, "cafe"));
       const list = q.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setServices(list);
+      setItems(list);
     } catch (error) {
-      console.error("Error fetching services:", error);
+      console.error("Error fetching cafe items:", error);
     } finally {
       setLoading(false);
       setIsRefreshing(false);
     }
   };
 
-  const handleRefresh = () => { setIsRefreshing(true); fetchServices(); };
+  const handleRefresh = () => { setIsRefreshing(true); fetchItems(); };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    if (file.size > 2 * 1024 * 1024) {
-      alert("Image is too large. Please use a file under 2MB to keep the site fast.");
-      return;
-    }
+    if (file.size > 2 * 1024 * 1024) { alert("Image is too large. Please use a file under 2MB."); return; }
 
     setIsUploading(true);
     try {
-      const storageRef = ref(storage, `services/${Date.now()}_${file.name}`);
+      const storageRef = ref(storage, `cafe/${Date.now()}_${file.name}`);
       await uploadBytes(storageRef, file);
       const url = await getDownloadURL(storageRef);
       setNewItem({ ...newItem, image: url });
-    } catch (error) {
-      console.error("Upload Error:", error);
-      alert("Failed to upload image.");
-    } finally {
-      setIsUploading(false);
-    }
+    } catch (error) { alert("Failed to upload image."); } 
+    finally { setIsUploading(false); }
   };
 
   const calculateFinalPrice = (priceStr: string, val: string, type: string) => {
@@ -122,50 +118,35 @@ export default function ServicesPage() {
   };
 
   const toggleStatus = async (id: string, field: string, currentValue: boolean) => {
-    await updateDoc(doc(db, "services", id), { [field]: !currentValue });
-    fetchServices(); 
+    await updateDoc(doc(db, "cafe", id), { [field]: !currentValue });
+    fetchItems(); 
   };
 
-  const startEditing = (service: any) => {
-    setEditingId(service.id);
-    setNewItem({ ...service });
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const cancelEditing = () => {
-    setEditingId(null);
-    setNewItem({ name: '', price: '', category: 'facial', duration: '60 min', isMonthlyPromo: false, isSignature: false, discountValue: '', discountType: 'percent', image: '', description: '' });
-  };
+  const startEditing = (item: any) => { setEditingId(item.id); setNewItem({ ...item }); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+  const cancelEditing = () => { setEditingId(null); setNewItem({ name: '', price: '', category: 'coffee', description: '', isMonthlyPromo: false, isSignature: false, discountValue: '', discountType: 'percent', image: '' }); };
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (editingId) {
-      await updateDoc(doc(db, "services", editingId), newItem);
-    } else {
-      await addDoc(collection(db, "services"), { ...newItem, createdAt: serverTimestamp() });
-    }
-    cancelEditing();
-    fetchServices();
+    if (editingId) await updateDoc(doc(db, "cafe", editingId), newItem);
+    else await addDoc(collection(db, "cafe"), { ...newItem, createdAt: serverTimestamp() });
+    cancelEditing(); fetchItems();
   };
 
   const handleUploadData = async () => {
-    if (!confirm("This will upload the MASTER MENU to Firebase. Continue?")) return;
+    if (!confirm("Add MOCK CAFE MENU to Database?")) return;
     setLoading(true);
-    const result = await uploadServices();
-    if (result.success) {
-      alert(`✅ Successfully added ${result.count} services!`);
-      fetchServices();
-    } else {
-      alert("❌ Error uploading data.");
-    }
+    try {
+      for (const item of mockCafeData) { await addDoc(collection(db, "cafe"), { ...item, createdAt: serverTimestamp() }); }
+      alert(`✅ Added ${mockCafeData.length} items!`); fetchItems();
+    } catch (e) { alert("Error uploading."); }
     setLoading(false);
   };
 
-  const filteredServices = activeFilter === 'all' ? services : services.filter(s => s.category?.toLowerCase() === activeFilter);
+  const filteredItems = activeFilter === 'all' ? items : items.filter(i => i.category?.toLowerCase() === activeFilter.toLowerCase());
   const inputStyle = "w-full bg-white border border-gray-300 text-black text-sm rounded-lg p-2.5 outline-none appearance-none rounded-none";
   const selectStyle = `${inputStyle} bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%207l5%205%205-5%22%20stroke%3D%22%236b7280%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[center_right_0.5rem]`;
 
-  if (loading) return <div className="p-8 text-center text-xs uppercase tracking-widest text-gray-400">Loading Menu...</div>;
+  if (loading) return <div className="p-8 text-center text-xs uppercase tracking-widest text-gray-400">Loading Cafe Menu...</div>;
 
   return (
     <div className="space-y-8 pb-20 font-sans text-left relative">
@@ -195,7 +176,6 @@ export default function ServicesPage() {
                   <input placeholder="New Category..." value={newCatName} onChange={e => setNewCatName(e.target.value)} className="flex-1 border p-2 text-sm rounded" />
                   <button onClick={() => { 
                       if(newCatName) { 
-                          // Generate ID only for NEW items
                           setTempCats([...tempCats, { id: newCatName.toLowerCase().replace(/[^a-z0-9]/g, ''), label: newCatName }]); 
                           setNewCatName(''); 
                       } 
@@ -210,8 +190,8 @@ export default function ServicesPage() {
       {/* HEADER */}
       <div className="bg-black text-white p-6 md:p-8 rounded-xl flex flex-col md:flex-row justify-between items-center shadow-lg gap-4 text-center md:text-left">
         <div>
-          <h1 className="text-xl md:text-2xl font-bold uppercase tracking-wider">Services Manager</h1>
-          <p className="text-[10px] text-gray-400 uppercase tracking-[0.2em]">Treatment & Menu Control</p>
+          <h1 className="text-xl md:text-2xl font-bold uppercase tracking-wider">Cafe Manager</h1>
+          <p className="text-[10px] text-gray-400 uppercase tracking-[0.2em]">Drinks & Pastries</p>
         </div>
         
         <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto">
@@ -219,7 +199,7 @@ export default function ServicesPage() {
              {isRefreshing ? 'Loading...' : 'Refresh ↻'}
            </button>
            <button onClick={handleUploadData} className="w-full md:w-auto bg-white/10 text-white text-[10px] font-bold px-4 py-3 rounded-lg border border-white/20 hover:bg-white/20 transition-all">
-             UPLOAD MASTER MENU
+             SEED CAFE MENU
            </button>
         </div>
       </div>
@@ -227,18 +207,17 @@ export default function ServicesPage() {
       {/* FORM */}
       <div className={`p-6 rounded-xl border ${editingId ? 'bg-amber-50 border-amber-200' : 'bg-white border-gray-200 shadow-sm'}`}>
         <div className="flex justify-between items-center mb-6 pb-2 border-b border-gray-100">
-          <h3 className="font-bold text-lg text-black">{editingId ? '✏️ Edit Service' : 'Add New Service'}</h3>
+          <h3 className="font-bold text-lg text-black">{editingId ? '✏️ Edit Item' : 'Add New Item'}</h3>
           <div className="flex gap-2 items-center">
-             {/* 🟢 EDIT CATEGORIES BUTTON (Placed here per request) */}
+             {/* 🟢 EDIT CATEGORIES BUTTON */}
              <button onClick={() => { setTempCats(categories.filter(c => c.id !== 'all')); setShowCatModal(true); }} className="text-[10px] font-bold uppercase bg-black text-white px-3 py-2 rounded hover:bg-gray-800">Edit Categories</button>
              {editingId && <button onClick={cancelEditing} className="text-xs text-red-500 font-bold underline">Cancel Edit</button>}
           </div>
         </div>
         <form onSubmit={handleFormSubmit} className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
-           {/* IMAGE INPUTS */}
            <div className="md:col-span-12">
              <label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">
-               {isUploading ? "Uploading Image..." : "Service Image (Upload or URL)"}
+               {isUploading ? "Uploading Image..." : "Menu Image (Upload or URL)"}
              </label>
              <div className="flex gap-2">
                <input type="file" accept="image/*" onChange={handleFileUpload} className={`${inputStyle} w-1/2 cursor-pointer border-dashed`} />
@@ -246,7 +225,7 @@ export default function ServicesPage() {
              </div>
            </div>
 
-           <div className="md:col-span-3"><label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">Service Name</label><input value={newItem.name} onChange={e=>setNewItem({...newItem, name: e.target.value})} className={inputStyle} placeholder="e.g. Gold Facial" /></div>
+           <div className="md:col-span-3"><label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">Item Name</label><input value={newItem.name} onChange={e=>setNewItem({...newItem, name: e.target.value})} className={inputStyle} placeholder="e.g. Latte" /></div>
            <div className="md:col-span-2"><label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">Price</label><input value={newItem.price} onChange={e=>setNewItem({...newItem, price: e.target.value})} className={inputStyle} placeholder="$0.00" /></div>
            <div className="md:col-span-3"><label className="text-[10px] font-bold text-red-500 uppercase block mb-1">Discount</label><div className="flex gap-2"><input type="number" value={newItem.discountValue} onChange={e=>setNewItem({...newItem, discountValue: e.target.value})} className={`${inputStyle} w-2/3`} placeholder="0" /><select value={newItem.discountType} onChange={e=>setNewItem({...newItem, discountType: e.target.value})} className={`${selectStyle} w-1/3 px-1 text-center`}><option value="percent">% Off</option><option value="fixed">$ Off</option></select></div></div>
            <div className="md:col-span-2 text-center pb-2"><p className="text-[10px] text-gray-400 uppercase font-bold">Final Price</p><p className="text-xl font-bold text-green-600">{calculateFinalPrice(newItem.price, newItem.discountValue, newItem.discountType)}</p></div>
@@ -254,10 +233,9 @@ export default function ServicesPage() {
            {/* 🟢 DYNAMIC CATEGORY SELECT */}
            <div className="md:col-span-3"><label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">Category</label><select value={newItem.category} onChange={e=>setNewItem({...newItem, category: e.target.value})} className={selectStyle}>{categories.filter(c => c.id !== 'all').map(c => <option key={c.id} value={c.id}>{c.label}</option>)}</select></div>
            
-           <div className="md:col-span-2"><label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">Duration</label><input value={newItem.duration} onChange={e=>setNewItem({...newItem, duration: e.target.value})} className={inputStyle} placeholder="60 min" /></div>
-           <div className="md:col-span-7"><label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">Treatment Description</label><input value={newItem.description} onChange={e=>setNewItem({...newItem, description: e.target.value})} className={inputStyle} placeholder="Describe benefits..." /></div>
+           <div className="md:col-span-9"><label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">Description</label><input value={newItem.description} onChange={e=>setNewItem({...newItem, description: e.target.value})} className={inputStyle} placeholder="Describe the item..." /></div>
            <button disabled={isUploading} className={`md:col-span-12 w-full text-white font-bold py-4 uppercase text-xs tracking-widest ${isUploading ? 'bg-gray-400' : (editingId ? 'bg-amber-600' : 'bg-black')}`}>
-             {isUploading ? 'Wait for upload...' : (editingId ? 'Update Service' : 'Add Service +')}
+             {isUploading ? 'Wait for upload...' : (editingId ? 'Update Item' : 'Add Item +')}
            </button>
         </form>
       </div>
@@ -273,24 +251,17 @@ export default function ServicesPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm whitespace-nowrap">
             <thead className="bg-gray-50 text-[10px] font-bold uppercase text-gray-400 tracking-widest">
-              <tr><th className="px-6 py-4">Image</th><th className="px-6 py-4">Service Details</th><th className="px-6 py-4">Price</th><th className="px-6 py-4 text-center">Tags</th><th className="px-6 py-4 text-right">Actions</th></tr>
+              <tr><th className="px-6 py-4">Image</th><th className="px-6 py-4">Details</th><th className="px-6 py-4">Price</th><th className="px-6 py-4 text-center">Tags</th><th className="px-6 py-4 text-right">Actions</th></tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
-              {filteredServices.map((s) => (
+              {filteredItems.map((s) => (
                 <tr key={s.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4">
                     <div className="w-12 h-12 relative rounded border border-gray-100 overflow-hidden">
-                      <Image 
-                        src={s.image || treatmentPlaceholder} 
-                        alt="" 
-                        fill 
-                        sizes="48px" 
-                        quality={75}
-                        className="object-cover" 
-                      />
+                      <Image src={s.image || cafePlaceholder} alt="" fill sizes="48px" quality={75} className="object-cover" />
                     </div>
                   </td>
-                  <td className="px-6 py-4"><p className="font-bold text-black uppercase text-xs">{s.name}</p><p className="text-[10px] text-gray-400 uppercase">{s.duration}</p></td>
+                  <td className="px-6 py-4"><p className="font-bold text-black uppercase text-xs">{s.name}</p><p className="text-[10px] text-gray-400 uppercase">{s.category}</p></td>
                   <td className="px-6 py-4 font-bold">{s.price}</td>
                   <td className="px-6 py-4 text-center space-x-2">
                     <button onClick={() => toggleStatus(s.id, 'isMonthlyPromo', s.isMonthlyPromo)} className={`px-3 py-1 rounded-full text-[9px] font-bold border ${s.isMonthlyPromo ? 'bg-yellow-100 text-yellow-700' : 'text-gray-300'}`}>Promo</button>
@@ -298,7 +269,7 @@ export default function ServicesPage() {
                   </td>
                   <td className="px-6 py-4 text-right space-x-4">
                     <button onClick={() => startEditing(s)} className="text-blue-500 font-bold uppercase text-[10px]">Edit</button>
-                    <button onClick={async () => { if(confirm('Delete?')) { await deleteDoc(doc(db, "services", s.id)); fetchServices(); } }} className="text-gray-300 hover:text-red-500 font-bold uppercase text-[10px]">Del</button>
+                    <button onClick={async () => { if(confirm('Delete?')) { await deleteDoc(doc(db, "cafe", s.id)); fetchItems(); } }} className="text-gray-300 hover:text-red-500 font-bold uppercase text-[10px]">Del</button>
                   </td>
                 </tr>
               ))}

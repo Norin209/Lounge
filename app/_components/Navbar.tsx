@@ -61,7 +61,7 @@ export default function Navbar() {
           
           {/* 1. LEFT: LOGO */}
           <Link href="/" className={`text-2xl font-playfair font-bold tracking-tighter transition-colors duration-300 ${textColor}`}>
-            GLISTEN.
+            PREMIER.
           </Link>
 
           {/* 2. CENTER: DESKTOP LINKS */}

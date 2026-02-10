@@ -21,7 +21,7 @@ const Hero = () => {
       <div className="absolute top-1/2 left-6 md:left-20 transform -translate-y-1/2 text-white z-10 max-w-xl pr-6">
         
         <h2 className="text-[10px] md:text-sm font-bold tracking-[0.3em] mb-4 md:mb-6 text-white/80 uppercase">
-          A Cambodian Cocoon
+          PREMIER LOUNGE A Cambodian Cocoon
         </h2>
         
         <h1 className="text-4xl md:text-7xl font-playfair font-medium leading-tight mb-8 text-white">
