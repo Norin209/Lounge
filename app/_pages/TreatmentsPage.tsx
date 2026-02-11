@@ -10,7 +10,43 @@ import { collection, getDocs } from 'firebase/firestore';
 const HERO_IMAGE = "https://images.unsplash.com/photo-1600334129128-685c5582fd35?q=80&w=2000&auto=format&fit=crop";
 const PLACEHOLDER_IMG = "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=800&auto=format&fit=crop";
 
-const TABS = ["PROMOTIONS", "SIGNATURE", "NAILS & LASHES", "HAIR", "FACIALS", "BODY & WAX", "PACKAGES"];
+const CATEGORIES = [
+  { 
+    id: "PROMOTIONS", 
+    label: "Deals", 
+    image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=600" 
+  },
+  { 
+    id: "SIGNATURE", 
+    label: "Signature", 
+    image: "https://images.unsplash.com/photo-1515377905703-c4788e51af15?q=80&w=600" 
+  },
+  { 
+    id: "FACIALS", 
+    label: "Facials", 
+    image: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=600" 
+  },
+  { 
+    id: "HAIR", 
+    label: "Hair", 
+    image: "https://images.unsplash.com/photo-1562322140-8baeececf3df?q=80&w=600" 
+  },
+  { 
+    id: "NAILS & LASHES", 
+    label: "Nails", 
+    image: "https://images.unsplash.com/photo-1632345031435-8727f6897d53?q=80&w=600" 
+  },
+  { 
+    id: "BODY & WAX", 
+    label: "Body", 
+    image: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=600" 
+  },
+  { 
+    id: "PACKAGES", 
+    label: "Packages", 
+    image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=600" 
+  }
+];
 
 interface ServiceItem {
   id: string;
@@ -28,7 +64,7 @@ interface ServiceItem {
 }
 
 const TreatmentsPage = () => {
-  const [activeTab, setActiveTab] = useState(TABS[0]);
+  const [activeTab, setActiveTab] = useState(CATEGORIES[0].id);
   const [services, setServices] = useState<ServiceItem[]>([]); 
   const [loading, setLoading] = useState(true);
   
@@ -75,7 +111,7 @@ const TreatmentsPage = () => {
 
   const scrollTabs = (direction: 'left' | 'right') => {
     if (tabContainerRef.current) {
-      const amount = 150;
+      const amount = 200;
       const current = tabContainerRef.current.scrollLeft;
       tabContainerRef.current.scrollTo({
         left: direction === 'left' ? current - amount : current + amount,
@@ -162,36 +198,61 @@ const TreatmentsPage = () => {
         </div>
       </section>
 
-      <nav className="sticky top-0 z-1 bg-white border-b border-gray-100 shadow-sm">
-        <div className="relative max-w-7xl mx-auto px-4 py-4 group">
+      {/* 🟢 FIXED: Changed 'sticky' to 'relative' & Increased Padding (py-8) to fix clipping */}
+      <nav className="relative z-10 bg-white border-b border-gray-100 shadow-sm">
+        {/* Wrapper padding reduced to py-2 to balance the inner py-8 */}
+        <div className="relative max-w-7xl mx-auto px-4 py-2 group">
           
           <button 
             onClick={() => scrollTabs('left')} 
-            className="md:hidden absolute left-0 top-0 bottom-0 z-20 bg-linear-to-r from-white via-white/80 to-transparent w-10 flex items-center justify-center text-black"
+            className="md:hidden absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 w-10 h-10 rounded-full shadow-md flex items-center justify-center text-black ml-2"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
           </button>
 
+          {/* 🟢 INNER SCROLL CONTAINER: Increased to py-8 to prevent top clipping */}
           <div 
             ref={tabContainerRef} 
-            className="flex overflow-x-auto justify-start md:justify-center gap-6 md:gap-10 hide-scrollbar px-6 scroll-smooth touch-pan-x"
+            className="flex overflow-x-auto justify-start md:justify-center gap-4 hide-scrollbar px-2 py-8 scroll-smooth snap-x"
           >
-            {TABS.map((tab) => (
-              <button 
-                key={tab} 
-                onClick={() => setActiveTab(tab)} 
-                className={`whitespace-nowrap text-[10px] md:text-[11px] font-bold tracking-[0.15em] uppercase transition-all duration-300 border-b-2 pb-2 shrink-0 ${
-                  activeTab === tab ? "text-black border-black scale-105" : "text-gray-400 border-transparent hover:text-black"
-                }`}
+            {CATEGORIES.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => setActiveTab(cat.id)}
+                className={`
+                  relative shrink-0 w-24 h-24 md:w-28 md:h-28 rounded-xl overflow-hidden transition-all duration-300 snap-start shadow-sm group
+                  ${activeTab === cat.id 
+                    ? "ring-2 ring-black scale-105 shadow-md" 
+                    : "hover:scale-105 hover:shadow-md"
+                  }
+                `}
               >
-                {tab}
+                <Image 
+                  src={cat.image} 
+                  alt={cat.label} 
+                  fill 
+                  className="object-cover" 
+                />
+                
+                {/* Gradient Overlay */}
+                <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-80" />
+
+                {/* Text Label */}
+                <div className="absolute bottom-2 left-0 right-0 text-center px-1">
+                  <span className={`
+                    text-[9px] md:text-[10px] font-bold tracking-widest uppercase text-white drop-shadow-md
+                    ${activeTab === cat.id ? "opacity-100" : "opacity-90"}
+                  `}>
+                    {cat.label}
+                  </span>
+                </div>
               </button>
             ))}
           </div>
 
           <button 
             onClick={() => scrollTabs('right')} 
-            className="md:hidden absolute right-0 top-0 bottom-0 z-20 bg-linear-to-l from-white via-white/80 to-transparent w-10 flex items-center justify-center text-black"
+            className="md:hidden absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 w-10 h-10 rounded-full shadow-md flex items-center justify-center text-black mr-2"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </button>
@@ -278,7 +339,6 @@ const TreatmentsPage = () => {
                     
                     <Image src={item.image || PLACEHOLDER_IMG} alt={item.name} fill className="object-cover transition-transform duration-700 md:group-hover:scale-105" />
                     
-                    {/* 🟢 CHANGED: md:flex -> xl:flex */}
                     <div className="hidden xl:flex absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-end pb-4 justify-center px-4">
                       {isInBag ? (
                         <Link href="/book" className="w-full bg-black text-white py-3 text-[10px] font-bold tracking-[0.2em] uppercase text-center">View Bag</Link>
@@ -321,7 +381,6 @@ const TreatmentsPage = () => {
                     <div className="flex justify-between items-center mt-auto">
                       <span className="text-[8px] uppercase tracking-widest text-gray-400 font-medium">{item.duration || "60 min"}</span>
                       
-                      {/* 🟢 CHANGED: md:hidden -> xl:hidden */}
                       <button 
                         onClick={() => isInBag ? null : handleAddToBag(item)}
                         className={`xl:hidden text-[9px] font-bold uppercase tracking-widest rounded-sm transition-all

@@ -49,7 +49,7 @@ export default function Navbar() {
         fixed top-0 w-full z-50 bg-black text-white text-[9px] uppercase tracking-[0.2em] font-bold text-center py-2 transition-all duration-500
         ${isScrolled ? '-translate-y-full' : 'translate-y-0'}
       `}>
-        Open Daily: 10am - 9pm • Phnom Penh
+        Open Daily: 9am - 9pm • Phnom Penh
       </div>
 
       {/* 🟢 MAIN NAVBAR */}

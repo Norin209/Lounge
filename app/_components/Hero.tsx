@@ -1,4 +1,6 @@
+// app/_components/Hero.tsx
 import Image from 'next/image';
+import Link from 'next/link'; // Import Link
 
 const Hero = () => {
   return (
@@ -14,7 +16,6 @@ const Hero = () => {
       />
 
       {/* Gradient Overlay */}
-      {/* FIX: bg-gradient-to-r -> bg-linear-to-r */}
       <div className="absolute inset-0 bg-linear-to-r from-black/80 via-black/40 to-transparent" />
 
       {/* Text Content */}
@@ -28,6 +29,14 @@ const Hero = () => {
           A Sanctuary for <br />
           <span className="italic text-white/90">Mind, Body & Soul</span>
         </h1>
+
+        {/* 👇 ADDED: Button to link to the menu below */}
+        <Link 
+          href="#service-menu" 
+          className="inline-block border border-white px-8 py-3 text-[10px] font-bold tracking-[0.2em] uppercase text-white hover:bg-white hover:text-black transition-colors duration-300"
+        >
+          View Treatments
+        </Link>
       </div>
       
       {/* Scroll Indicator */}

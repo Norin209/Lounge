@@ -23,10 +23,41 @@ interface TreatmentItem {
   discountType?: 'percent' | 'fixed';
 }
 
-const tabs = ["PROMOTIONS", "NAILS & LASHES", "HAIR", "FACIALS", "BODY & WAX", "PACKAGES"];
+const categories = [
+  { 
+    id: "PROMOTIONS", 
+    label: "Deals", 
+    image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=600" 
+  },
+  { 
+    id: "FACIALS", 
+    label: "Facials", 
+    image: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=600" 
+  },
+  { 
+    id: "HAIR", 
+    label: "Hair", 
+    image: "https://images.unsplash.com/photo-1562322140-8baeececf3df?q=80&w=600" 
+  },
+  { 
+    id: "NAILS & LASHES", 
+    label: "Nails", 
+    image: "https://images.unsplash.com/photo-1632345031435-8727f6897d53?q=80&w=600" 
+  },
+  { 
+    id: "BODY & WAX", 
+    label: "Body", 
+    image: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=600" 
+  },
+  { 
+    id: "PACKAGES", 
+    label: "Packages", 
+    image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=600" 
+  }
+];
 
 const TreatmentMenu = () => {
-  const [activeTab, setActiveTab] = useState(tabs[0]);
+  const [activeTab, setActiveTab] = useState(categories[0].id);
   const [services, setServices] = useState<TreatmentItem[]>([]);
   const [loading, setLoading] = useState(true);
   
@@ -50,6 +81,17 @@ const TreatmentMenu = () => {
       }
     };
     fetchServices();
+  }, []);
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '').toUpperCase();
+      const matchingCat = categories.find(c => c.id.includes(hash) || hash.includes(c.id.split(' ')[0]));
+      if (matchingCat) setActiveTab(matchingCat.id);
+    };
+    handleHashChange();
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
   useEffect(() => {
@@ -77,7 +119,7 @@ const TreatmentMenu = () => {
 
   const scrollTabs = (direction: 'left' | 'right') => {
     if (tabContainerRef.current) {
-      const amount = 150;
+      const amount = 200;
       const current = tabContainerRef.current.scrollLeft;
       tabContainerRef.current.scrollTo({
         left: direction === 'left' ? current - amount : current + amount,
@@ -117,53 +159,75 @@ const TreatmentMenu = () => {
   }
 
   return (
-    <section className="py-0 bg-zinc-100 text-black">
+    <section id="full-menu" className="py-0 bg-white text-black">
       
-      <div className="max-w-7xl mx-auto px-6 pt-20 pb-10 text-center">
-        <h3 className="text-xs font-bold tracking-[0.2em] uppercase text-gray-500 mb-4">Our Full Menu</h3>
-        <div className="w-10 h-px bg-gray-400 mx-auto" />
+      <div className="max-w-7xl mx-auto px-6 pt-20 pb-4 text-center">
+        <h3 className="text-xs font-bold tracking-[0.2em] uppercase text-gray-400 mb-4">Our Full Menu</h3>
+        <div className="w-10 h-px bg-gray-300 mx-auto" />
       </div>
 
-      {/* Sticky Tabs Wrapper */}
-      <div className="sticky top-0 z-1 bg-zinc-100 border-b border-gray-300 shadow-sm">
-        <div className="relative max-w-7xl mx-auto px-6 py-4 group">
+      {/* 🟢 FIXED: REMOVED "sticky top-0" -> Changed to "relative" */}
+      <div className="relative z-10 bg-white border-b border-gray-100">
+        <div className="relative max-w-7xl mx-auto px-6 group">
           
           <button 
             onClick={() => scrollTabs('left')}
-            className="md:hidden absolute left-0 top-0 bottom-0 z-20 bg-linear-to-r from-zinc-100 via-zinc-100 to-transparent w-12 flex items-center justify-start pl-4 text-black hover:text-gray-600"
+            className="md:hidden absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 w-10 h-10 rounded-full shadow-md flex items-center justify-center text-black ml-2"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
           </button>
 
           <div 
             ref={tabContainerRef}
-            className="flex overflow-x-auto justify-start md:justify-center gap-6 hide-scrollbar px-2 md:px-0 scroll-smooth"
+            className="flex overflow-x-auto md:justify-center gap-4 hide-scrollbar px-2 py-6 scroll-smooth snap-x"
           > 
-            {tabs.map((tab) => (
+            {categories.map((cat) => (
               <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`whitespace-nowrap text-[10px] md:text-[11px] font-bold tracking-[0.15em] uppercase transition-all duration-300 border-b-2 pb-2 shrink-0
-                  ${activeTab === tab ? "text-black border-black" : "text-gray-400 border-transparent hover:text-black"}`}
+                key={cat.id}
+                onClick={() => setActiveTab(cat.id)}
+                className={`
+                  relative shrink-0 w-24 h-24 md:w-28 md:h-28 rounded-xl overflow-hidden transition-all duration-300 snap-start shadow-sm group
+                  ${activeTab === cat.id 
+                    ? "ring-2 ring-black scale-105 shadow-md" 
+                    : "hover:scale-105 hover:shadow-md"
+                  }
+                `}
               >
-                {tab}
+                <Image 
+                  src={cat.image} 
+                  alt={cat.label} 
+                  fill 
+                  className="object-cover" 
+                />
+                
+                {/* Gradient Bottom */}
+                <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-90" />
+
+                {/* Text Bottom */}
+                <div className="absolute bottom-2 left-0 right-0 text-center px-1">
+                  <span className={`
+                    text-[9px] md:text-[10px] font-bold tracking-widest uppercase text-white drop-shadow-md
+                    ${activeTab === cat.id ? "opacity-100" : "opacity-90"}
+                  `}>
+                    {cat.label}
+                  </span>
+                </div>
               </button>
             ))}
           </div>
 
           <button 
             onClick={() => scrollTabs('right')}
-            className="md:hidden absolute right-0 top-0 bottom-0 z-20 bg-linear-to-l from-zinc-100 via-zinc-100 to-transparent w-12 flex items-center justify-end pr-4 text-black hover:text-gray-600"
+            className="md:hidden absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 w-10 h-10 rounded-full shadow-md flex items-center justify-center text-black mr-2"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </button>
-
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-12 relative">
-          <button onClick={() => scrollServices('left')} className="absolute left-0 top-1/2 -translate-y-1/2 z-10 text-gray-800/80 hover:text-black transition-colors">
-             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          <button onClick={() => scrollServices('left')} className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white shadow-md rounded-full items-center justify-center hover:scale-110 transition-transform text-black border border-gray-100">
+             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
           </button>
 
           <div ref={scrollContainerRef} className="flex flex-nowrap overflow-x-auto gap-6 pb-4 hide-scrollbar snap-x snap-mandatory">
@@ -176,7 +240,7 @@ const TreatmentMenu = () => {
 
                 return (
                   <div key={item.id} className="group shrink-0 w-72 snap-start flex flex-col h-full">
-                    <div className="relative aspect-square overflow-hidden mb-4 bg-white shadow-sm shrink-0">
+                    <div className="relative aspect-4/5 overflow-hidden mb-4 bg-gray-50 shadow-sm shrink-0">
                       
                       {hasPromo && (
                         <div className="absolute top-2 right-2 z-10 bg-[#D4AF37] text-white text-[9px] font-bold px-2 py-1 uppercase tracking-widest shadow-sm">
@@ -186,10 +250,9 @@ const TreatmentMenu = () => {
 
                       <Image src={displayImage} alt={item.name} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
                       
-                      {/* 🟢 CHANGED: md:bg-black/20 -> xl:bg-black/20 and md:opacity-0 -> xl:opacity-0 */}
                       <div className="absolute inset-0 bg-black/10 xl:bg-black/20 opacity-100 xl:opacity-0 xl:group-hover:opacity-100 transition-opacity duration-300 flex items-end pb-4 justify-center px-4">
                         {isInBag ? (
-                          <Link href="/book" className="w-full bg-black text-white py-2 text-[10px] font-bold tracking-[0.2em] uppercase shadow-lg text-center">
+                          <Link href="/book" className="w-full bg-black text-white py-3 text-[10px] font-bold tracking-[0.2em] uppercase shadow-lg text-center">
                             View Bag
                           </Link>
                         ) : (
@@ -202,7 +265,7 @@ const TreatmentMenu = () => {
                               duration: item.duration || '60 min',
                               image: displayImage
                             })}
-                            className="w-full bg-white text-black py-2 text-[10px] font-bold tracking-[0.2em] uppercase shadow-lg"
+                            className="w-full bg-white text-black py-3 text-[10px] font-bold tracking-[0.2em] uppercase shadow-lg hover:bg-gray-100"
                           >
                             Add to Bag
                           </button>
@@ -248,12 +311,12 @@ const TreatmentMenu = () => {
             )}
           </div>
           
-          <button onClick={() => scrollServices('right')} className="absolute right-0 top-1/2 -translate-y-1/2 z-10 text-gray-800/80 hover:text-black transition-colors">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          <button onClick={() => scrollServices('right')} className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white shadow-md rounded-full items-center justify-center hover:scale-110 transition-transform text-black border border-gray-100">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </button>
       </div>
 
-      <div className="mt-16 pb-20 text-center">
+      <div className="mt-8 pb-20 text-center">
         <Link 
           href="/treatments" 
           className="inline-block border border-black px-10 py-3 text-xs font-bold tracking-[0.2em] uppercase text-black hover:bg-black hover:text-white transition-colors"
