@@ -1,6 +1,7 @@
-// app/_components/Hero.tsx
+'use client';
+
 import Image from 'next/image';
-import Link from 'next/link'; // Import Link
+import Link from 'next/link';
 
 const Hero = () => {
   return (
@@ -30,9 +31,9 @@ const Hero = () => {
           <span className="italic text-white/90">Mind, Body & Soul</span>
         </h1>
 
-        {/* 👇 ADDED: Button to link to the menu below */}
+        {/* 👇 THE BUTTON: Links to the section with ID "treatments" */}
         <Link 
-          href="#service-menu" 
+          href="/treatments"
           className="inline-block border border-white px-8 py-3 text-[10px] font-bold tracking-[0.2em] uppercase text-white hover:bg-white hover:text-black transition-colors duration-300"
         >
           View Treatments
