@@ -117,11 +117,11 @@ const Promotions = () => {
           </h2>
         </div>
 
-        {/* 🟢 UNIFIED GRID (Mobile: Stacked | Desktop: Split) */}
+        {/* UNIFIED GRID */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-stretch min-h-125">
           
           {/* 1. VISUAL DISPLAY (Mobile: Top, Desktop: Left) */}
-          <div className="md:col-span-7 relative group cursor-pointer w-full h-87.5` md:h-auto"
+          <div className="md:col-span-7 relative group cursor-pointer w-full h-[350px] md:h-full"
                onClick={() => displayPromo && handleAddToBag(displayPromo)}>
             
             {/* Desktop Border Effect */}
@@ -169,8 +169,7 @@ const Promotions = () => {
                  return (
                   <div 
                     key={item.id} 
-                    // 🟢 BOTH HOVER & CLICK update the image
-                    onMouseEnter={() => setActivePromo(item)}
+                    // 🟢 FIXED: Removed onMouseEnter. Now it only changes when clicked.
                     onClick={() => setActivePromo(item)}
                     className={`
                       group flex items-center justify-between p-4 md:p-6 border-b cursor-pointer transition-all duration-300

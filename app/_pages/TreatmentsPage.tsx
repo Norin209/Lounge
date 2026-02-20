@@ -5,12 +5,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useBag } from '../_context/BagContext'; 
 import { db } from '../_utils/firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, doc, getDoc, onSnapshot } from 'firebase/firestore'; // 🟢 Added onSnapshot for real-time updates
 
 const HERO_IMAGE = "https://images.unsplash.com/photo-1600334129128-685c5582fd35?q=80&w=2000&auto=format&fit=crop";
 const PLACEHOLDER_IMG = "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=800&auto=format&fit=crop";
 
-const CATEGORIES = [
+// 1. STATIC TABS (Virtual Categories)
+const STATIC_TABS = [
   { 
     id: "PROMOTIONS", 
     label: "Deals", 
@@ -20,31 +21,6 @@ const CATEGORIES = [
     id: "SIGNATURE", 
     label: "Signature", 
     image: "https://images.unsplash.com/photo-1515377905703-c4788e51af15?q=80&w=600" 
-  },
-  { 
-    id: "FACIALS", 
-    label: "Facials", 
-    image: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=600" 
-  },
-  { 
-    id: "HAIR", 
-    label: "Hair", 
-    image: "https://images.unsplash.com/photo-1562322140-8baeececf3df?q=80&w=600" 
-  },
-  { 
-    id: "NAILS & LASHES", 
-    label: "Nails", 
-    image: "https://images.unsplash.com/photo-1632345031435-8727f6897d53?q=80&w=600" 
-  },
-  { 
-    id: "BODY & WAX", 
-    label: "Body", 
-    image: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=600" 
-  },
-  { 
-    id: "PACKAGES", 
-    label: "Packages", 
-    image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=600" 
   }
 ];
 
@@ -61,36 +37,75 @@ interface ServiceItem {
   image?: string;
   duration?: string;
   isSignature?: boolean;
+  order?: number; 
+}
+
+interface CategoryItem {
+  id: string;
+  label: string;
+  image: string;
 }
 
 const TreatmentsPage = () => {
-  const [activeTab, setActiveTab] = useState(CATEGORIES[0].id);
+  const [activeTab, setActiveTab] = useState("PROMOTIONS");
   const [services, setServices] = useState<ServiceItem[]>([]); 
+  const [categories, setCategories] = useState<CategoryItem[]>(STATIC_TABS); 
   const [loading, setLoading] = useState(true);
-  
   const [viewMode, setViewMode] = useState<'list' | 'grid' | 'carousel'>('list');
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   const tabContainerRef = useRef<HTMLDivElement>(null); 
   const scrollContainerRef = useRef<HTMLDivElement>(null); 
-  const { addToBag, bag } = useBag();
+  
+  const bagContext = useBag();
+  const addToBag = bagContext?.addToBag || (() => {});
+  const bag = bagContext?.bag || [];
 
+  // 🟢 2. REAL-TIME DATA FETCHING
   useEffect(() => {
-    const fetchServices = async () => {
+    // A. Fetch Categories (Static rarely changes, one time fetch is fine)
+    const fetchCategories = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "services"));
-        const data = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        } as ServiceItem));
-        setServices(data);
+        const catDoc = await getDoc(doc(db, "settings", "service_categories"));
+        if (catDoc.exists()) {
+          const fetchedCats = catDoc.data().list || [];
+          const dynamicCats = fetchedCats.map((c: any) => ({
+            id: c.id,
+            label: c.label,
+            image: c.image || PLACEHOLDER_IMG 
+          }));
+          setCategories([...STATIC_TABS, ...dynamicCats]);
+        }
       } catch (error) {
-        console.error("Error fetching services:", error);
-      } finally {
-        setLoading(false);
+        console.error("Error fetching categories:", error);
       }
     };
-    fetchServices();
+
+    fetchCategories();
+
+    // B. Real-time Listener for Services
+    const unsubscribe = onSnapshot(collection(db, "services"), (snapshot) => {
+      const serviceList = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      } as ServiceItem));
+
+      // 🟢 SORT BY ORDER: Items with NO order become 999 (go to bottom)
+      serviceList.sort((a, b) => {
+        const orderA = a.order !== undefined && a.order !== null ? Number(a.order) : 999;
+        const orderB = b.order !== undefined && b.order !== null ? Number(b.order) : 999;
+        return orderA - orderB;
+      });
+
+      setServices(serviceList);
+      setLoading(false);
+    }, (error) => {
+      console.error("Error listening to services:", error);
+      setLoading(false);
+    });
+
+    // Clean up listener when component unmounts
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
@@ -150,17 +165,9 @@ const TreatmentsPage = () => {
 
   const filteredItems = useMemo(() => {
     return services.filter(item => {
-      const cat = item.category?.toLowerCase() || "";
-      switch (activeTab) {
-        case "PROMOTIONS": return item.isMonthlyPromo === true;
-        case "SIGNATURE": return item.isSignature === true;
-        case "NAILS & LASHES": return cat.includes('nail') || cat.includes('lash');
-        case "HAIR": return cat.includes('hair');
-        case "FACIALS": return cat.includes('facial') || cat.includes('face');
-        case "BODY & WAX": return cat.includes('body') || cat.includes('wax') || cat.includes('massage') || cat.includes('scrub');
-        case "PACKAGES": return cat.includes('package');
-        default: return false;
-      }
+      if (activeTab === "PROMOTIONS") return item.isMonthlyPromo === true;
+      if (activeTab === "SIGNATURE") return item.isSignature === true;
+      return item.category === activeTab;
     });
   }, [activeTab, services]);
 
@@ -189,6 +196,7 @@ const TreatmentsPage = () => {
   return (
     <div className="bg-white min-h-screen pb-24 relative">
       
+      {/* HERO SECTION */}
       <section className="relative h-[45vh] md:h-[50vh] w-full flex items-center justify-center overflow-hidden">
         <Image src={HERO_IMAGE} alt="Header" fill priority className="object-cover brightness-[0.4]" />
         <div className="relative z-0 text-center px-6">
@@ -198,11 +206,11 @@ const TreatmentsPage = () => {
         </div>
       </section>
 
-      {/* 🟢 FIXED: Changed 'sticky' to 'relative' & Increased Padding (py-8) to fix clipping */}
+      {/* CATEGORY TABS */}
       <nav className="relative z-10 bg-white border-b border-gray-100 shadow-sm">
-        {/* Wrapper padding reduced to py-2 to balance the inner py-8 */}
         <div className="relative max-w-7xl mx-auto px-4 py-2 group">
           
+          {/* Mobile Left Arrow */}
           <button 
             onClick={() => scrollTabs('left')} 
             className="md:hidden absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 w-10 h-10 rounded-full shadow-md flex items-center justify-center text-black ml-2"
@@ -210,34 +218,36 @@ const TreatmentsPage = () => {
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
           </button>
 
-          {/* 🟢 INNER SCROLL CONTAINER: Increased to py-8 to prevent top clipping */}
           <div 
             ref={tabContainerRef} 
-            className="flex overflow-x-auto justify-start md:justify-center gap-4 hide-scrollbar px-2 py-8 scroll-smooth snap-x"
+            className="flex overflow-x-auto justify-start gap-4 hide-scrollbar px-2 py-8 scroll-smooth snap-x"
           >
-            {CATEGORIES.map((cat) => (
+            {categories.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => setActiveTab(cat.id)}
                 className={`
-                  relative shrink-0 w-24 h-24 md:w-28 md:h-28 rounded-xl overflow-hidden transition-all duration-300 snap-start shadow-sm group
+                  relative shrink-0 z-0
+                  w-24 h-24 md:w-28 md:h-28
+                  rounded-xl overflow-hidden transition-all duration-300 snap-start transform-gpu
                   ${activeTab === cat.id 
-                    ? "ring-2 ring-black scale-105 shadow-md" 
-                    : "hover:scale-105 hover:shadow-md"
+                    ? "border-[3px] border-black scale-110 shadow-xl z-10" 
+                    : "border border-transparent hover:scale-105 hover:shadow-md opacity-90 hover:opacity-100"
                   }
                 `}
+                style={{ WebkitMaskImage: '-webkit-radial-gradient(white, black)' }}
               >
                 <Image 
                   src={cat.image} 
                   alt={cat.label} 
                   fill 
                   className="object-cover" 
+                  sizes="(max-width: 768px) 100px, 120px"
                 />
                 
-                {/* Gradient Overlay */}
+                {/* 🟢 FIXED: Changed bg-gradient-to-t to bg-linear-to-t */}
                 <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-80" />
 
-                {/* Text Label */}
                 <div className="absolute bottom-2 left-0 right-0 text-center px-1">
                   <span className={`
                     text-[9px] md:text-[10px] font-bold tracking-widest uppercase text-white drop-shadow-md
@@ -250,6 +260,7 @@ const TreatmentsPage = () => {
             ))}
           </div>
 
+          {/* Mobile Right Arrow */}
           <button 
             onClick={() => scrollTabs('right')} 
             className="md:hidden absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 w-10 h-10 rounded-full shadow-md flex items-center justify-center text-black mr-2"
@@ -259,8 +270,8 @@ const TreatmentsPage = () => {
         </div>
       </nav>
 
+      {/* MAIN CONTENT */}
       <main className="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-16 relative">
-        
         <div className="flex justify-start mb-6">
           <div className="flex border border-gray-200 rounded-lg p-1 gap-1 bg-white shadow-sm">
             <button 
