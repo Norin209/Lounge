@@ -8,7 +8,7 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const cafePlaceholder = "https://images.unsplash.com/photo-1509042239860-f550ce710b93?q=80&w=800";
 
-// 🟢 INTERNAL SEED DATA
+// INTERNAL SEED DATA
 const mockCafeData = [
   { name: "Iced Americano", price: "$3.50", category: "coffee", description: "Double shot espresso over ice." },
   { name: "Matcha Latte", price: "$4.50", category: "matcha", description: "Premium Japanese matcha with milk." },
@@ -16,7 +16,7 @@ const mockCafeData = [
   { name: "Passion Fruit Tea", price: "$3.75", category: "tea", description: "Refreshing fruit tea." }
 ];
 
-// 🟢 DEFAULT CAFE CATEGORIES
+// DEFAULT CAFE CATEGORIES
 const DEFAULT_CATS = [
   { id: 'coffee', label: 'Coffee' },
   { id: 'tea', label: 'Tea' },
@@ -31,16 +31,28 @@ export default function AdminCafe() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isUploading, setIsUploading] = useState(false); 
   
-  // 🟢 DYNAMIC CATEGORY STATE
+  // DYNAMIC CATEGORY STATE
   const [categories, setCategories] = useState<any[]>([{ id: 'all', label: 'View All' }]);
   const [showCatModal, setShowCatModal] = useState(false);
   const [tempCats, setTempCats] = useState<any[]>([]);
   const [newCatName, setNewCatName] = useState('');
 
+  // DRAG STATE
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+
+  // FORM STATE
   const [newItem, setNewItem] = useState({ 
-    name: '', price: '', category: 'coffee', description: '', 
-    isMonthlyPromo: false, isSignature: false, 
-    discountValue: '', discountType: 'percent', image: ''
+    name: '', 
+    price: '', 
+    category: 'coffee', 
+    description: '', 
+    isMonthlyPromo: false, 
+    isSignature: false, 
+    isPaused: false,
+    discountValue: '', 
+    discountType: 'percent', 
+    image: '',
+    order: 10 
   });
 
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -51,7 +63,6 @@ export default function AdminCafe() {
     fetchItems(); 
   }, []);
 
-  // 🟢 1. FETCH CATEGORIES
   const fetchCategories = async () => {
     try {
       const docRef = doc(db, "settings", "cafe_categories");
@@ -65,7 +76,6 @@ export default function AdminCafe() {
     } catch (error) { console.error("Cat Error:", error); }
   };
 
-  // 🟢 2. SAVE CATEGORIES
   const saveCategories = async () => {
     if (tempCats.length === 0) return alert("Need at least 1 category");
     try {
@@ -77,11 +87,50 @@ export default function AdminCafe() {
     }
   };
 
+  const handleCatImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) return alert("Image too large. Please use a file under 2MB.");
+    setIsUploading(true); 
+    try {
+      const storageRef = ref(storage, `categories/${Date.now()}_${file.name}`);
+      await uploadBytes(storageRef, file);
+      const url = await getDownloadURL(storageRef);
+      const updatedCats = [...tempCats];
+      updatedCats[index] = { ...updatedCats[index], image: url };
+      setTempCats(updatedCats);
+    } catch (error) {
+      console.error("Category Upload Error:", error);
+      alert("Failed to upload category image.");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleDragStart = (index: number) => {
+    setDraggedIndex(index);
+  };
+
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault(); 
+  };
+
+  const handleDrop = (index: number) => {
+    if (draggedIndex === null || draggedIndex === index) return;
+    const newCats = [...tempCats];
+    const draggedItem = newCats[draggedIndex];
+    newCats.splice(draggedIndex, 1);
+    newCats.splice(index, 0, draggedItem);
+    setTempCats(newCats);
+    setDraggedIndex(null);
+  };
+
   const fetchItems = async () => {
     if (!isRefreshing && loading) setLoading(true);
     try {
       const q = await getDocs(collection(db, "cafe"));
       const list = q.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      list.sort((a: any, b: any) => (a.order ?? 999) - (b.order ?? 999));
       setItems(list);
     } catch (error) {
       console.error("Error fetching cafe items:", error);
@@ -96,7 +145,11 @@ export default function AdminCafe() {
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (file.size > 2 * 1024 * 1024) { alert("Image is too large. Please use a file under 2MB."); return; }
+
+    if (file.size > 2 * 1024 * 1024) {
+      alert("Image is too large. Please use a file under 2MB.");
+      return;
+    }
 
     setIsUploading(true);
     try {
@@ -104,8 +157,11 @@ export default function AdminCafe() {
       await uploadBytes(storageRef, file);
       const url = await getDownloadURL(storageRef);
       setNewItem({ ...newItem, image: url });
-    } catch (error) { alert("Failed to upload image."); } 
-    finally { setIsUploading(false); }
+    } catch (error) {
+      alert("Failed to upload image.");
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const calculateFinalPrice = (priceStr: string, val: string, type: string) => {
@@ -122,14 +178,50 @@ export default function AdminCafe() {
     fetchItems(); 
   };
 
-  const startEditing = (item: any) => { setEditingId(item.id); setNewItem({ ...item }); window.scrollTo({ top: 0, behavior: 'smooth' }); };
-  const cancelEditing = () => { setEditingId(null); setNewItem({ name: '', price: '', category: 'coffee', description: '', isMonthlyPromo: false, isSignature: false, discountValue: '', discountType: 'percent', image: '' }); };
+  const startEditing = (item: any) => { 
+    setEditingId(item.id); 
+    setNewItem({ 
+      name: item.name || '', 
+      price: item.price || '', 
+      category: item.category || 'coffee', 
+      description: item.description || '', 
+      isMonthlyPromo: item.isMonthlyPromo || false, 
+      isSignature: item.isSignature || false, 
+      isPaused: item.isPaused || false,
+      discountValue: item.discountValue || '', 
+      discountType: item.discountType || 'percent', 
+      image: item.image || '',
+      order: item.order ?? 10 
+    }); 
+    window.scrollTo({ top: 0, behavior: 'smooth' }); 
+  };
+
+  const cancelEditing = () => { 
+    setEditingId(null); 
+    setNewItem({ 
+      name: '', 
+      price: '', 
+      category: 'coffee', 
+      description: '', 
+      isMonthlyPromo: false, 
+      isSignature: false, 
+      isPaused: false,
+      discountValue: '', 
+      discountType: 'percent', 
+      image: '', 
+      order: 10 
+    }); 
+  };
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (editingId) await updateDoc(doc(db, "cafe", editingId), newItem);
-    else await addDoc(collection(db, "cafe"), { ...newItem, createdAt: serverTimestamp() });
-    cancelEditing(); fetchItems();
+    if (editingId) {
+      await updateDoc(doc(db, "cafe", editingId), newItem);
+    } else {
+      await addDoc(collection(db, "cafe"), { ...newItem, createdAt: serverTimestamp() });
+    }
+    cancelEditing();
+    fetchItems();
   };
 
   const handleUploadData = async () => {
@@ -151,38 +243,62 @@ export default function AdminCafe() {
   return (
     <div className="space-y-8 pb-20 font-sans text-left relative">
       
-      {/* 🟢 CATEGORY EDITOR MODAL */}
+      {/* CATEGORY EDITOR MODAL */}
       {showCatModal && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
-            <div className="p-4 border-b flex justify-between items-center"><h3 className="font-bold">Manage Categories</h3><button onClick={() => setShowCatModal(false)}>✕</button></div>
+            <div className="p-4 border-b flex justify-between items-center">
+              <h3 className="font-bold">Manage Categories</h3>
+              <button onClick={() => setShowCatModal(false)}>✕</button>
+            </div>
             <div className="p-4 max-h-[60vh] overflow-y-auto space-y-2">
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest mb-4">Drag to reorder • Click box to add image</p>
+              
               {tempCats.map((cat, i) => (
-                <div key={i} className="flex gap-2">
+                <div 
+                    key={cat.id || i} 
+                    className={`flex gap-2 items-center p-2 border rounded mb-2 bg-white transition-all ${draggedIndex === i ? 'opacity-50' : ''}`}
+                    draggable
+                    onDragStart={() => handleDragStart(i)}
+                    onDragOver={(e) => handleDragOver(e, i)}
+                    onDrop={() => handleDrop(i)}
+                >
+                    <div className="cursor-move text-gray-300 hover:text-black px-1 select-none">⋮⋮</div>
+                    
+                    <div className="relative w-10 h-10 shrink-0 group">
+                      <input type="file" id={`cat-file-${i}`} accept="image/*" className="hidden" onChange={(e) => handleCatImageUpload(e, i)} />
+                      <label htmlFor={`cat-file-${i}`} className="w-full h-full rounded overflow-hidden cursor-pointer border border-gray-200 hover:border-black transition-colors bg-gray-50 flex items-center justify-center relative">
+                        {cat.image ? <img src={cat.image} alt="" className="w-full h-full object-cover" /> : <span className="text-[8px] text-gray-400 text-center leading-tight">ADD<br/>IMG</span>}
+                        <div className="absolute inset-0 bg-black/50 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-[8px] font-bold">EDIT</div>
+                      </label>
+                    </div>
+
                     <input 
                         value={cat.label} 
                         onChange={(e) => { 
-                            // Update label only, keep ID same
                             const n = [...tempCats]; 
                             n[i] = { ...n[i], label: e.target.value }; 
                             setTempCats(n); 
                         }} 
-                        className="flex-1 border p-2 text-sm rounded" 
+                        className="flex-1 border-none outline-none text-sm font-bold text-gray-700 bg-transparent focus:text-black" 
                     />
-                    <button onClick={() => setTempCats(tempCats.filter((_, idx) => idx !== i))} className="text-red-500 font-bold">✕</button>
+                    <button onClick={() => setTempCats(tempCats.filter((_, idx) => idx !== i))} className="text-gray-300 hover:text-red-500 font-bold px-2">✕</button>
                 </div>
               ))}
               <div className="flex gap-2 mt-4 pt-4 border-t">
                   <input placeholder="New Category..." value={newCatName} onChange={e => setNewCatName(e.target.value)} className="flex-1 border p-2 text-sm rounded" />
                   <button onClick={() => { 
                       if(newCatName) { 
-                          setTempCats([...tempCats, { id: newCatName.toLowerCase().replace(/[^a-z0-9]/g, ''), label: newCatName }]); 
+                          setTempCats([...tempCats, { id: newCatName.toLowerCase().replace(/[^a-z0-9]/g, ''), label: newCatName, image: '' }]); 
                           setNewCatName(''); 
                       } 
                   }} className="bg-black text-white px-4 text-xs font-bold rounded">ADD</button>
               </div>
             </div>
-            <div className="p-4 bg-gray-50 flex justify-end gap-2"><button onClick={() => setShowCatModal(false)} className="px-4 py-2 text-xs font-bold text-gray-500">CANCEL</button><button onClick={saveCategories} className="px-4 py-2 text-xs font-bold bg-green-600 text-white rounded">SAVE CHANGES</button></div>
+            <div className="p-4 bg-gray-50 flex justify-end gap-2">
+              <button onClick={() => setShowCatModal(false)} className="px-4 py-2 text-xs font-bold text-gray-500">CANCEL</button>
+              <button onClick={saveCategories} className="px-4 py-2 text-xs font-bold bg-green-600 text-white rounded">SAVE CHANGES</button>
+            </div>
           </div>
         </div>
       )}
@@ -209,31 +325,66 @@ export default function AdminCafe() {
         <div className="flex justify-between items-center mb-6 pb-2 border-b border-gray-100">
           <h3 className="font-bold text-lg text-black">{editingId ? '✏️ Edit Item' : 'Add New Item'}</h3>
           <div className="flex gap-2 items-center">
-             {/* 🟢 EDIT CATEGORIES BUTTON */}
              <button onClick={() => { setTempCats(categories.filter(c => c.id !== 'all')); setShowCatModal(true); }} className="text-[10px] font-bold uppercase bg-black text-white px-3 py-2 rounded hover:bg-gray-800">Edit Categories</button>
              {editingId && <button onClick={cancelEditing} className="text-xs text-red-500 font-bold underline">Cancel Edit</button>}
           </div>
         </div>
+        
         <form onSubmit={handleFormSubmit} className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+           
            <div className="md:col-span-12">
              <label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">
                {isUploading ? "Uploading Image..." : "Menu Image (Upload or URL)"}
              </label>
              <div className="flex gap-2">
                <input type="file" accept="image/*" onChange={handleFileUpload} className={`${inputStyle} w-1/2 cursor-pointer border-dashed`} />
-               <input value={newItem.image} onChange={e=>setNewItem({...newItem, image: e.target.value})} className={`${inputStyle} w-1/2 bg-gray-50`} placeholder="https://..." />
+               <input value={newItem.image || ''} onChange={e=>setNewItem({...newItem, image: e.target.value})} className={`${inputStyle} w-1/2 bg-gray-50`} placeholder="https://..." />
              </div>
            </div>
 
-           <div className="md:col-span-3"><label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">Item Name</label><input value={newItem.name} onChange={e=>setNewItem({...newItem, name: e.target.value})} className={inputStyle} placeholder="e.g. Latte" /></div>
-           <div className="md:col-span-2"><label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">Price</label><input value={newItem.price} onChange={e=>setNewItem({...newItem, price: e.target.value})} className={inputStyle} placeholder="$0.00" /></div>
-           <div className="md:col-span-3"><label className="text-[10px] font-bold text-red-500 uppercase block mb-1">Discount</label><div className="flex gap-2"><input type="number" value={newItem.discountValue} onChange={e=>setNewItem({...newItem, discountValue: e.target.value})} className={`${inputStyle} w-2/3`} placeholder="0" /><select value={newItem.discountType} onChange={e=>setNewItem({...newItem, discountType: e.target.value})} className={`${selectStyle} w-1/3 px-1 text-center`}><option value="percent">% Off</option><option value="fixed">$ Off</option></select></div></div>
-           <div className="md:col-span-2 text-center pb-2"><p className="text-[10px] text-gray-400 uppercase font-bold">Final Price</p><p className="text-xl font-bold text-green-600">{calculateFinalPrice(newItem.price, newItem.discountValue, newItem.discountType)}</p></div>
+           <div className="md:col-span-2">
+              <label className="text-[10px] font-bold text-blue-600 uppercase block mb-1">Display Order</label>
+              <input type="number" value={newItem.order ?? 10} onChange={e=>setNewItem({...newItem, order: parseInt(e.target.value) || 0})} className={`${inputStyle} border-blue-200 bg-blue-50 font-bold text-center`} placeholder="1" />
+           </div>
+
+           <div className="md:col-span-3">
+             <label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">Item Name</label>
+             <input value={newItem.name || ''} onChange={e=>setNewItem({...newItem, name: e.target.value})} className={inputStyle} placeholder="e.g. Latte" />
+           </div>
+
+           <div className="md:col-span-2">
+             <label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">Price</label>
+             <input value={newItem.price || ''} onChange={e=>setNewItem({...newItem, price: e.target.value})} className={inputStyle} placeholder="$0.00" />
+           </div>
+
+           <div className="md:col-span-3">
+             <label className="text-[10px] font-bold text-red-500 uppercase block mb-1">Discount</label>
+             <div className="flex gap-2">
+               <input type="number" value={newItem.discountValue || ''} onChange={e=>setNewItem({...newItem, discountValue: e.target.value})} className={`${inputStyle} w-2/3`} placeholder="0" />
+               <select value={newItem.discountType} onChange={e=>setNewItem({...newItem, discountType: e.target.value})} className={`${selectStyle} w-1/3 px-1 text-center`}>
+                 <option value="percent">% Off</option>
+                 <option value="fixed">$ Off</option>
+               </select>
+             </div>
+           </div>
+
+           <div className="md:col-span-2 text-center pb-2">
+             <p className="text-[10px] text-gray-400 uppercase font-bold">Final Price</p>
+             <p className="text-xl font-bold text-green-600">{calculateFinalPrice(newItem.price, newItem.discountValue, newItem.discountType)}</p>
+           </div>
            
-           {/* 🟢 DYNAMIC CATEGORY SELECT */}
-           <div className="md:col-span-3"><label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">Category</label><select value={newItem.category} onChange={e=>setNewItem({...newItem, category: e.target.value})} className={selectStyle}>{categories.filter(c => c.id !== 'all').map(c => <option key={c.id} value={c.id}>{c.label}</option>)}</select></div>
+           <div className="md:col-span-3">
+             <label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">Category</label>
+             <select value={newItem.category || 'coffee'} onChange={e=>setNewItem({...newItem, category: e.target.value})} className={selectStyle}>
+               {categories.filter(c => c.id !== 'all').map(c => <option key={c.id} value={c.id}>{c.label}</option>)}
+             </select>
+           </div>
            
-           <div className="md:col-span-9"><label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">Description</label><input value={newItem.description} onChange={e=>setNewItem({...newItem, description: e.target.value})} className={inputStyle} placeholder="Describe the item..." /></div>
+           <div className="md:col-span-9">
+             <label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">Description</label>
+             <input value={newItem.description || ''} onChange={e=>setNewItem({...newItem, description: e.target.value})} className={inputStyle} placeholder="Describe the item..." />
+           </div>
+
            <button disabled={isUploading} className={`md:col-span-12 w-full text-white font-bold py-4 uppercase text-xs tracking-widest ${isUploading ? 'bg-gray-400' : (editingId ? 'bg-amber-600' : 'bg-black')}`}>
              {isUploading ? 'Wait for upload...' : (editingId ? 'Update Item' : 'Add Item +')}
            </button>
@@ -242,7 +393,9 @@ export default function AdminCafe() {
 
       <div className="flex flex-wrap gap-2">
         {categories.map((cat) => (
-          <button key={cat.id} onClick={() => setActiveFilter(cat.id)} className={`px-4 py-2 rounded-full text-[10px] font-bold uppercase transition-all border ${activeFilter === cat.id ? 'bg-black text-white' : 'bg-white text-gray-400 border-gray-200'}`}>{cat.label}</button>
+          <button key={cat.id} onClick={() => setActiveFilter(cat.id)} className={`px-4 py-2 rounded-full text-[10px] font-bold uppercase transition-all border ${activeFilter === cat.id ? 'bg-black text-white' : 'bg-white text-gray-400 border-gray-200'}`}>
+            {cat.label}
+          </button>
         ))}
       </div>
 
@@ -251,26 +404,60 @@ export default function AdminCafe() {
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm whitespace-nowrap">
             <thead className="bg-gray-50 text-[10px] font-bold uppercase text-gray-400 tracking-widest">
-              <tr><th className="px-6 py-4">Image</th><th className="px-6 py-4">Details</th><th className="px-6 py-4">Price</th><th className="px-6 py-4 text-center">Tags</th><th className="px-6 py-4 text-right">Actions</th></tr>
+              <tr>
+                <th className="px-6 py-4">Ord</th>
+                <th className="px-6 py-4">Status</th>
+                <th className="px-6 py-4">Image</th>
+                <th className="px-6 py-4">Details</th>
+                <th className="px-6 py-4">Price</th>
+                <th className="px-6 py-4 text-center">Tags</th>
+                <th className="px-6 py-4 text-right">Actions</th>
+              </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
               {filteredItems.map((s) => (
-                <tr key={s.id} className="hover:bg-gray-50">
+                <tr key={s.id} className={`transition-all ${s.isPaused ? 'bg-gray-50 opacity-60 grayscale-50' : 'hover:bg-gray-50'}`}>
+                  
+                  <td className="px-6 py-4 text-blue-600 font-bold">{s.order || '-'}</td>
+                  
+                  <td className="px-6 py-4">
+                    <button 
+                      onClick={() => toggleStatus(s.id, 'isPaused', s.isPaused)} 
+                      className={`px-3 py-1.5 rounded text-[9px] font-bold uppercase tracking-widest border transition-all ${
+                        s.isPaused 
+                          ? 'bg-red-50 text-red-600 border-red-200 hover:bg-red-100' 
+                          : 'bg-green-50 text-green-600 border-green-200 hover:bg-green-100'
+                      }`}
+                    >
+                      {s.isPaused ? 'Paused' : 'Active'}
+                    </button>
+                  </td>
+
                   <td className="px-6 py-4">
                     <div className="w-12 h-12 relative rounded border border-gray-100 overflow-hidden">
                       <Image src={s.image || cafePlaceholder} alt="" fill sizes="48px" quality={75} className="object-cover" />
                     </div>
                   </td>
-                  <td className="px-6 py-4"><p className="font-bold text-black uppercase text-xs">{s.name}</p><p className="text-[10px] text-gray-400 uppercase">{s.category}</p></td>
+
+                  <td className="px-6 py-4">
+                    <p className={`font-bold uppercase text-xs ${s.isPaused ? 'text-gray-500 line-through' : 'text-black'}`}>
+                      {s.name}
+                    </p>
+                    <p className="text-[10px] text-gray-400 uppercase">{s.category}</p>
+                  </td>
+
                   <td className="px-6 py-4 font-bold">{s.price}</td>
+
                   <td className="px-6 py-4 text-center space-x-2">
                     <button onClick={() => toggleStatus(s.id, 'isMonthlyPromo', s.isMonthlyPromo)} className={`px-3 py-1 rounded-full text-[9px] font-bold border ${s.isMonthlyPromo ? 'bg-yellow-100 text-yellow-700' : 'text-gray-300'}`}>Promo</button>
                     <button onClick={() => toggleStatus(s.id, 'isSignature', s.isSignature)} className={`px-3 py-1 rounded-full text-[9px] font-bold border ${s.isSignature ? 'bg-purple-100 text-purple-700' : 'text-gray-300'}`}>Sign</button>
                   </td>
+
                   <td className="px-6 py-4 text-right space-x-4">
                     <button onClick={() => startEditing(s)} className="text-blue-500 font-bold uppercase text-[10px]">Edit</button>
                     <button onClick={async () => { if(confirm('Delete?')) { await deleteDoc(doc(db, "cafe", s.id)); fetchItems(); } }} className="text-gray-300 hover:text-red-500 font-bold uppercase text-[10px]">Del</button>
                   </td>
+                  
                 </tr>
               ))}
             </tbody>

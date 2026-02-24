@@ -121,7 +121,7 @@ const Promotions = () => {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-stretch min-h-125">
           
           {/* 1. VISUAL DISPLAY (Mobile: Top, Desktop: Left) */}
-          <div className="md:col-span-7 relative group cursor-pointer w-full h-[350px] md:h-full"
+          <div className="md:col-span-7 relative group cursor-pointer w-full h-87.5 md:h-full"
                onClick={() => displayPromo && handleAddToBag(displayPromo)}>
             
             {/* Desktop Border Effect */}

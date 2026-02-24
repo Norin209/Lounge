@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useBag } from '../_context/BagContext'; 
 import { db } from '../_utils/firebase';
-import { collection, doc, getDoc, onSnapshot } from 'firebase/firestore'; // 🟢 Added onSnapshot for real-time updates
+import { collection, doc, getDoc, onSnapshot } from 'firebase/firestore'; 
 
 const HERO_IMAGE = "https://images.unsplash.com/photo-1600334129128-685c5582fd35?q=80&w=2000&auto=format&fit=crop";
 const PLACEHOLDER_IMG = "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=800&auto=format&fit=crop";
@@ -38,6 +38,7 @@ interface ServiceItem {
   duration?: string;
   isSignature?: boolean;
   order?: number; 
+  isPaused?: boolean; // 🟢 Added isPaused
 }
 
 interface CategoryItem {
@@ -63,7 +64,7 @@ const TreatmentsPage = () => {
 
   // 🟢 2. REAL-TIME DATA FETCHING
   useEffect(() => {
-    // A. Fetch Categories (Static rarely changes, one time fetch is fine)
+    // A. Fetch Categories
     const fetchCategories = async () => {
       try {
         const catDoc = await getDoc(doc(db, "settings", "service_categories"));
@@ -85,19 +86,22 @@ const TreatmentsPage = () => {
 
     // B. Real-time Listener for Services
     const unsubscribe = onSnapshot(collection(db, "services"), (snapshot) => {
-      const serviceList = snapshot.docs.map(doc => ({
+      const rawData = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       } as ServiceItem));
 
+      // 🟢 Filter out paused items
+      const activeServices = rawData.filter(item => !item.isPaused);
+
       // 🟢 SORT BY ORDER: Items with NO order become 999 (go to bottom)
-      serviceList.sort((a, b) => {
+      activeServices.sort((a, b) => {
         const orderA = a.order !== undefined && a.order !== null ? Number(a.order) : 999;
         const orderB = b.order !== undefined && b.order !== null ? Number(b.order) : 999;
         return orderA - orderB;
       });
 
-      setServices(serviceList);
+      setServices(activeServices);
       setLoading(false);
     }, (error) => {
       console.error("Error listening to services:", error);
@@ -210,10 +214,9 @@ const TreatmentsPage = () => {
       <nav className="relative z-10 bg-white border-b border-gray-100 shadow-sm">
         <div className="relative max-w-7xl mx-auto px-4 py-2 group">
           
-          {/* Mobile Left Arrow */}
           <button 
             onClick={() => scrollTabs('left')} 
-            className="md:hidden absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 w-10 h-10 rounded-full shadow-md flex items-center justify-center text-black ml-2"
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-gray-100 w-10 h-10 rounded-full shadow-md flex items-center justify-center text-black ml-2 transition-colors cursor-pointer"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
           </button>
@@ -245,7 +248,6 @@ const TreatmentsPage = () => {
                   sizes="(max-width: 768px) 100px, 120px"
                 />
                 
-                {/* 🟢 FIXED: Changed bg-gradient-to-t to bg-linear-to-t */}
                 <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-80" />
 
                 <div className="absolute bottom-2 left-0 right-0 text-center px-1">
@@ -260,10 +262,9 @@ const TreatmentsPage = () => {
             ))}
           </div>
 
-          {/* Mobile Right Arrow */}
           <button 
             onClick={() => scrollTabs('right')} 
-            className="md:hidden absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 w-10 h-10 rounded-full shadow-md flex items-center justify-center text-black mr-2"
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-gray-100 w-10 h-10 rounded-full shadow-md flex items-center justify-center text-black mr-2 transition-colors cursor-pointer"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </button>

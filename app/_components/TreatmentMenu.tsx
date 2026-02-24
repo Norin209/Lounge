@@ -22,7 +22,8 @@ interface TreatmentItem {
   isMonthlyPromo?: boolean; 
   discountValue?: string;
   discountType?: 'percent' | 'fixed';
-  order?: number; // 🟢 Added 'order' for sorting
+  order?: number; 
+  isPaused?: boolean; // 🟢 Added isPaused
 }
 
 interface CategoryItem {
@@ -77,19 +78,22 @@ const TreatmentMenu = () => {
 
     // 2. Listen to Services in Real-Time
     const unsubscribe = onSnapshot(collection(db, "services"), (snapshot) => {
-      const data = snapshot.docs.map(doc => ({
+      const rawData = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       } as TreatmentItem));
 
+      // 🟢 Filter out paused items
+      const activeServices = rawData.filter(item => !item.isPaused);
+
       // 🟢 SORT BY ORDER
-      data.sort((a, b) => {
+      activeServices.sort((a, b) => {
         const orderA = a.order !== undefined && a.order !== null ? Number(a.order) : 999;
         const orderB = b.order !== undefined && b.order !== null ? Number(b.order) : 999;
         return orderA - orderB;
       });
 
-      setServices(data);
+      setServices(activeServices);
       setLoading(false);
     }, (error) => {
       console.error("Error listening to menu:", error);
@@ -175,13 +179,13 @@ const TreatmentMenu = () => {
         <div className="w-10 h-px bg-gray-300 mx-auto" />
       </div>
 
-      {/* 🟢 TABS (COPIED EXACTLY FROM YOUR TREATMENTS PAGE) */}
+      {/* 🟢 TABS */}
       <nav className="relative z-10 bg-white border-b border-gray-100 shadow-sm">
         <div className="relative max-w-7xl mx-auto px-4 py-2 group">
           
           <button 
             onClick={() => scrollTabs('left')} 
-            className="md:hidden absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 w-10 h-10 rounded-full shadow-md flex items-center justify-center text-black ml-2"
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-gray-100 w-10 h-10 rounded-full shadow-md flex items-center justify-center text-black ml-2 transition-colors cursor-pointer"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
           </button>
@@ -229,7 +233,7 @@ const TreatmentMenu = () => {
 
           <button 
             onClick={() => scrollTabs('right')} 
-            className="md:hidden absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 w-10 h-10 rounded-full shadow-md flex items-center justify-center text-black mr-2"
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-gray-100 w-10 h-10 rounded-full shadow-md flex items-center justify-center text-black mr-2 transition-colors cursor-pointer"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </button>
@@ -238,11 +242,11 @@ const TreatmentMenu = () => {
 
       {/* 🟢 SERVICES CAROUSEL */}
       <div className="max-w-7xl mx-auto px-6 py-12 relative">
-          <button onClick={() => scrollServices('left')} className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white shadow-md rounded-full items-center justify-center hover:scale-110 transition-transform text-black border border-gray-100">
+          <button onClick={() => scrollServices('left')} className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white shadow-md rounded-full items-center justify-center hover:scale-110 transition-transform text-black border border-gray-100 cursor-pointer">
              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
           </button>
 
-          <div ref={scrollContainerRef} className="flex flex-nowrap overflow-x-auto gap-6 pb-4 hide-scrollbar snap-x snap-mandatory">
+          <div ref={scrollContainerRef} className="flex flex-nowrap overflow-x-auto gap-6 pb-4 hide-scrollbar snap-x snap-mandatory scroll-smooth">
             {filteredItems.length > 0 ? (
               filteredItems.map((item) => {
                 const isInBag = bag.some(b => b.id === item.id);
@@ -323,7 +327,7 @@ const TreatmentMenu = () => {
             )}
           </div>
           
-          <button onClick={() => scrollServices('right')} className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white shadow-md rounded-full items-center justify-center hover:scale-110 transition-transform text-black border border-gray-100">
+          <button onClick={() => scrollServices('right')} className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white shadow-md rounded-full items-center justify-center hover:scale-110 transition-transform text-black border border-gray-100 cursor-pointer">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </button>
       </div>

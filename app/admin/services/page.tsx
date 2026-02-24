@@ -9,7 +9,7 @@ import { uploadServices } from '../../_utils/uploadServices';
 
 const treatmentPlaceholder = "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=800";
 
-// 🟢 DEFAULT CATEGORIES
+// DEFAULT CATEGORIES
 const DEFAULT_CATS = [
   { id: 'facial', label: 'Facial' },
   { id: 'body', label: 'Body' },
@@ -25,20 +25,29 @@ export default function ServicesPage() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isUploading, setIsUploading] = useState(false); 
   
-  // 🟢 DYNAMIC CATEGORY STATE
+  // DYNAMIC CATEGORY STATE
   const [categories, setCategories] = useState<any[]>([{ id: 'all', label: 'View All' }]);
   const [showCatModal, setShowCatModal] = useState(false);
   const [tempCats, setTempCats] = useState<any[]>([]);
   const [newCatName, setNewCatName] = useState('');
 
-  // 🟢 DRAG STATE
+  // DRAG STATE
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
 
+  // FORM STATE
   const [newItem, setNewItem] = useState({ 
-    name: '', price: '', category: 'facial', duration: '60 min', 
-    isMonthlyPromo: false, isSignature: false, 
-    discountValue: '', discountType: 'percent', image: '',
-    description: '', order: 10
+    name: '', 
+    price: '', 
+    category: 'facial', 
+    duration: '60 min', 
+    isMonthlyPromo: false, 
+    isSignature: false, 
+    isPaused: false,
+    discountValue: '', 
+    discountType: 'percent', 
+    image: '',
+    description: '', 
+    order: 10
   });
 
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -49,7 +58,6 @@ export default function ServicesPage() {
     fetchServices(); 
   }, []);
 
-  // 🟢 1. FETCH CATEGORIES
   const fetchCategories = async () => {
     try {
       const docRef = doc(db, "settings", "service_categories");
@@ -63,7 +71,6 @@ export default function ServicesPage() {
     } catch (error) { console.error("Cat Error:", error); }
   };
 
-  // 🟢 2. SAVE CATEGORIES
   const saveCategories = async () => {
     if (tempCats.length === 0) return alert("Need at least 1 category");
     try {
@@ -75,7 +82,6 @@ export default function ServicesPage() {
     }
   };
 
-  // 🟢 3. DRAG HANDLERS
   const handleDragStart = (index: number) => {
     setDraggedIndex(index);
   };
@@ -86,25 +92,20 @@ export default function ServicesPage() {
 
   const handleDrop = (index: number) => {
     if (draggedIndex === null || draggedIndex === index) return;
-
     const newCats = [...tempCats];
     const draggedItem = newCats[draggedIndex];
-
     newCats.splice(draggedIndex, 1);
     newCats.splice(index, 0, draggedItem);
-
     setTempCats(newCats);
     setDraggedIndex(null);
   };
 
-  // 🟢 4. FETCH SERVICES
   const fetchServices = async () => {
     if (!isRefreshing && loading) setLoading(true);
     try {
       const q = await getDocs(collection(db, "services"));
       const list = q.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      // Sort immediately based on order
-      list.sort((a: any, b: any) => (a.order || 999) - (b.order || 999));
+      list.sort((a: any, b: any) => (a.order ?? 999) - (b.order ?? 999));
       setServices(list);
     } catch (error) {
       console.error("Error fetching services:", error);
@@ -116,7 +117,6 @@ export default function ServicesPage() {
 
   const handleRefresh = () => { setIsRefreshing(true); fetchServices(); };
 
-  // 🟢 5. UPLOAD SERVICE IMAGE
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -140,7 +140,6 @@ export default function ServicesPage() {
     }
   };
 
-  // 🟢 6. UPLOAD CATEGORY IMAGE
   const handleCatImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -175,7 +174,6 @@ export default function ServicesPage() {
     fetchServices(); 
   };
 
-  // 🟢 FIXED: Safely load all properties to prevent "uncontrolled input" error
   const startEditing = (service: any) => {
     setEditingId(service.id);
     setNewItem({ 
@@ -185,6 +183,7 @@ export default function ServicesPage() {
       duration: service.duration || '', 
       isMonthlyPromo: service.isMonthlyPromo || false, 
       isSignature: service.isSignature || false, 
+      isPaused: service.isPaused || false,
       discountValue: service.discountValue || '', 
       discountType: service.discountType || 'percent', 
       image: service.image || '',
@@ -197,10 +196,18 @@ export default function ServicesPage() {
   const cancelEditing = () => {
     setEditingId(null);
     setNewItem({ 
-      name: '', price: '', category: 'facial', duration: '60 min', 
-      isMonthlyPromo: false, isSignature: false, 
-      discountValue: '', discountType: 'percent', image: '', 
-      description: '', order: 10 
+      name: '', 
+      price: '', 
+      category: 'facial', 
+      duration: '60 min', 
+      isMonthlyPromo: false, 
+      isSignature: false, 
+      isPaused: false,
+      discountValue: '', 
+      discountType: 'percent', 
+      image: '', 
+      description: '', 
+      order: 10 
     });
   };
 
@@ -237,11 +244,14 @@ export default function ServicesPage() {
   return (
     <div className="space-y-8 pb-20 font-sans text-left relative">
       
-      {/* 🟢 CATEGORY EDITOR MODAL */}
+      {/* CATEGORY EDITOR MODAL */}
       {showCatModal && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
-            <div className="p-4 border-b flex justify-between items-center"><h3 className="font-bold">Manage Categories</h3><button onClick={() => setShowCatModal(false)}>✕</button></div>
+            <div className="p-4 border-b flex justify-between items-center">
+              <h3 className="font-bold">Manage Categories</h3>
+              <button onClick={() => setShowCatModal(false)}>✕</button>
+            </div>
             <div className="p-4 max-h-[60vh] overflow-y-auto space-y-2">
               <p className="text-[10px] text-gray-400 uppercase tracking-widest mb-4">Drag to reorder • Click box to add image</p>
               
@@ -256,26 +266,41 @@ export default function ServicesPage() {
                 >
                     <div className="cursor-move text-gray-300 hover:text-black px-1 select-none">⋮⋮</div>
                     
-                    {/* CATEGORY IMAGE UPLOAD */}
                     <div className="relative w-10 h-10 shrink-0 group">
                       <input type="file" id={`cat-file-${i}`} accept="image/*" className="hidden" onChange={(e) => handleCatImageUpload(e, i)} />
-                      {/* FIXED CSS CONFLICT: Removed 'block', kept 'flex' */}
                       <label htmlFor={`cat-file-${i}`} className="w-full h-full rounded overflow-hidden cursor-pointer border border-gray-200 hover:border-black transition-colors bg-gray-50 flex items-center justify-center relative">
                         {cat.image ? <img src={cat.image} alt="" className="w-full h-full object-cover" /> : <span className="text-[8px] text-gray-400 text-center leading-tight">ADD<br/>IMG</span>}
                         <div className="absolute inset-0 bg-black/50 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-[8px] font-bold">EDIT</div>
                       </label>
                     </div>
 
-                    <input value={cat.label} onChange={(e) => { const n = [...tempCats]; n[i] = { ...n[i], label: e.target.value }; setTempCats(n); }} className="flex-1 border-none outline-none text-sm font-bold text-gray-700 bg-transparent focus:text-black" placeholder="Category Name" />
+                    <input 
+                      value={cat.label} 
+                      onChange={(e) => { 
+                        const n = [...tempCats]; 
+                        n[i] = { ...n[i], label: e.target.value }; 
+                        setTempCats(n); 
+                      }} 
+                      className="flex-1 border-none outline-none text-sm font-bold text-gray-700 bg-transparent focus:text-black" 
+                      placeholder="Category Name" 
+                    />
                     <button onClick={() => setTempCats(tempCats.filter((_, idx) => idx !== i))} className="text-gray-300 hover:text-red-500 font-bold px-2">✕</button>
                 </div>
               ))}
               <div className="flex gap-2 mt-4 pt-4 border-t">
                   <input placeholder="New Category..." value={newCatName} onChange={e => setNewCatName(e.target.value)} className="flex-1 border p-2 text-sm rounded" />
-                  <button onClick={() => { if(newCatName) { setTempCats([...tempCats, { id: newCatName.toLowerCase().replace(/[^a-z0-9]/g, ''), label: newCatName, image: '' }]); setNewCatName(''); } }} className="bg-black text-white px-4 text-xs font-bold rounded">ADD</button>
+                  <button onClick={() => { 
+                    if(newCatName) { 
+                      setTempCats([...tempCats, { id: newCatName.toLowerCase().replace(/[^a-z0-9]/g, ''), label: newCatName, image: '' }]); 
+                      setNewCatName(''); 
+                    } 
+                  }} className="bg-black text-white px-4 text-xs font-bold rounded">ADD</button>
               </div>
             </div>
-            <div className="p-4 bg-gray-50 flex justify-end gap-2"><button onClick={() => setShowCatModal(false)} className="px-4 py-2 text-xs font-bold text-gray-500">CANCEL</button><button onClick={saveCategories} className="px-4 py-2 text-xs font-bold bg-green-600 text-white rounded">SAVE CHANGES</button></div>
+            <div className="p-4 bg-gray-50 flex justify-end gap-2">
+              <button onClick={() => setShowCatModal(false)} className="px-4 py-2 text-xs font-bold text-gray-500">CANCEL</button>
+              <button onClick={saveCategories} className="px-4 py-2 text-xs font-bold bg-green-600 text-white rounded">SAVE CHANGES</button>
+            </div>
           </div>
         </div>
       )}
@@ -306,8 +331,10 @@ export default function ServicesPage() {
              {editingId && <button onClick={cancelEditing} className="text-xs text-red-500 font-bold underline">Cancel Edit</button>}
           </div>
         </div>
+
         <form onSubmit={handleFormSubmit} className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
-           {/* IMAGE INPUTS */}
+           
+           {/* IMAGE UPLOAD */}
            <div className="md:col-span-12">
              <label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">
                {isUploading ? "Uploading Image..." : "Service Image (Upload or URL)"}
@@ -324,29 +351,71 @@ export default function ServicesPage() {
               <input type="number" value={newItem.order ?? 10} onChange={e=>setNewItem({...newItem, order: parseInt(e.target.value) || 0})} className={`${inputStyle} border-blue-200 bg-blue-50 font-bold text-center`} placeholder="1" />
            </div>
 
-           <div className="md:col-span-3"><label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">Service Name</label><input value={newItem.name || ''} onChange={e=>setNewItem({...newItem, name: e.target.value})} className={inputStyle} placeholder="e.g. Gold Facial" /></div>
-           <div className="md:col-span-2"><label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">Price</label><input value={newItem.price || ''} onChange={e=>setNewItem({...newItem, price: e.target.value})} className={inputStyle} placeholder="$0.00" /></div>
-           <div className="md:col-span-3"><label className="text-[10px] font-bold text-red-500 uppercase block mb-1">Discount</label><div className="flex gap-2"><input type="number" value={newItem.discountValue || ''} onChange={e=>setNewItem({...newItem, discountValue: e.target.value})} className={`${inputStyle} w-2/3`} placeholder="0" /><select value={newItem.discountType} onChange={e=>setNewItem({...newItem, discountType: e.target.value})} className={`${selectStyle} w-1/3 px-1 text-center`}><option value="percent">% Off</option><option value="fixed">$ Off</option></select></div></div>
-           <div className="md:col-span-2 text-center pb-2"><p className="text-[10px] text-gray-400 uppercase font-bold">Final Price</p><p className="text-xl font-bold text-green-600">{calculateFinalPrice(newItem.price, newItem.discountValue, newItem.discountType)}</p></div>
+           {/* NAME */}
+           <div className="md:col-span-3">
+             <label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">Service Name</label>
+             <input value={newItem.name || ''} onChange={e=>setNewItem({...newItem, name: e.target.value})} className={inputStyle} placeholder="e.g. Gold Facial" />
+           </div>
+
+           {/* PRICE */}
+           <div className="md:col-span-2">
+             <label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">Price</label>
+             <input value={newItem.price || ''} onChange={e=>setNewItem({...newItem, price: e.target.value})} className={inputStyle} placeholder="$0.00" />
+           </div>
+
+           {/* DISCOUNT */}
+           <div className="md:col-span-3">
+             <label className="text-[10px] font-bold text-red-500 uppercase block mb-1">Discount</label>
+             <div className="flex gap-2">
+               <input type="number" value={newItem.discountValue || ''} onChange={e=>setNewItem({...newItem, discountValue: e.target.value})} className={`${inputStyle} w-2/3`} placeholder="0" />
+               <select value={newItem.discountType} onChange={e=>setNewItem({...newItem, discountType: e.target.value})} className={`${selectStyle} w-1/3 px-1 text-center`}>
+                 <option value="percent">% Off</option>
+                 <option value="fixed">$ Off</option>
+               </select>
+             </div>
+           </div>
+
+           {/* FINAL PRICE PREVIEW */}
+           <div className="md:col-span-2 text-center pb-2">
+             <p className="text-[10px] text-gray-400 uppercase font-bold">Final Price</p>
+             <p className="text-xl font-bold text-green-600">{calculateFinalPrice(newItem.price, newItem.discountValue, newItem.discountType)}</p>
+           </div>
            
-           <div className="md:col-span-3"><label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">Category</label><select value={newItem.category || 'facial'} onChange={e=>setNewItem({...newItem, category: e.target.value})} className={selectStyle}>{categories.filter(c => c.id !== 'all').map(c => <option key={c.id} value={c.id}>{c.label}</option>)}</select></div>
+           {/* CATEGORY */}
+           <div className="md:col-span-3">
+             <label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">Category</label>
+             <select value={newItem.category || 'facial'} onChange={e=>setNewItem({...newItem, category: e.target.value})} className={selectStyle}>
+               {categories.filter(c => c.id !== 'all').map(c => (
+                 <option key={c.id} value={c.id}>{c.label}</option>
+               ))}
+             </select>
+           </div>
            
-           {/* 🟢 FIXED: Duration now safely uses || '' */}
+           {/* DURATION */}
            <div className="md:col-span-2">
              <label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">Duration</label>
              <input value={newItem.duration || ''} onChange={e=>setNewItem({...newItem, duration: e.target.value})} className={inputStyle} placeholder="60 min" />
            </div>
-           
-           <div className="md:col-span-7"><label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">Treatment Description</label><input value={newItem.description || ''} onChange={e=>setNewItem({...newItem, description: e.target.value})} className={inputStyle} placeholder="Describe benefits..." /></div>
+
+           {/* DESCRIPTION */}
+           <div className="md:col-span-7">
+             <label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">Treatment Description</label>
+             <input value={newItem.description || ''} onChange={e=>setNewItem({...newItem, description: e.target.value})} className={inputStyle} placeholder="Describe benefits..." />
+           </div>
+
+           {/* SUBMIT BUTTON */}
            <button disabled={isUploading} className={`md:col-span-12 w-full text-white font-bold py-4 uppercase text-xs tracking-widest ${isUploading ? 'bg-gray-400' : (editingId ? 'bg-amber-600' : 'bg-black')}`}>
              {isUploading ? 'Wait for upload...' : (editingId ? 'Update Service' : 'Add Service +')}
            </button>
+
         </form>
       </div>
 
       <div className="flex flex-wrap gap-2">
         {categories.map((cat) => (
-          <button key={cat.id} onClick={() => setActiveFilter(cat.id)} className={`px-4 py-2 rounded-full text-[10px] font-bold uppercase transition-all border ${activeFilter === cat.id ? 'bg-black text-white' : 'bg-white text-gray-400 border-gray-200'}`}>{cat.label}</button>
+          <button key={cat.id} onClick={() => setActiveFilter(cat.id)} className={`px-4 py-2 rounded-full text-[10px] font-bold uppercase transition-all border ${activeFilter === cat.id ? 'bg-black text-white' : 'bg-white text-gray-400 border-gray-200'}`}>
+            {cat.label}
+          </button>
         ))}
       </div>
 
@@ -357,6 +426,7 @@ export default function ServicesPage() {
             <thead className="bg-gray-50 text-[10px] font-bold uppercase text-gray-400 tracking-widest">
               <tr>
                 <th className="px-6 py-4">Ord</th>
+                <th className="px-6 py-4">Status</th>
                 <th className="px-6 py-4">Image</th>
                 <th className="px-6 py-4">Service Details</th>
                 <th className="px-6 py-4">Price</th>
@@ -366,8 +436,23 @@ export default function ServicesPage() {
             </thead>
             <tbody className="divide-y divide-gray-50">
               {filteredServices.map((s) => (
-                <tr key={s.id} className="hover:bg-gray-50">
+                <tr key={s.id} className={`transition-all ${s.isPaused ? 'bg-gray-50 opacity-60 grayscale-50' : 'hover:bg-gray-50'}`}>
+                  
                   <td className="px-6 py-4 text-blue-600 font-bold">{s.order || '-'}</td>
+                  
+                  <td className="px-6 py-4">
+                    <button 
+                      onClick={() => toggleStatus(s.id, 'isPaused', s.isPaused)} 
+                      className={`px-3 py-1.5 rounded text-[9px] font-bold uppercase tracking-widest border transition-all ${
+                        s.isPaused 
+                          ? 'bg-red-50 text-red-600 border-red-200 hover:bg-red-100' 
+                          : 'bg-green-50 text-green-600 border-green-200 hover:bg-green-100'
+                      }`}
+                    >
+                      {s.isPaused ? 'Paused' : 'Active'}
+                    </button>
+                  </td>
+
                   <td className="px-6 py-4">
                     <div className="w-12 h-12 relative rounded border border-gray-100 overflow-hidden">
                       <Image 
@@ -380,16 +465,26 @@ export default function ServicesPage() {
                       />
                     </div>
                   </td>
-                  <td className="px-6 py-4"><p className="font-bold text-black uppercase text-xs">{s.name}</p><p className="text-[10px] text-gray-400 uppercase">{s.duration}</p></td>
+
+                  <td className="px-6 py-4">
+                    <p className={`font-bold uppercase text-xs ${s.isPaused ? 'text-gray-500 line-through' : 'text-black'}`}>
+                      {s.name}
+                    </p>
+                    <p className="text-[10px] text-gray-400 uppercase">{s.duration}</p>
+                  </td>
+
                   <td className="px-6 py-4 font-bold">{s.price}</td>
+
                   <td className="px-6 py-4 text-center space-x-2">
                     <button onClick={() => toggleStatus(s.id, 'isMonthlyPromo', s.isMonthlyPromo)} className={`px-3 py-1 rounded-full text-[9px] font-bold border ${s.isMonthlyPromo ? 'bg-yellow-100 text-yellow-700' : 'text-gray-300'}`}>Promo</button>
                     <button onClick={() => toggleStatus(s.id, 'isSignature', s.isSignature)} className={`px-3 py-1 rounded-full text-[9px] font-bold border ${s.isSignature ? 'bg-purple-100 text-purple-700' : 'text-gray-300'}`}>Sign</button>
                   </td>
+
                   <td className="px-6 py-4 text-right space-x-4">
                     <button onClick={() => startEditing(s)} className="text-blue-500 font-bold uppercase text-[10px]">Edit</button>
                     <button onClick={async () => { if(confirm('Delete?')) { await deleteDoc(doc(db, "services", s.id)); fetchServices(); } }} className="text-gray-300 hover:text-red-500 font-bold uppercase text-[10px]">Del</button>
                   </td>
+                  
                 </tr>
               ))}
             </tbody>
