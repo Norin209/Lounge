@@ -14,7 +14,7 @@ const PLACEHOLDER_IMG = "https://images.unsplash.com/photo-1544161515-4ab6ce6db8
 const STATIC_TABS = [
   { 
     id: "PROMOTIONS", 
-    label: "Deals", 
+    label: "Promotion", 
     image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=600" 
   },
   { 
