@@ -1,6 +1,30 @@
+[build]
+  command = "npm run build"
+
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
-[build]
-  command = "npm run build"
-  publish = ".next"
+# Force one canonical HTTPS host (helps Facebook/IG in-app browser a LOT)
+[[redirects]]
+  from = "http://premierlounge.co/*"
+  to = "https://premierlounge.co/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://www.premierlounge.co/*"
+  to = "https://premierlounge.co/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://www.premierlounge.co/*"
+  to = "https://premierlounge.co/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://premierlounge.netlify.app/*"
+  to = "https://premierlounge.co/:splat"
+  status = 301
+  force = true
