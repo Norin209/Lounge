@@ -36,7 +36,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <div className="max-w-sm w-full bg-white p-8 rounded-xl shadow-lg border border-gray-100">
         <div className="text-center mb-10">
-          <h1 className="text-xl font-bold font-playfair mb-2">Glisten Admin</h1>
+          <h1 className="text-xl font-bold font-playfair mb-2">PREMIER LOUNGE ADMIN</h1>
           <p className="text-[10px] text-gray-400 uppercase tracking-[0.2em]">Security Check</p>
         </div>
 
