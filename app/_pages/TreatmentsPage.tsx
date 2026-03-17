@@ -38,7 +38,7 @@ interface ServiceItem {
   duration?: string;
   isSignature?: boolean;
   order?: number; 
-  isPaused?: boolean; // 🟢 Added isPaused
+  isPaused?: boolean;
 }
 
 interface CategoryItem {
@@ -62,7 +62,7 @@ const TreatmentsPage = () => {
   const addToBag = bagContext?.addToBag || (() => {});
   const bag = bagContext?.bag || [];
 
-  // 🟢 2. REAL-TIME DATA FETCHING
+  // 2. REAL-TIME DATA FETCHING
   useEffect(() => {
     // A. Fetch Categories
     const fetchCategories = async () => {
@@ -91,10 +91,8 @@ const TreatmentsPage = () => {
         ...doc.data()
       } as ServiceItem));
 
-      // 🟢 Filter out paused items
       const activeServices = rawData.filter(item => !item.isPaused);
 
-      // 🟢 SORT BY ORDER: Items with NO order become 999 (go to bottom)
       activeServices.sort((a, b) => {
         const orderA = a.order !== undefined && a.order !== null ? Number(a.order) : 999;
         const orderB = b.order !== undefined && b.order !== null ? Number(b.order) : 999;
@@ -108,7 +106,6 @@ const TreatmentsPage = () => {
       setLoading(false);
     });
 
-    // Clean up listener when component unmounts
     return () => unsubscribe();
   }, []);
 
@@ -337,10 +334,11 @@ const TreatmentsPage = () => {
                     ${isCarousel ? 'w-72 md:w-80 shrink-0 snap-start' : 'w-full'}
                   `}
                 >
+                  {/* Container set to aspect-square */}
                   <div className={`
-                    relative bg-gray-50 shrink-0
-                    ${isList ? 'w-28 md:w-40 self-start rounded-md aspect-4/5' : ''}
-                    ${!isList ? 'w-full aspect-4/5' : ''}
+                    relative bg-gray-50 shrink-0 overflow-hidden
+                    ${isList ? 'w-28 md:w-40 self-start rounded-md aspect-square' : ''}
+                    ${!isList ? 'w-full aspect-square' : ''}
                   `}>
                     
                     {hasPromo && (
@@ -349,7 +347,8 @@ const TreatmentsPage = () => {
                       </div>
                     )}
                     
-                    <Image src={item.image || PLACEHOLDER_IMG} alt={item.name} fill className="object-cover transition-transform duration-700 md:group-hover:scale-105" />
+                    {/* Image set to object-contain so nothing gets cut off */}
+                    <Image src={item.image || PLACEHOLDER_IMG} alt={item.name} fill className="object-contain transition-transform duration-700 md:group-hover:scale-105" />
                     
                     <div className="hidden xl:flex absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-end pb-4 justify-center px-4">
                       {isInBag ? (
@@ -370,14 +369,15 @@ const TreatmentsPage = () => {
                           {item.name}
                         </h3>
                         
+                        {/* Price Display Logic Updated Here */}
                         <div className="text-right shrink-0">
                           {hasPromo ? (
                             <div className="flex flex-col items-end">
+                              <span className="text-[10px] line-through text-gray-400">{item.price}</span>
                               <span className="text-[12px] font-playfair text-[#D4AF37] font-bold italic">{finalPrice}</span>
-                              {!isGrid && <span className="text-[9px] line-through text-gray-400">{item.price}</span>}
                             </div>
                           ) : (
-                            <span className="text-[12px] font-playfair text-black italic">{item.price}</span>
+                            <span className="text-[12px] font-playfair text-black italic mt-auto">{item.price}</span>
                           )}
                         </div>
                       </div>

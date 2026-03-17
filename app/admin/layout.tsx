@@ -72,7 +72,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* MOBILE NAV */}
       <div className="md:hidden bg-black text-white sticky top-0 z-50 shadow-md">
         <div className="flex justify-between items-center p-4">
-          <span className="font-bold text-xs uppercase">Glisten Admin</span>
+          <span className="font-bold text-xs uppercase">Premier Admin</span>
           <div className="flex gap-2">
              {lastSyncIds.length > 0 ? (
                <button onClick={handleUndoSync} className="text-[9px] font-bold uppercase bg-red-600 px-3 py-1 rounded">Undo</button>
@@ -91,7 +91,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
       {/* DESKTOP SIDEBAR */}
       <aside className="hidden md:flex flex-col w-64 bg-black text-white min-h-screen fixed left-0 top-0 p-8">
-        <div className="mb-12"><h2 className="text-xl font-bold uppercase tracking-widest">Glisten</h2><p className="text-[9px] text-gray-500 uppercase tracking-widest">Master Hub</p></div>
+        <div className="mb-12"><h2 className="text-xl font-bold uppercase tracking-widest">Premier</h2><p className="text-[9px] text-gray-500 uppercase tracking-widest">Master Hub</p></div>
         <nav className="flex flex-col gap-2 flex-1">
           {navLinks.map(link => (
             <Link key={link.path} href={link.path} className={`flex items-center gap-4 px-4 py-3 rounded-lg transition-all ${isActive(link.path) ? 'bg-white text-black font-bold' : 'text-gray-400 hover:text-white hover:bg-zinc-900'}`}>
