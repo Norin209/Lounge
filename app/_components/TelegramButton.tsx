@@ -51,7 +51,7 @@ const TelegramButton = () => {
           Send Inquiry
         </span>
         <span style={{ fontSize: '13px', opacity: 0.8, marginTop: '2px' }}>
-          ផ្ញើសំណួរ
+          ផ្ញើសារ
         </span>
       </div>
     </a>
