@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useBag } from '../_context/BagContext';
 
@@ -34,10 +35,9 @@ export default function Navbar() {
   const underlineColor = isLightMode ? 'bg-black' : 'bg-white';
   const burgerColor    = isLightMode ? 'bg-black' : 'bg-white';
 
-  // 🟢 CORRECTED LINKS: Label is "Products", Link is "/shop"
   const navLinks = [
     { name: 'Treatments', href: '/treatments' },
-    { name: 'Products', href: '/shop' }, // 👈 Points to src/app/shop/page.tsx
+    { name: 'Products', href: '/shop' }, 
     { name: 'Contact Us', href: '/contact' },
     { name: 'Book Now', href: '/book' },
   ];
@@ -59,9 +59,18 @@ export default function Navbar() {
       `}>
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
           
-          {/* 1. LEFT: LOGO */}
-          <Link href="/" className={`text-2xl font-playfair font-bold tracking-tighter transition-colors duration-300 ${textColor}`}>
-            PREMIER.
+          {/* 1. LEFT: LOGO (Dynamic Image Swap!) */}
+          <Link href="/" className="relative flex items-center transition-opacity hover:opacity-80">
+            <Image 
+              // 👇 This tells it to use the black logo when scrolled/open, and the white one otherwise
+              src={isLightMode ? "/logo-black.png" : "/logo.png"} 
+              alt="Premier Logo" 
+              width={0} 
+              height={0} 
+              sizes="100vw"
+              className="w-auto h-8 md:h-10 object-contain scale-[6.5] md:scale-[8] origin-left" 
+              priority 
+            />
           </Link>
 
           {/* 2. CENTER: DESKTOP LINKS */}
