@@ -1,12 +1,13 @@
-// app/_pages/Homepage.tsx
-
 import Hero from "../_components/Hero";
-// import About from "../_components/About"; // 👈 Kept commented out for later!
+// import About from "../_components/About"; 
 import Promotions from "../_components/Promotions";
 import TreatmentsPreview from "../_components/TreatmentsPreview";
 import TreatmentMenu from "../_components/TreatmentMenu";
 import ProductShowcase from "../_components/ProductShowcase";
-//import Testimonials from "../_components/Testimonials";//
+//import Testimonials from "../_components/Testimonials";
+
+// 👇 Import your new button
+import TelegramButton from "../_components/TelegramButton"; 
 
 const Homepage = () => {
   return (
@@ -16,6 +17,9 @@ const Homepage = () => {
       <TreatmentsPreview /> 
       <TreatmentMenu />
       <ProductShowcase />
+      
+      {/* 👇 Drop it right here */}
+      <TelegramButton />
     </>
   );
 };
