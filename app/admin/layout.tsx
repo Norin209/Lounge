@@ -57,9 +57,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   };
 
   const isActive = (path: string) => pathname === path;
+  
+  // 🟢 ADDED THE PROMO CODES LINK HERE
   const navLinks = [
     { name: 'Bookings', path: '/admin/bookings', icon: '📅' },
     { name: 'Services', path: '/admin/services', icon: '💅' },
+    { name: 'Promo Codes', path: '/admin/promos', icon: '🏷️' }, 
     { name: 'Apothecary', path: '/admin/products', icon: '🧴' },
     { name: 'Cafe Menu', path: '/admin/cafe', icon: '☕' },
     { name: 'Car Wash', path: '/admin/carwash', icon: '🚗' },

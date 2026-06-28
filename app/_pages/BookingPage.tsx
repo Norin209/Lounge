@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useBag } from '../_context/BagContext'; 
 import { db } from '../_utils/firebase'; 
-import { collection, addDoc } from 'firebase/firestore'; 
+import { collection, addDoc, query, where, getDocs } from 'firebase/firestore'; 
 
 // --- CALENDAR HELPERS ---
 const DAYS = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
@@ -19,8 +19,10 @@ const BookingPage = () => {
   // 🟢 PROMO STATE
   const [showPromoInput, setShowPromoInput] = useState(false);
   const [promoCode, setPromoCode] = useState('');
-  const [discountApplied, setDiscountApplied] = useState(0); // value in %
+  const [discountApplied, setDiscountApplied] = useState(0); 
+  const [discountType, setDiscountType] = useState('percent'); 
   const [promoError, setPromoError] = useState('');
+  const [isApplyingPromo, setIsApplyingPromo] = useState(false);
   
   const topRef = useRef<HTMLDivElement>(null);
 
@@ -68,17 +70,52 @@ const BookingPage = () => {
     return bag.reduce((sum: number, item: any) => sum + parsePrice(item.price), 0);
   }, [bag]);
 
-  const discountAmount = (subtotal * discountApplied) / 100;
+  const discountAmount = useMemo(() => {
+    if (discountApplied <= 0) return 0;
+    if (discountType === 'percent') {
+      return (subtotal * discountApplied) / 100;
+    } else {
+      return Math.min(subtotal, discountApplied); 
+    }
+  }, [subtotal, discountApplied, discountType]);
+
   const finalTotal = subtotal - discountAmount;
 
-  // 🟢 PROMO CODE LOGIC
-  const handleApplyPromo = () => {
-    if (promoCode.trim().toUpperCase() === 'GLISTEN20') {
-      setDiscountApplied(20);
-      setPromoError('');
-    } else {
-      setDiscountApplied(0);
-      setPromoError('Invalid code');
+  // 🟢 DYNAMIC PROMO CODE LOGIC
+  const handleApplyPromo = async () => {
+    const formattedCode = promoCode.trim().toUpperCase();
+    if (!formattedCode) {
+      setPromoError('Please enter a code');
+      return;
+    }
+
+    setIsApplyingPromo(true);
+    setPromoError('');
+
+    try {
+      const q = query(
+        collection(db, "promocodes"), 
+        where("code", "==", formattedCode),
+        where("isActive", "==", true)
+      );
+      
+      const querySnapshot = await getDocs(q);
+      
+      if (!querySnapshot.empty) {
+        const promoData = querySnapshot.docs[0].data();
+        setDiscountApplied(promoData.discount);
+        setDiscountType(promoData.type || 'percent'); 
+        setPromoError('');
+      } else {
+        setDiscountApplied(0);
+        setDiscountType('percent');
+        setPromoError('Invalid or expired code');
+      }
+    } catch (error) {
+      console.error("Error checking promo code", error);
+      setPromoError('Error verifying code');
+    } finally {
+      setIsApplyingPromo(false);
     }
   };
 
@@ -124,17 +161,15 @@ const BookingPage = () => {
   const handleChange = (e: any) => setFormData({ ...formData, [e.target.name]: e.target.value });
   const handleTimeSelect = (time: string) => !isTimeDisabled(time) && setFormData({ ...formData, time });
 
-  // --- SUBMIT HANDLER (FIXED FOR TELEGRAM DETAILS) ---
+  // --- SUBMIT HANDLER ---
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     const displayDate = selectedDateObj ? selectedDateObj.toDateString() : formData.date;
 
-    // 1. Generate text list of items for Telegram
     const itemsList = bag.map((i: any) => `- ${i.name} (${i.price})`).join('\n');
 
-    // 2. Construct the Detailed Telegram Message
     const telegramMessage = `
 🔔 *NEW BOOKING REQUEST* 🔔
 
@@ -148,12 +183,11 @@ const BookingPage = () => {
 ${itemsList}
 
 💰 *Total Est:* $${finalTotal.toFixed(2)}
-${discountApplied > 0 ? `🏷️ *Promo Applied:* ${promoCode} (${discountApplied}%)` : ''}
+${discountApplied > 0 ? `🏷️ *Promo Applied:* ${promoCode.toUpperCase()} (${discountType === 'percent' ? discountApplied + '%' : '$' + discountApplied} Off)` : ''}
 
 📝 *Notes:* ${formData.notes || "None"}
     `;
 
-    // 3. Prepare Data for Firestore
     const bookingData = {
       ...formData,
       services: bag.map((i: any) => ({ 
@@ -161,21 +195,19 @@ ${discountApplied > 0 ? `🏷️ *Promo Applied:* ${promoCode} (${discountApplie
         price: i.price 
       })),
       totalPrice: finalTotal.toFixed(2), 
-      discountCode: discountApplied > 0 ? promoCode : null,
+      discountCode: discountApplied > 0 ? promoCode.toUpperCase() : null,
+      discountAmount: discountAmount.toFixed(2),
       createdAt: new Date(),
       status: 'pending'
     };
 
     try {
-      // Save to Firebase
       await addDoc(collection(db, "bookings"), bookingData);
       
-      // Send Detailed Telegram Notification
       try {
         await fetch('/.netlify/functions/booking', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          // 🔴 sending the detailed message now
           body: JSON.stringify({ message: telegramMessage })
         });
       } catch (err) { console.log("Telegram notification skipped"); }
@@ -237,7 +269,7 @@ ${discountApplied > 0 ? `🏷️ *Promo Applied:* ${promoCode} (${discountApplie
         <div ref={topRef} />
         <div className="bg-black pt-32 pb-32 px-6 text-center">
           <h1 className="text-3xl md:text-5xl font-playfair text-white uppercase tracking-tight">Booking Received</h1>
-          <p className="text-zinc-400 text-[10px] mt-4 tracking-[0.2em] uppercase font-light">Glisten Lounge Concierge</p>
+          <p className="text-zinc-400 text-[10px] mt-4 tracking-[0.2em] uppercase font-light">Premier Lounge Concierge</p>
         </div>
         <div className="max-w-md mx-auto px-6 -mt-20 relative z-10 mb-20">
           <div className="bg-white p-10 shadow-xl border border-gray-100 text-center">
@@ -248,9 +280,28 @@ ${discountApplied > 0 ? `🏷️ *Promo Applied:* ${promoCode} (${discountApplie
             <p className="text-sm text-gray-500 mb-8 leading-relaxed">
               Thank you, <strong>{formData.name}</strong>. Our team will contact you at <strong>{formData.phone}</strong> shortly.
             </p>
-            <Link href="/" className="block w-full bg-black text-white py-4 text-[10px] font-bold tracking-[0.2em] uppercase hover:bg-zinc-800 transition-colors">
-              Return Home
-            </Link>
+            
+            {/* 🟢 NEW: Stacked Buttons for Telegram and Home */}
+            <div className="space-y-3">
+              <a 
+                href="https://t.me/premierlounge1" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="flex items-center justify-center gap-2 w-full border border-black text-black py-4 text-[10px] font-bold tracking-[0.2em] uppercase hover:bg-black hover:text-white transition-colors"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm5.56 8.16l-1.9 8.97c-.14.62-.51.77-1.03.48l-2.85-2.1-1.38 1.33c-.15.15-.28.28-.57.28l.2-2.9 5.28-4.77c.23-.21-.05-.33-.36-.12l-6.52 4.1-2.82-.88c-.61-.19-.62-.61.13-.9l11.05-4.26c.51-.19.96.11.77.87z"/>
+                </svg>
+                Chat on Telegram
+              </a>
+              <Link 
+                href="/" 
+                className="block w-full bg-black text-white py-4 text-[10px] font-bold tracking-[0.2em] uppercase hover:bg-zinc-800 transition-colors"
+              >
+                Return Home
+              </Link>
+            </div>
+
           </div>
         </div>
       </div>
@@ -356,18 +407,23 @@ ${discountApplied > 0 ? `🏷️ *Promo Applied:* ${promoCode} (${discountApplie
                           type="text" 
                           value={promoCode}
                           onChange={(e) => setPromoCode(e.target.value)}
-                          placeholder="GLISTEN20"
+                          placeholder="ENTER CODE"
                           className="w-full text-xs border border-gray-200 p-2 uppercase tracking-wide focus:outline-none focus:border-black"
                         />
                         <button 
                           onClick={handleApplyPromo}
-                          className="bg-black text-white text-[10px] font-bold px-4 uppercase tracking-widest"
+                          disabled={isApplyingPromo}
+                          className={`bg-black text-white text-[10px] font-bold px-4 uppercase tracking-widest ${isApplyingPromo ? 'opacity-50' : 'hover:bg-zinc-800'}`}
                         >
-                          Apply
+                          {isApplyingPromo ? '...' : 'Apply'}
                         </button>
                       </div>
                       {promoError && <p className="text-[10px] text-red-500 mt-2 font-bold">{promoError}</p>}
-                      {discountApplied > 0 && <p className="text-[10px] text-green-600 mt-2 font-bold">Code Applied: {discountApplied}% Off</p>}
+                      {discountApplied > 0 && (
+                        <p className="text-[10px] text-green-600 mt-2 font-bold">
+                          Code Applied: {discountType === 'percent' ? `${discountApplied}%` : `$${discountApplied}`} Off
+                        </p>
+                      )}
                     </div>
                   )}
                 </div>
