@@ -1,0 +1,3020 @@
+{
+  "source": "DAILY EXPENSE REPORT.xlsx",
+  "months": [
+    {
+      "key": "2026-07",
+      "label": "July 2026",
+      "expenses": [
+        {
+          "id": "2026-07-car-wash-38",
+          "date": "2026-07-31",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 12.5,
+          "total": 12.5
+        },
+        {
+          "id": "2026-07-other-35",
+          "date": "2026-07-31",
+          "category": "Other",
+          "description": "Delivery from china",
+          "quantity": 1.0,
+          "unitPrice": 33.0,
+          "total": 33.0
+        },
+        {
+          "id": "2026-07-salon-32",
+          "date": "2026-07-30",
+          "category": "Salon",
+          "description": "shampoo",
+          "quantity": 3.0,
+          "unitPrice": 6.5,
+          "total": 19.5
+        },
+        {
+          "id": "2026-07-salon-33",
+          "date": "2026-07-30",
+          "category": "Salon",
+          "description": "Hair mask",
+          "quantity": 3.0,
+          "unitPrice": 6.5,
+          "total": 19.5
+        },
+        {
+          "id": "2026-07-coffee-40",
+          "date": "2026-07-30",
+          "category": "Coffee",
+          "description": "Matcha",
+          "quantity": 1.0,
+          "unitPrice": 34.75,
+          "total": 34.75
+        },
+        {
+          "id": "2026-07-coffee-41",
+          "date": "2026-07-30",
+          "category": "Coffee",
+          "description": "cream cheese",
+          "quantity": 2.0,
+          "unitPrice": 4.25,
+          "total": 8.5
+        },
+        {
+          "id": "2026-07-car-wash-37",
+          "date": "2026-07-30",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 12.5,
+          "total": 12.5
+        },
+        {
+          "id": "2026-07-other-33",
+          "date": "2026-07-30",
+          "category": "Other",
+          "description": "Soap",
+          "quantity": 1.0,
+          "unitPrice": 71.0,
+          "total": 71.0
+        },
+        {
+          "id": "2026-07-other-34",
+          "date": "2026-07-30",
+          "category": "Other",
+          "description": "Door",
+          "quantity": 1.0,
+          "unitPrice": 150.0,
+          "total": 150.0
+        },
+        {
+          "id": "2026-07-coffee-39",
+          "date": "2026-07-29",
+          "category": "Coffee",
+          "description": "milk",
+          "quantity": 1.0,
+          "unitPrice": 11.7,
+          "total": 11.7
+        },
+        {
+          "id": "2026-07-car-wash-36",
+          "date": "2026-07-29",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 12.5,
+          "total": 12.5
+        },
+        {
+          "id": "2026-07-advertisement-28",
+          "date": "2026-07-29",
+          "category": "Advertisement",
+          "description": "Facebook",
+          "quantity": 1.0,
+          "unitPrice": 20.0,
+          "total": 20.0
+        },
+        {
+          "id": "2026-07-advertisement-29",
+          "date": "2026-07-29",
+          "category": "Advertisement",
+          "description": "tiktok",
+          "quantity": 1.0,
+          "unitPrice": 16.5,
+          "total": 16.5
+        },
+        {
+          "id": "2026-07-salon-30",
+          "date": "2026-07-28",
+          "category": "Salon",
+          "description": "Facial Product",
+          "quantity": 1.0,
+          "unitPrice": 17.0,
+          "total": 17.0
+        },
+        {
+          "id": "2026-07-salon-31",
+          "date": "2026-07-28",
+          "category": "Salon",
+          "description": "hair color",
+          "quantity": 3.0,
+          "unitPrice": 25.0,
+          "total": 75.0
+        },
+        {
+          "id": "2026-07-car-wash-35",
+          "date": "2026-07-28",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 12.5,
+          "total": 12.5
+        },
+        {
+          "id": "2026-07-other-32",
+          "date": "2026-07-28",
+          "category": "Other",
+          "description": "cup",
+          "quantity": 1.0,
+          "unitPrice": 51.0,
+          "total": 51.0
+        },
+        {
+          "id": "2026-07-salon-28",
+          "date": "2026-07-27",
+          "category": "Salon",
+          "description": "keratin sliver",
+          "quantity": 6.0,
+          "unitPrice": 13.0,
+          "total": 78.0
+        },
+        {
+          "id": "2026-07-salon-29",
+          "date": "2026-07-27",
+          "category": "Salon",
+          "description": "delivery",
+          "quantity": 1.0,
+          "unitPrice": 2.5,
+          "total": 2.5
+        },
+        {
+          "id": "2026-07-coffee-38",
+          "date": "2026-07-27",
+          "category": "Coffee",
+          "description": "Milk",
+          "quantity": 1.0,
+          "unitPrice": 11.7,
+          "total": 11.7
+        },
+        {
+          "id": "2026-07-car-wash-34",
+          "date": "2026-07-27",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 12.5,
+          "total": 12.5
+        },
+        {
+          "id": "2026-07-car-wash-33",
+          "date": "2026-07-26",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 12.5,
+          "total": 12.5
+        },
+        {
+          "id": "2026-07-utilities-13",
+          "date": "2026-07-26",
+          "category": "Utilities",
+          "description": "Water",
+          "quantity": 1.0,
+          "unitPrice": 82.38,
+          "total": 82.38
+        },
+        {
+          "id": "2026-07-advertisement-26",
+          "date": "2026-07-26",
+          "category": "Advertisement",
+          "description": "Facebook",
+          "quantity": 1.0,
+          "unitPrice": 30.0,
+          "total": 30.0
+        },
+        {
+          "id": "2026-07-advertisement-27",
+          "date": "2026-07-26",
+          "category": "Advertisement",
+          "description": "tiktok",
+          "quantity": 1.0,
+          "unitPrice": 22.0,
+          "total": 22.0
+        },
+        {
+          "id": "2026-07-car-wash-32",
+          "date": "2026-07-25",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 12.5,
+          "total": 12.5
+        },
+        {
+          "id": "2026-07-salon-27",
+          "date": "2026-07-24",
+          "category": "Salon",
+          "description": "test product",
+          "quantity": 1.0,
+          "unitPrice": 58.8,
+          "total": 58.8
+        },
+        {
+          "id": "2026-07-coffee-37",
+          "date": "2026-07-24",
+          "category": "Coffee",
+          "description": "Coffee bean",
+          "quantity": 1.0,
+          "unitPrice": 33.91,
+          "total": 33.91
+        },
+        {
+          "id": "2026-07-car-wash-31",
+          "date": "2026-07-24",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 12.5,
+          "total": 12.5
+        },
+        {
+          "id": "2026-07-salon-26",
+          "date": "2026-07-23",
+          "category": "Salon",
+          "description": "shower cap",
+          "quantity": 1.0,
+          "unitPrice": 6.21,
+          "total": 6.21
+        },
+        {
+          "id": "2026-07-car-wash-30",
+          "date": "2026-07-23",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 12.5,
+          "total": 12.5
+        },
+        {
+          "id": "2026-07-other-31",
+          "date": "2026-07-23",
+          "category": "Other",
+          "description": "exchnage money",
+          "quantity": 1.0,
+          "unitPrice": 50.0,
+          "total": 50.0
+        },
+        {
+          "id": "2026-07-coffee-35",
+          "date": "2026-07-22",
+          "category": "Coffee",
+          "description": "passion",
+          "quantity": 3.0,
+          "unitPrice": 1.5,
+          "total": 4.5
+        },
+        {
+          "id": "2026-07-coffee-36",
+          "date": "2026-07-22",
+          "category": "Coffee",
+          "description": "orange",
+          "quantity": 1.0,
+          "unitPrice": 0.75,
+          "total": 0.75
+        },
+        {
+          "id": "2026-07-car-wash-29",
+          "date": "2026-07-22",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 12.5,
+          "total": 12.5
+        },
+        {
+          "id": "2026-07-advertisement-24",
+          "date": "2026-07-22",
+          "category": "Advertisement",
+          "description": "tiktok",
+          "quantity": 1.0,
+          "unitPrice": 16.5,
+          "total": 16.5
+        },
+        {
+          "id": "2026-07-advertisement-25",
+          "date": "2026-07-22",
+          "category": "Advertisement",
+          "description": "Facebook",
+          "quantity": 1.0,
+          "unitPrice": 19.5,
+          "total": 19.5
+        },
+        {
+          "id": "2026-07-other-28",
+          "date": "2026-07-22",
+          "category": "Other",
+          "description": "accesorties from  the start of the month",
+          "quantity": 1.0,
+          "unitPrice": 115.0,
+          "total": 115.0
+        },
+        {
+          "id": "2026-07-other-29",
+          "date": "2026-07-22",
+          "category": "Other",
+          "description": "newspaper",
+          "quantity": 4.0,
+          "unitPrice": 1.25,
+          "total": 5.0
+        },
+        {
+          "id": "2026-07-other-30",
+          "date": "2026-07-22",
+          "category": "Other",
+          "description": "water",
+          "quantity": 1.0,
+          "unitPrice": 5.1,
+          "total": 5.1
+        },
+        {
+          "id": "2026-07-coffee-33",
+          "date": "2026-07-21",
+          "category": "Coffee",
+          "description": "Strawberry",
+          "quantity": 3.0,
+          "unitPrice": 6.25,
+          "total": 18.75
+        },
+        {
+          "id": "2026-07-coffee-34",
+          "date": "2026-07-21",
+          "category": "Coffee",
+          "description": "delivery",
+          "quantity": 1.0,
+          "unitPrice": 2.5,
+          "total": 2.5
+        },
+        {
+          "id": "2026-07-car-wash-28",
+          "date": "2026-07-21",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 12.5,
+          "total": 12.5
+        },
+        {
+          "id": "2026-07-other-27",
+          "date": "2026-07-21",
+          "category": "Other",
+          "description": "light bulb",
+          "quantity": 1.0,
+          "unitPrice": 6.0,
+          "total": 6.0
+        },
+        {
+          "id": "2026-07-salon-24",
+          "date": "2026-07-20",
+          "category": "Salon",
+          "description": "Facial Product",
+          "quantity": 1.0,
+          "unitPrice": 32.0,
+          "total": 32.0
+        },
+        {
+          "id": "2026-07-salon-25",
+          "date": "2026-07-20",
+          "category": "Salon",
+          "description": "Item from china",
+          "quantity": 1.0,
+          "unitPrice": 77.0,
+          "total": 77.0
+        },
+        {
+          "id": "2026-07-coffee-26",
+          "date": "2026-07-20",
+          "category": "Coffee",
+          "description": "green tea",
+          "quantity": 1.0,
+          "unitPrice": 3.5,
+          "total": 3.5
+        },
+        {
+          "id": "2026-07-coffee-27",
+          "date": "2026-07-20",
+          "category": "Coffee",
+          "description": "red tea",
+          "quantity": 1.0,
+          "unitPrice": 3.5,
+          "total": 3.5
+        },
+        {
+          "id": "2026-07-coffee-28",
+          "date": "2026-07-20",
+          "category": "Coffee",
+          "description": "cocao powder",
+          "quantity": 1.0,
+          "unitPrice": 6.0,
+          "total": 6.0
+        },
+        {
+          "id": "2026-07-coffee-29",
+          "date": "2026-07-20",
+          "category": "Coffee",
+          "description": "chocolate surp",
+          "quantity": 1.0,
+          "unitPrice": 15.5,
+          "total": 15.5
+        },
+        {
+          "id": "2026-07-coffee-30",
+          "date": "2026-07-20",
+          "category": "Coffee",
+          "description": "Condensed milk",
+          "quantity": 4.0,
+          "unitPrice": 2.0,
+          "total": 8.0
+        },
+        {
+          "id": "2026-07-coffee-31",
+          "date": "2026-07-20",
+          "category": "Coffee",
+          "description": "conditioner milk",
+          "quantity": 2.0,
+          "unitPrice": 0.75,
+          "total": 1.5
+        },
+        {
+          "id": "2026-07-coffee-32",
+          "date": "2026-07-20",
+          "category": "Coffee",
+          "description": "delivery",
+          "quantity": 3.0,
+          "unitPrice": 1.5,
+          "total": 4.5
+        },
+        {
+          "id": "2026-07-car-wash-27",
+          "date": "2026-07-20",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 12.5,
+          "total": 12.5
+        },
+        {
+          "id": "2026-07-other-25",
+          "date": "2026-07-20",
+          "category": "Other",
+          "description": "Charger",
+          "quantity": 1.0,
+          "unitPrice": 13.5,
+          "total": 13.5
+        },
+        {
+          "id": "2026-07-other-26",
+          "date": "2026-07-20",
+          "category": "Other",
+          "description": "employee",
+          "quantity": 1.0,
+          "unitPrice": 40.0,
+          "total": 40.0
+        },
+        {
+          "id": "2026-07-coffee-24",
+          "date": "2026-07-19",
+          "category": "Coffee",
+          "description": "Strawberry syrup",
+          "quantity": 1.0,
+          "unitPrice": 19.95,
+          "total": 19.95
+        },
+        {
+          "id": "2026-07-coffee-25",
+          "date": "2026-07-19",
+          "category": "Coffee",
+          "description": "Milk",
+          "quantity": 1.0,
+          "unitPrice": 11.7,
+          "total": 11.7
+        },
+        {
+          "id": "2026-07-car-wash-26",
+          "date": "2026-07-19",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 12.5,
+          "total": 12.5
+        },
+        {
+          "id": "2026-07-advertisement-22",
+          "date": "2026-07-19",
+          "category": "Advertisement",
+          "description": "tiktok",
+          "quantity": 1.0,
+          "unitPrice": 16.5,
+          "total": 16.5
+        },
+        {
+          "id": "2026-07-advertisement-23",
+          "date": "2026-07-19",
+          "category": "Advertisement",
+          "description": "Facebook",
+          "quantity": 1.0,
+          "unitPrice": 19.5,
+          "total": 19.5
+        },
+        {
+          "id": "2026-07-other-22",
+          "date": "2026-07-19",
+          "category": "Other",
+          "description": "Crad delivbery",
+          "quantity": 1.0,
+          "unitPrice": 1.0,
+          "total": 1.0
+        },
+        {
+          "id": "2026-07-other-24",
+          "date": "2026-07-19",
+          "category": "Other",
+          "description": "milk and other",
+          "quantity": 1.0,
+          "unitPrice": 20.0,
+          "total": 20.0
+        },
+        {
+          "id": "2026-07-car-wash-25",
+          "date": "2026-07-18",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 12.5,
+          "total": 12.5
+        },
+        {
+          "id": "2026-07-salon-17",
+          "date": "2026-07-17",
+          "category": "Salon",
+          "description": "keratin gold",
+          "quantity": 6.0,
+          "unitPrice": 17.0,
+          "total": 102.0
+        },
+        {
+          "id": "2026-07-salon-18",
+          "date": "2026-07-17",
+          "category": "Salon",
+          "description": "keratin green",
+          "quantity": 3.0,
+          "unitPrice": 22.0,
+          "total": 66.0
+        },
+        {
+          "id": "2026-07-salon-19",
+          "date": "2026-07-17",
+          "category": "Salon",
+          "description": "delivery",
+          "quantity": 1.0,
+          "unitPrice": 2.5,
+          "total": 2.5
+        },
+        {
+          "id": "2026-07-salon-20",
+          "date": "2026-07-17",
+          "category": "Salon",
+          "description": "shampoo",
+          "quantity": 6.0,
+          "unitPrice": 6.5,
+          "total": 39.0
+        },
+        {
+          "id": "2026-07-salon-21",
+          "date": "2026-07-17",
+          "category": "Salon",
+          "description": "Hair mask",
+          "quantity": 4.0,
+          "unitPrice": 6.5,
+          "total": 26.0
+        },
+        {
+          "id": "2026-07-salon-22",
+          "date": "2026-07-17",
+          "category": "Salon",
+          "description": "Olaplex",
+          "quantity": 2.0,
+          "unitPrice": 7.0,
+          "total": 14.0
+        },
+        {
+          "id": "2026-07-salon-23",
+          "date": "2026-07-17",
+          "category": "Salon",
+          "description": "Ch plex",
+          "quantity": 2.0,
+          "unitPrice": 6.0,
+          "total": 12.0
+        },
+        {
+          "id": "2026-07-car-wash-24",
+          "date": "2026-07-17",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 12.5,
+          "total": 12.5
+        },
+        {
+          "id": "2026-07-advertisement-20",
+          "date": "2026-07-17",
+          "category": "Advertisement",
+          "description": "tiktok",
+          "quantity": 1.0,
+          "unitPrice": 16.5,
+          "total": 16.5
+        },
+        {
+          "id": "2026-07-advertisement-21",
+          "date": "2026-07-17",
+          "category": "Advertisement",
+          "description": "Facebook",
+          "quantity": 1.0,
+          "unitPrice": 19.5,
+          "total": 19.5
+        },
+        {
+          "id": "2026-07-other-20",
+          "date": "2026-07-17",
+          "category": "Other",
+          "description": "China delivery",
+          "quantity": 1.0,
+          "unitPrice": 4.62,
+          "total": 4.62
+        },
+        {
+          "id": "2026-07-other-21",
+          "date": "2026-07-17",
+          "category": "Other",
+          "description": "Package Card",
+          "quantity": 1.0,
+          "unitPrice": 10.0,
+          "total": 10.0
+        },
+        {
+          "id": "2026-07-car-wash-23",
+          "date": "2026-07-16",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 12.5,
+          "total": 12.5
+        },
+        {
+          "id": "2026-07-coffee-23",
+          "date": "2026-07-15",
+          "category": "Coffee",
+          "description": "Coffee bean",
+          "quantity": 1.0,
+          "unitPrice": 22.61,
+          "total": 22.61
+        },
+        {
+          "id": "2026-07-car-wash-22",
+          "date": "2026-07-15",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 12.5,
+          "total": 12.5
+        },
+        {
+          "id": "2026-07-advertisement-18",
+          "date": "2026-07-15",
+          "category": "Advertisement",
+          "description": "tiktok",
+          "quantity": 1.0,
+          "unitPrice": 16.5,
+          "total": 16.5
+        },
+        {
+          "id": "2026-07-advertisement-19",
+          "date": "2026-07-15",
+          "category": "Advertisement",
+          "description": "Facebook",
+          "quantity": 1.0,
+          "unitPrice": 29.5,
+          "total": 29.5
+        },
+        {
+          "id": "2026-07-car-wash-21",
+          "date": "2026-07-14",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 12.5,
+          "total": 12.5
+        },
+        {
+          "id": "2026-07-utilities-12",
+          "date": "2026-07-14",
+          "category": "Utilities",
+          "description": "EDC",
+          "quantity": 1.0,
+          "unitPrice": 984.84,
+          "total": 984.84
+        },
+        {
+          "id": "2026-07-other-19",
+          "date": "2026-07-14",
+          "category": "Other",
+          "description": "smart",
+          "quantity": 1.0,
+          "unitPrice": 8.0,
+          "total": 8.0
+        },
+        {
+          "id": "2026-07-coffee-22",
+          "date": "2026-07-13",
+          "category": "Coffee",
+          "description": "milk",
+          "quantity": 1.0,
+          "unitPrice": 11.7,
+          "total": 11.7
+        },
+        {
+          "id": "2026-07-car-wash-20",
+          "date": "2026-07-13",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 12.5,
+          "total": 12.5
+        },
+        {
+          "id": "2026-07-advertisement-17",
+          "date": "2026-07-13",
+          "category": "Advertisement",
+          "description": "Norin ads boost",
+          "quantity": 1.0,
+          "unitPrice": 186.22,
+          "total": 186.22
+        },
+        {
+          "id": "2026-07-other-17",
+          "date": "2026-07-13",
+          "category": "Other",
+          "description": "employee",
+          "quantity": 1.0,
+          "unitPrice": 30.0,
+          "total": 30.0
+        },
+        {
+          "id": "2026-07-other-18",
+          "date": "2026-07-13",
+          "category": "Other",
+          "description": "old employee",
+          "quantity": 1.0,
+          "unitPrice": 28.51,
+          "total": 28.51
+        },
+        {
+          "id": "2026-07-car-wash-19",
+          "date": "2026-07-12",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 12.5,
+          "total": 12.5
+        },
+        {
+          "id": "2026-07-other-13",
+          "date": "2026-07-12",
+          "category": "Other",
+          "description": "Material",
+          "quantity": 1.0,
+          "unitPrice": 30.0,
+          "total": 30.0
+        },
+        {
+          "id": "2026-07-other-14",
+          "date": "2026-07-12",
+          "category": "Other",
+          "description": "rice",
+          "quantity": 1.0,
+          "unitPrice": 7.47,
+          "total": 7.47
+        },
+        {
+          "id": "2026-07-other-15",
+          "date": "2026-07-12",
+          "category": "Other",
+          "description": "employee",
+          "quantity": 1.0,
+          "unitPrice": 20.0,
+          "total": 20.0
+        },
+        {
+          "id": "2026-07-other-16",
+          "date": "2026-07-12",
+          "category": "Other",
+          "description": "employee",
+          "quantity": 1.0,
+          "unitPrice": 30.0,
+          "total": 30.0
+        },
+        {
+          "id": "2026-07-car-wash-18",
+          "date": "2026-07-11",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 12.5,
+          "total": 12.5
+        },
+        {
+          "id": "2026-07-advertisement-15",
+          "date": "2026-07-11",
+          "category": "Advertisement",
+          "description": "Facebook",
+          "quantity": 1.0,
+          "unitPrice": 20.0,
+          "total": 20.0
+        },
+        {
+          "id": "2026-07-advertisement-16",
+          "date": "2026-07-11",
+          "category": "Advertisement",
+          "description": "tiktok",
+          "quantity": 1.0,
+          "unitPrice": 16.5,
+          "total": 16.5
+        },
+        {
+          "id": "2026-07-other-11",
+          "date": "2026-07-11",
+          "category": "Other",
+          "description": "Recept paper",
+          "quantity": 1.0,
+          "unitPrice": 9.6,
+          "total": 9.6
+        },
+        {
+          "id": "2026-07-other-12",
+          "date": "2026-07-11",
+          "category": "Other",
+          "description": "employee",
+          "quantity": 1.0,
+          "unitPrice": 25.0,
+          "total": 25.0
+        },
+        {
+          "id": "2026-07-car-wash-17",
+          "date": "2026-07-10",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 12.5,
+          "total": 12.5
+        },
+        {
+          "id": "2026-07-car-wash-16",
+          "date": "2026-07-09",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 12.5,
+          "total": 12.5
+        },
+        {
+          "id": "2026-07-salon-12",
+          "date": "2026-07-08",
+          "category": "Salon",
+          "description": "Hair Botox",
+          "quantity": 1.0,
+          "unitPrice": 57.0,
+          "total": 57.0
+        },
+        {
+          "id": "2026-07-salon-13",
+          "date": "2026-07-08",
+          "category": "Salon",
+          "description": "delivery hair botox",
+          "quantity": 1.0,
+          "unitPrice": 1.92,
+          "total": 1.92
+        },
+        {
+          "id": "2026-07-salon-14",
+          "date": "2026-07-08",
+          "category": "Salon",
+          "description": "keratin sliver",
+          "quantity": 6.0,
+          "unitPrice": 13.0,
+          "total": 78.0
+        },
+        {
+          "id": "2026-07-salon-15",
+          "date": "2026-07-08",
+          "category": "Salon",
+          "description": "keratin gold",
+          "quantity": 6.0,
+          "unitPrice": 17.0,
+          "total": 102.0
+        },
+        {
+          "id": "2026-07-salon-16",
+          "date": "2026-07-08",
+          "category": "Salon",
+          "description": "delivery",
+          "quantity": 1.0,
+          "unitPrice": 3.0,
+          "total": 3.0
+        },
+        {
+          "id": "2026-07-coffee-21",
+          "date": "2026-07-08",
+          "category": "Coffee",
+          "description": "milk",
+          "quantity": 1.0,
+          "unitPrice": 11.7,
+          "total": 11.7
+        },
+        {
+          "id": "2026-07-car-wash-15",
+          "date": "2026-07-08",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 12.5,
+          "total": 12.5
+        },
+        {
+          "id": "2026-07-advertisement-13",
+          "date": "2026-07-08",
+          "category": "Advertisement",
+          "description": "Fcaebook",
+          "quantity": 1.0,
+          "unitPrice": 15.0,
+          "total": 15.0
+        },
+        {
+          "id": "2026-07-advertisement-14",
+          "date": "2026-07-08",
+          "category": "Advertisement",
+          "description": "tiktok",
+          "quantity": 1.0,
+          "unitPrice": 16.5,
+          "total": 16.5
+        },
+        {
+          "id": "2026-07-coffee-16",
+          "date": "2026-07-07",
+          "category": "Coffee",
+          "description": "Matcha1",
+          "quantity": 1.0,
+          "unitPrice": 34.75,
+          "total": 34.75
+        },
+        {
+          "id": "2026-07-coffee-17",
+          "date": "2026-07-07",
+          "category": "Coffee",
+          "description": "delivery honey",
+          "quantity": 1.0,
+          "unitPrice": 1.4,
+          "total": 1.4
+        },
+        {
+          "id": "2026-07-coffee-18",
+          "date": "2026-07-07",
+          "category": "Coffee",
+          "description": "honey",
+          "quantity": 2.0,
+          "unitPrice": 5.0,
+          "total": 10.0
+        },
+        {
+          "id": "2026-07-coffee-19",
+          "date": "2026-07-07",
+          "category": "Coffee",
+          "description": "olaplex",
+          "quantity": 2.0,
+          "unitPrice": 7.0,
+          "total": 14.0
+        },
+        {
+          "id": "2026-07-coffee-20",
+          "date": "2026-07-07",
+          "category": "Coffee",
+          "description": "delivery olaplex",
+          "quantity": 1.0,
+          "unitPrice": 2.0,
+          "total": 2.0
+        },
+        {
+          "id": "2026-07-car-wash-14",
+          "date": "2026-07-07",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 12.5,
+          "total": 12.5
+        },
+        {
+          "id": "2026-07-other-10",
+          "date": "2026-07-07",
+          "category": "Other",
+          "description": "Fruit",
+          "quantity": 1.0,
+          "unitPrice": 2.5,
+          "total": 2.5
+        },
+        {
+          "id": "2026-07-coffee-15",
+          "date": "2026-07-06",
+          "category": "Coffee",
+          "description": "Milk",
+          "quantity": 1.0,
+          "unitPrice": 11.7,
+          "total": 11.7
+        },
+        {
+          "id": "2026-07-salon-34",
+          "date": "2026-07-04",
+          "category": "Salon",
+          "description": "keratin sliver",
+          "quantity": 2.0,
+          "unitPrice": 14.0,
+          "total": 28.0
+        },
+        {
+          "id": "2026-07-salon-35",
+          "date": "2026-07-04",
+          "category": "Salon",
+          "description": "keratin gold",
+          "quantity": 2.0,
+          "unitPrice": 19.0,
+          "total": 38.0
+        },
+        {
+          "id": "2026-07-salon-36",
+          "date": "2026-07-04",
+          "category": "Salon",
+          "description": "delivery",
+          "quantity": 1.0,
+          "unitPrice": 3.0,
+          "total": 3.0
+        },
+        {
+          "id": "2026-07-coffee-13",
+          "date": "2026-07-04",
+          "category": "Coffee",
+          "description": "Coffee bean",
+          "quantity": 1.0,
+          "unitPrice": 22.61,
+          "total": 22.61
+        },
+        {
+          "id": "2026-07-coffee-14",
+          "date": "2026-07-04",
+          "category": "Coffee",
+          "description": "Milk",
+          "quantity": 1.0,
+          "unitPrice": 11.7,
+          "total": 11.7
+        },
+        {
+          "id": "2026-07-car-wash-13",
+          "date": "2026-07-04",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-07-advertisement-11",
+          "date": "2026-07-04",
+          "category": "Advertisement",
+          "description": "tiktok",
+          "quantity": 1.0,
+          "unitPrice": 13.5,
+          "total": 13.5
+        },
+        {
+          "id": "2026-07-advertisement-12",
+          "date": "2026-07-04",
+          "category": "Advertisement",
+          "description": "facebook",
+          "quantity": 1.0,
+          "unitPrice": 12.0,
+          "total": 12.0
+        },
+        {
+          "id": "2026-07-car-wash-12",
+          "date": "2026-07-03",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-07-advertisement-9",
+          "date": "2026-07-03",
+          "category": "Advertisement",
+          "description": "tiktok",
+          "quantity": 1.0,
+          "unitPrice": 16.5,
+          "total": 16.5
+        },
+        {
+          "id": "2026-07-advertisement-10",
+          "date": "2026-07-03",
+          "category": "Advertisement",
+          "description": "facebook",
+          "quantity": 1.0,
+          "unitPrice": 15.0,
+          "total": 15.0
+        },
+        {
+          "id": "2026-07-salon-10",
+          "date": "2026-07-02",
+          "category": "Salon",
+          "description": "Sugar",
+          "quantity": 1.0,
+          "unitPrice": 7.5,
+          "total": 7.5
+        },
+        {
+          "id": "2026-07-salon-11",
+          "date": "2026-07-02",
+          "category": "Salon",
+          "description": "Keratin",
+          "quantity": 1.0,
+          "unitPrice": 69.8,
+          "total": 69.8
+        },
+        {
+          "id": "2026-07-coffee-10",
+          "date": "2026-07-02",
+          "category": "Coffee",
+          "description": "Ice",
+          "quantity": 1.0,
+          "unitPrice": 27.87,
+          "total": 27.87
+        },
+        {
+          "id": "2026-07-coffee-11",
+          "date": "2026-07-02",
+          "category": "Coffee",
+          "description": "Lychee syrup",
+          "quantity": 1.0,
+          "unitPrice": 18.91,
+          "total": 18.91
+        },
+        {
+          "id": "2026-07-coffee-12",
+          "date": "2026-07-02",
+          "category": "Coffee",
+          "description": "orange",
+          "quantity": 3.0,
+          "unitPrice": 0.75,
+          "total": 2.25
+        },
+        {
+          "id": "2026-07-car-wash-11",
+          "date": "2026-07-02",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-07-other-9",
+          "date": "2026-07-02",
+          "category": "Other",
+          "description": "Sim bill",
+          "quantity": 1.0,
+          "unitPrice": 6.0,
+          "total": 6.0
+        },
+        {
+          "id": "2026-07-salon-9",
+          "date": "2026-07-01",
+          "category": "Salon",
+          "description": "milky scrub",
+          "quantity": 5.0,
+          "unitPrice": 8.4,
+          "total": 42.0
+        },
+        {
+          "id": "2026-07-coffee-9",
+          "date": "2026-07-01",
+          "category": "Coffee",
+          "description": "Condensed milk",
+          "quantity": 2.0,
+          "unitPrice": 0.875,
+          "total": 1.75
+        },
+        {
+          "id": "2026-07-car-wash-9",
+          "date": "2026-07-01",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-07-car-wash-10",
+          "date": "2026-07-01",
+          "category": "Car Wash",
+          "description": "viso",
+          "quantity": 1.0,
+          "unitPrice": 5.25,
+          "total": 5.25
+        },
+        {
+          "id": "2026-07-utilities-9",
+          "date": "2026-07-01",
+          "category": "Utilities",
+          "description": "Fresha",
+          "quantity": 1.0,
+          "unitPrice": 22.0,
+          "total": 22.0
+        },
+        {
+          "id": "2026-07-utilities-10",
+          "date": "2026-07-01",
+          "category": "Utilities",
+          "description": "Wifi",
+          "quantity": 1.0,
+          "unitPrice": 50.0,
+          "total": 50.0
+        },
+        {
+          "id": "2026-07-utilities-11",
+          "date": "2026-07-01",
+          "category": "Utilities",
+          "description": "rent",
+          "quantity": 1.0,
+          "unitPrice": 1000.0,
+          "total": 1000.0
+        }
+      ]
+    },
+    {
+      "key": "2026-06",
+      "label": "June 2026",
+      "expenses": [
+        {
+          "id": "2026-06-coffee-18",
+          "date": "2026-06-30",
+          "category": "Coffee",
+          "description": "milk",
+          "quantity": 1.0,
+          "unitPrice": 11.7,
+          "total": 11.7
+        },
+        {
+          "id": "2026-06-car-wash-39",
+          "date": "2026-06-30",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-06-advertisement-23",
+          "date": "2026-06-30",
+          "category": "Advertisement",
+          "description": "tiktok",
+          "quantity": 1.0,
+          "unitPrice": 15.0,
+          "total": 15.0
+        },
+        {
+          "id": "2026-06-advertisement-24",
+          "date": "2026-06-30",
+          "category": "Advertisement",
+          "description": "facebook",
+          "quantity": 1.0,
+          "unitPrice": 15.0,
+          "total": 15.0
+        },
+        {
+          "id": "2026-06-salon-21",
+          "date": "2026-06-29",
+          "category": "Salon",
+          "description": "shampoo",
+          "quantity": 6.0,
+          "unitPrice": 6.5,
+          "total": 39.0
+        },
+        {
+          "id": "2026-06-salon-22",
+          "date": "2026-06-29",
+          "category": "Salon",
+          "description": "hhair mask",
+          "quantity": 4.0,
+          "unitPrice": 6.5,
+          "total": 26.0
+        },
+        {
+          "id": "2026-06-salon-23",
+          "date": "2026-06-29",
+          "category": "Salon",
+          "description": "oc",
+          "quantity": 2.0,
+          "unitPrice": 3.0,
+          "total": 6.0
+        },
+        {
+          "id": "2026-06-salon-24",
+          "date": "2026-06-29",
+          "category": "Salon",
+          "description": "hair color",
+          "quantity": 1.0,
+          "unitPrice": 25.0,
+          "total": 25.0
+        },
+        {
+          "id": "2026-06-salon-25",
+          "date": "2026-06-29",
+          "category": "Salon",
+          "description": "delivery",
+          "quantity": 1.0,
+          "unitPrice": 2.0,
+          "total": 2.0
+        },
+        {
+          "id": "2026-06-car-wash-38",
+          "date": "2026-06-29",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-06-salon-17",
+          "date": "2026-06-28",
+          "category": "Salon",
+          "description": "keratin test",
+          "quantity": 1.0,
+          "unitPrice": 14.0,
+          "total": 14.0
+        },
+        {
+          "id": "2026-06-salon-18",
+          "date": "2026-06-28",
+          "category": "Salon",
+          "description": "keratin",
+          "quantity": 2.0,
+          "unitPrice": 19.0,
+          "total": 38.0
+        },
+        {
+          "id": "2026-06-salon-19",
+          "date": "2026-06-28",
+          "category": "Salon",
+          "description": "keratin green color",
+          "quantity": 1.0,
+          "unitPrice": 22.0,
+          "total": 22.0
+        },
+        {
+          "id": "2026-06-salon-20",
+          "date": "2026-06-28",
+          "category": "Salon",
+          "description": "delivery",
+          "quantity": 1.0,
+          "unitPrice": 3.0,
+          "total": 3.0
+        },
+        {
+          "id": "2026-06-car-wash-37",
+          "date": "2026-06-28",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-06-other-17",
+          "date": "2026-06-28",
+          "category": "Other",
+          "description": "borey",
+          "quantity": 1.0,
+          "unitPrice": 11.0,
+          "total": 11.0
+        },
+        {
+          "id": "2026-06-other-18",
+          "date": "2026-06-28",
+          "category": "Other",
+          "description": "Fixed  Karcher",
+          "quantity": 1.0,
+          "unitPrice": 97.6,
+          "total": 97.6
+        },
+        {
+          "id": "2026-06-salon-15",
+          "date": "2026-06-27",
+          "category": "Salon",
+          "description": "nikolas",
+          "quantity": 6.0,
+          "unitPrice": 4.0,
+          "total": 24.0
+        },
+        {
+          "id": "2026-06-salon-16",
+          "date": "2026-06-27",
+          "category": "Salon",
+          "description": "delivery",
+          "quantity": 1.0,
+          "unitPrice": 3.0,
+          "total": 3.0
+        },
+        {
+          "id": "2026-06-car-wash-36",
+          "date": "2026-06-27",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-06-car-wash-35",
+          "date": "2026-06-26",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-06-advertisement-21",
+          "date": "2026-06-26",
+          "category": "Advertisement",
+          "description": "tiktok",
+          "quantity": 1.0,
+          "unitPrice": 15.0,
+          "total": 15.0
+        },
+        {
+          "id": "2026-06-advertisement-22",
+          "date": "2026-06-26",
+          "category": "Advertisement",
+          "description": "facebook",
+          "quantity": 1.0,
+          "unitPrice": 16.5,
+          "total": 16.5
+        },
+        {
+          "id": "2026-06-other-16",
+          "date": "2026-06-26",
+          "category": "Other",
+          "description": "karcher",
+          "quantity": 1.0,
+          "unitPrice": 16.7,
+          "total": 16.7
+        },
+        {
+          "id": "2026-06-car-wash-34",
+          "date": "2026-06-25",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-06-coffee-17",
+          "date": "2026-06-24",
+          "category": "Coffee",
+          "description": "coffee bean",
+          "quantity": 1.0,
+          "unitPrice": 33.91,
+          "total": 33.91
+        },
+        {
+          "id": "2026-06-car-wash-33",
+          "date": "2026-06-24",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-06-coffee-16",
+          "date": "2026-06-23",
+          "category": "Coffee",
+          "description": "milk",
+          "quantity": 1.0,
+          "unitPrice": 11.7,
+          "total": 11.7
+        },
+        {
+          "id": "2026-06-car-wash-31",
+          "date": "2026-06-23",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-06-car-wash-32",
+          "date": "2026-06-23",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-06-advertisement-19",
+          "date": "2026-06-23",
+          "category": "Advertisement",
+          "description": "facebook",
+          "quantity": 1.0,
+          "unitPrice": 15.0,
+          "total": 15.0
+        },
+        {
+          "id": "2026-06-advertisement-20",
+          "date": "2026-06-23",
+          "category": "Advertisement",
+          "description": "tiktok",
+          "quantity": 1.0,
+          "unitPrice": 15.0,
+          "total": 15.0
+        },
+        {
+          "id": "2026-06-other-15",
+          "date": "2026-06-23",
+          "category": "Other",
+          "description": "soap",
+          "quantity": 1.0,
+          "unitPrice": 27.0,
+          "total": 27.0
+        },
+        {
+          "id": "2026-06-car-wash-30",
+          "date": "2026-06-22",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-06-salon-14",
+          "date": "2026-06-21",
+          "category": "Salon",
+          "description": "seisor",
+          "quantity": 1.0,
+          "unitPrice": 7.7,
+          "total": 7.7
+        },
+        {
+          "id": "2026-06-car-wash-29",
+          "date": "2026-06-21",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-06-car-wash-28",
+          "date": "2026-06-20",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-06-car-wash-27",
+          "date": "2026-06-19",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-06-utilities-12",
+          "date": "2026-06-19",
+          "category": "Utilities",
+          "description": "water suppliy",
+          "quantity": 1.0,
+          "unitPrice": 133.83,
+          "total": 133.83
+        },
+        {
+          "id": "2026-06-advertisement-17",
+          "date": "2026-06-19",
+          "category": "Advertisement",
+          "description": "tiktok",
+          "quantity": 1.0,
+          "unitPrice": 24.75,
+          "total": 24.75
+        },
+        {
+          "id": "2026-06-advertisement-18",
+          "date": "2026-06-19",
+          "category": "Advertisement",
+          "description": "facebook",
+          "quantity": 1.0,
+          "unitPrice": 15.0,
+          "total": 15.0
+        },
+        {
+          "id": "2026-06-other-14",
+          "date": "2026-06-19",
+          "category": "Other",
+          "description": "trash bag",
+          "quantity": 1.0,
+          "unitPrice": 7.5,
+          "total": 7.5
+        },
+        {
+          "id": "2026-06-car-wash-26",
+          "date": "2026-06-18",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-06-salon-12",
+          "date": "2026-06-17",
+          "category": "Salon",
+          "description": "shampoo",
+          "quantity": 6.0,
+          "unitPrice": 6.5,
+          "total": 39.0
+        },
+        {
+          "id": "2026-06-salon-13",
+          "date": "2026-06-17",
+          "category": "Salon",
+          "description": "hair mask",
+          "quantity": 4.0,
+          "unitPrice": 6.5,
+          "total": 26.0
+        },
+        {
+          "id": "2026-06-car-wash-25",
+          "date": "2026-06-17",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-06-other-13",
+          "date": "2026-06-17",
+          "category": "Other",
+          "description": "Med car and salon",
+          "quantity": 1.0,
+          "unitPrice": 7.61,
+          "total": 7.61
+        },
+        {
+          "id": "2026-06-car-wash-24",
+          "date": "2026-06-16",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-06-advertisement-15",
+          "date": "2026-06-16",
+          "category": "Advertisement",
+          "description": "tiktok",
+          "quantity": 1.0,
+          "unitPrice": 24.75,
+          "total": 24.75
+        },
+        {
+          "id": "2026-06-advertisement-16",
+          "date": "2026-06-16",
+          "category": "Advertisement",
+          "description": "facebook",
+          "quantity": 1.0,
+          "unitPrice": 20.0,
+          "total": 20.0
+        },
+        {
+          "id": "2026-06-other-12",
+          "date": "2026-06-16",
+          "category": "Other",
+          "description": "water pipe",
+          "quantity": 1.0,
+          "unitPrice": 5.0,
+          "total": 5.0
+        },
+        {
+          "id": "2026-06-car-wash-23",
+          "date": "2026-06-15",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-06-car-wash-22",
+          "date": "2026-06-14",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-06-car-wash-21",
+          "date": "2026-06-13",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-06-car-wash-20",
+          "date": "2026-06-12",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-06-car-wash-19",
+          "date": "2026-06-11",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-06-utilities-11",
+          "date": "2026-06-11",
+          "category": "Utilities",
+          "description": "EDC",
+          "quantity": 1.0,
+          "unitPrice": 1066.06,
+          "total": 1066.06
+        },
+        {
+          "id": "2026-06-car-wash-18",
+          "date": "2026-06-10",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-06-coffee-14",
+          "date": "2026-06-09",
+          "category": "Coffee",
+          "description": "Strawberry Syrup",
+          "quantity": 1.0,
+          "unitPrice": 9.98,
+          "total": 9.98
+        },
+        {
+          "id": "2026-06-coffee-15",
+          "date": "2026-06-09",
+          "category": "Coffee",
+          "description": "milk",
+          "quantity": 6.0,
+          "unitPrice": 3.9,
+          "total": 23.4
+        },
+        {
+          "id": "2026-06-car-wash-17",
+          "date": "2026-06-09",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-06-coffee-13",
+          "date": "2026-06-08",
+          "category": "Coffee",
+          "description": "material",
+          "quantity": 1.0,
+          "unitPrice": 28.92,
+          "total": 28.92
+        },
+        {
+          "id": "2026-06-car-wash-16",
+          "date": "2026-06-08",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-06-advertisement-11",
+          "date": "2026-06-08",
+          "category": "Advertisement",
+          "description": "tiktok",
+          "quantity": 1.0,
+          "unitPrice": 33.0,
+          "total": 33.0
+        },
+        {
+          "id": "2026-06-advertisement-12",
+          "date": "2026-06-08",
+          "category": "Advertisement",
+          "description": "facebook",
+          "quantity": 1.0,
+          "unitPrice": 20.0,
+          "total": 20.0
+        },
+        {
+          "id": "2026-06-advertisement-13",
+          "date": "2026-06-08",
+          "category": "Advertisement",
+          "description": "Tiktok",
+          "quantity": 1.0,
+          "unitPrice": 22.0,
+          "total": 22.0
+        },
+        {
+          "id": "2026-06-advertisement-14",
+          "date": "2026-06-08",
+          "category": "Advertisement",
+          "description": "Facebook",
+          "quantity": 1.0,
+          "unitPrice": 15.0,
+          "total": 15.0
+        },
+        {
+          "id": "2026-06-salon-10",
+          "date": "2026-06-07",
+          "category": "Salon",
+          "description": "keratin",
+          "quantity": 6.0,
+          "unitPrice": 17.0,
+          "total": 102.0
+        },
+        {
+          "id": "2026-06-salon-11",
+          "date": "2026-06-07",
+          "category": "Salon",
+          "description": "delivery",
+          "quantity": 1.0,
+          "unitPrice": 3.0,
+          "total": 3.0
+        },
+        {
+          "id": "2026-06-car-wash-15",
+          "date": "2026-06-07",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-06-car-wash-14",
+          "date": "2026-06-06",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-06-car-wash-13",
+          "date": "2026-06-05",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-06-coffee-10",
+          "date": "2026-06-04",
+          "category": "Coffee",
+          "description": "ice",
+          "quantity": 1.0,
+          "unitPrice": 30.51,
+          "total": 30.51
+        },
+        {
+          "id": "2026-06-coffee-11",
+          "date": "2026-06-04",
+          "category": "Coffee",
+          "description": "Coffe bean",
+          "quantity": 1.0,
+          "unitPrice": 33.91,
+          "total": 33.91
+        },
+        {
+          "id": "2026-06-coffee-12",
+          "date": "2026-06-04",
+          "category": "Coffee",
+          "description": "Cheese Power",
+          "quantity": 1.0,
+          "unitPrice": 4.0,
+          "total": 4.0
+        },
+        {
+          "id": "2026-06-car-wash-12",
+          "date": "2026-06-04",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-06-car-wash-11",
+          "date": "2026-06-03",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-06-car-wash-10",
+          "date": "2026-06-02",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-06-salon-9",
+          "date": "2026-06-01",
+          "category": "Salon",
+          "description": "Milk Scrub",
+          "quantity": 1.0,
+          "unitPrice": 14.0,
+          "total": 14.0
+        },
+        {
+          "id": "2026-06-coffee-9",
+          "date": "2026-06-01",
+          "category": "Coffee",
+          "description": "Strawberry",
+          "quantity": 1.0,
+          "unitPrice": 20.0,
+          "total": 20.0
+        },
+        {
+          "id": "2026-06-car-wash-9",
+          "date": "2026-06-01",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-06-utilities-9",
+          "date": "2026-06-01",
+          "category": "Utilities",
+          "description": "Fresha",
+          "quantity": 1.0,
+          "unitPrice": 12.0,
+          "total": 12.0
+        },
+        {
+          "id": "2026-06-utilities-10",
+          "date": "2026-06-01",
+          "category": "Utilities",
+          "description": "Wifi",
+          "quantity": 1.0,
+          "unitPrice": 50.0,
+          "total": 50.0
+        },
+        {
+          "id": "2026-06-advertisement-9",
+          "date": "2026-06-01",
+          "category": "Advertisement",
+          "description": "tiktok",
+          "quantity": 1.0,
+          "unitPrice": 57.75,
+          "total": 57.75
+        },
+        {
+          "id": "2026-06-advertisement-10",
+          "date": "2026-06-01",
+          "category": "Advertisement",
+          "description": "facebook",
+          "quantity": 1.0,
+          "unitPrice": 35.0,
+          "total": 35.0
+        },
+        {
+          "id": "2026-06-other-9",
+          "date": "2026-06-01",
+          "category": "Other",
+          "description": "forgot",
+          "quantity": 1.0,
+          "unitPrice": 25.0,
+          "total": 25.0
+        },
+        {
+          "id": "2026-06-other-10",
+          "date": "2026-06-01",
+          "category": "Other",
+          "description": "Loda",
+          "quantity": 1.0,
+          "unitPrice": 7.28,
+          "total": 7.28
+        },
+        {
+          "id": "2026-06-other-11",
+          "date": "2026-06-01",
+          "category": "Other",
+          "description": "Loda",
+          "quantity": 1.0,
+          "unitPrice": 5.93,
+          "total": 5.93
+        }
+      ]
+    },
+    {
+      "key": "2026-05",
+      "label": "May 2026",
+      "expenses": [
+        {
+          "id": "2026-05-coffee-27",
+          "date": "2026-05-31",
+          "category": "Coffee",
+          "description": "orange",
+          "quantity": 1.0,
+          "unitPrice": 2.25,
+          "total": 2.25
+        },
+        {
+          "id": "2026-05-car-wash-41",
+          "date": "2026-05-31",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-05-other-18",
+          "date": "2026-05-31",
+          "category": "Other",
+          "description": "phone bill",
+          "quantity": 1.0,
+          "unitPrice": 6.0,
+          "total": 6.0
+        },
+        {
+          "id": "2026-05-coffee-26",
+          "date": "2026-05-30",
+          "category": "Coffee",
+          "description": "milk",
+          "quantity": 6.0,
+          "unitPrice": 3.9,
+          "total": 23.4
+        },
+        {
+          "id": "2026-05-car-wash-40",
+          "date": "2026-05-30",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-05-advertisement-25",
+          "date": "2026-05-30",
+          "category": "Advertisement",
+          "description": "Tiktok Ads",
+          "quantity": 1.0,
+          "unitPrice": 11.0,
+          "total": 11.0
+        },
+        {
+          "id": "2026-05-car-wash-39",
+          "date": "2026-05-29",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-05-salon-23",
+          "date": "2026-05-28",
+          "category": "Salon",
+          "description": "hair mask",
+          "quantity": 6.0,
+          "unitPrice": 6.5,
+          "total": 39.0
+        },
+        {
+          "id": "2026-05-salon-24",
+          "date": "2026-05-28",
+          "category": "Salon",
+          "description": "olaplex",
+          "quantity": 2.0,
+          "unitPrice": 8.0,
+          "total": 16.0
+        },
+        {
+          "id": "2026-05-salon-25",
+          "date": "2026-05-28",
+          "category": "Salon",
+          "description": "keratin",
+          "quantity": 6.0,
+          "unitPrice": 17.0,
+          "total": 102.0
+        },
+        {
+          "id": "2026-05-salon-26",
+          "date": "2026-05-28",
+          "category": "Salon",
+          "description": "delivery",
+          "quantity": 1.0,
+          "unitPrice": 3.0,
+          "total": 3.0
+        },
+        {
+          "id": "2026-05-car-wash-38",
+          "date": "2026-05-28",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-05-other-16",
+          "date": "2026-05-28",
+          "category": "Other",
+          "description": "water",
+          "quantity": 1.0,
+          "unitPrice": 15.0,
+          "total": 15.0
+        },
+        {
+          "id": "2026-05-other-17",
+          "date": "2026-05-28",
+          "category": "Other",
+          "description": "fixed mater machine",
+          "quantity": 1.0,
+          "unitPrice": 50.0,
+          "total": 50.0
+        },
+        {
+          "id": "2026-05-salon-22",
+          "date": "2026-05-27",
+          "category": "Salon",
+          "description": "keratin",
+          "quantity": 4.0,
+          "unitPrice": 20.0,
+          "total": 80.0
+        },
+        {
+          "id": "2026-05-coffee-25",
+          "date": "2026-05-27",
+          "category": "Coffee",
+          "description": "Matcha",
+          "quantity": 1.0,
+          "unitPrice": 6.95,
+          "total": 6.95
+        },
+        {
+          "id": "2026-05-car-wash-37",
+          "date": "2026-05-27",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-05-other-15",
+          "date": "2026-05-27",
+          "category": "Other",
+          "description": "soap",
+          "quantity": 1.0,
+          "unitPrice": 48.0,
+          "total": 48.0
+        },
+        {
+          "id": "2026-05-coffee-24",
+          "date": "2026-05-26",
+          "category": "Coffee",
+          "description": "lychee syrup",
+          "quantity": 1.0,
+          "unitPrice": 18.91,
+          "total": 18.91
+        },
+        {
+          "id": "2026-05-car-wash-36",
+          "date": "2026-05-26",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-05-advertisement-23",
+          "date": "2026-05-26",
+          "category": "Advertisement",
+          "description": "Tiktok Ads",
+          "quantity": 1.0,
+          "unitPrice": 41.25,
+          "total": 41.25
+        },
+        {
+          "id": "2026-05-advertisement-24",
+          "date": "2026-05-26",
+          "category": "Advertisement",
+          "description": "Fb Ads",
+          "quantity": 1.0,
+          "unitPrice": 25.0,
+          "total": 25.0
+        },
+        {
+          "id": "2026-05-coffee-23",
+          "date": "2026-05-25",
+          "category": "Coffee",
+          "description": "strawberry",
+          "quantity": 2.0,
+          "unitPrice": 10.5,
+          "total": 21.0
+        },
+        {
+          "id": "2026-05-car-wash-35",
+          "date": "2026-05-25",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-05-other-14",
+          "date": "2026-05-25",
+          "category": "Other",
+          "description": "fixed pipe",
+          "quantity": 1.0,
+          "unitPrice": 5.0,
+          "total": 5.0
+        },
+        {
+          "id": "2026-05-car-wash-34",
+          "date": "2026-05-24",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-05-other-12",
+          "date": "2026-05-24",
+          "category": "Other",
+          "description": "Water filter",
+          "quantity": 2.0,
+          "unitPrice": 49.0,
+          "total": 98.0
+        },
+        {
+          "id": "2026-05-other-13",
+          "date": "2026-05-24",
+          "category": "Other",
+          "description": "order food",
+          "quantity": 1.0,
+          "unitPrice": 46.0,
+          "total": 46.0
+        },
+        {
+          "id": "2026-05-car-wash-33",
+          "date": "2026-05-23",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-05-utilities-13",
+          "date": "2026-05-23",
+          "category": "Utilities",
+          "description": "phone bill",
+          "quantity": 1.0,
+          "unitPrice": 1.0,
+          "total": 1.0
+        },
+        {
+          "id": "2026-05-car-wash-32",
+          "date": "2026-05-22",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-05-salon-20",
+          "date": "2026-05-21",
+          "category": "Salon",
+          "description": "keratin",
+          "quantity": 6.0,
+          "unitPrice": 20.0,
+          "total": 120.0
+        },
+        {
+          "id": "2026-05-salon-21",
+          "date": "2026-05-21",
+          "category": "Salon",
+          "description": "shampoo",
+          "quantity": 6.0,
+          "unitPrice": 6.5,
+          "total": 39.0
+        },
+        {
+          "id": "2026-05-car-wash-31",
+          "date": "2026-05-21",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-05-advertisement-21",
+          "date": "2026-05-21",
+          "category": "Advertisement",
+          "description": "Tiktok Ads",
+          "quantity": 1.0,
+          "unitPrice": 41.25,
+          "total": 41.25
+        },
+        {
+          "id": "2026-05-advertisement-22",
+          "date": "2026-05-21",
+          "category": "Advertisement",
+          "description": "Fb Ads",
+          "quantity": 1.0,
+          "unitPrice": 25.0,
+          "total": 25.0
+        },
+        {
+          "id": "2026-05-car-wash-30",
+          "date": "2026-05-20",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-05-salon-18",
+          "date": "2026-05-19",
+          "category": "Salon",
+          "description": "glove",
+          "quantity": 1.0,
+          "unitPrice": 2.9,
+          "total": 2.9
+        },
+        {
+          "id": "2026-05-salon-19",
+          "date": "2026-05-19",
+          "category": "Salon",
+          "description": "Stock from CHH",
+          "quantity": 1.0,
+          "unitPrice": 43.28,
+          "total": 43.28
+        },
+        {
+          "id": "2026-05-car-wash-29",
+          "date": "2026-05-19",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-05-other-11",
+          "date": "2026-05-19",
+          "category": "Other",
+          "description": "tissue",
+          "quantity": 1.0,
+          "unitPrice": 8.75,
+          "total": 8.75
+        },
+        {
+          "id": "2026-05-salon-15",
+          "date": "2026-05-18",
+          "category": "Salon",
+          "description": "KERATIN",
+          "quantity": 4.0,
+          "unitPrice": 20.0,
+          "total": 80.0
+        },
+        {
+          "id": "2026-05-salon-16",
+          "date": "2026-05-18",
+          "category": "Salon",
+          "description": "essential oil",
+          "quantity": 2.0,
+          "unitPrice": 5.0,
+          "total": 10.0
+        },
+        {
+          "id": "2026-05-salon-17",
+          "date": "2026-05-18",
+          "category": "Salon",
+          "description": "delivery",
+          "quantity": 1.0,
+          "unitPrice": 2.05,
+          "total": 2.05
+        },
+        {
+          "id": "2026-05-car-wash-27",
+          "date": "2026-05-18",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-05-car-wash-28",
+          "date": "2026-05-18",
+          "category": "Car Wash",
+          "description": "OIL",
+          "quantity": 10.0,
+          "unitPrice": 2.8,
+          "total": 28.0
+        },
+        {
+          "id": "2026-05-advertisement-19",
+          "date": "2026-05-18",
+          "category": "Advertisement",
+          "description": "Tiktok Ads",
+          "quantity": 1.0,
+          "unitPrice": 24.75,
+          "total": 24.75
+        },
+        {
+          "id": "2026-05-advertisement-20",
+          "date": "2026-05-18",
+          "category": "Advertisement",
+          "description": "Fb Ads",
+          "quantity": 1.0,
+          "unitPrice": 16.57,
+          "total": 16.57
+        },
+        {
+          "id": "2026-05-car-wash-26",
+          "date": "2026-05-17",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-05-utilities-12",
+          "date": "2026-05-17",
+          "category": "Utilities",
+          "description": "EDC",
+          "quantity": 1.0,
+          "unitPrice": 1088.8,
+          "total": 1088.8
+        },
+        {
+          "id": "2026-05-coffee-20",
+          "date": "2026-05-16",
+          "category": "Coffee",
+          "description": "milk",
+          "quantity": 6.0,
+          "unitPrice": 3.9,
+          "total": 23.4
+        },
+        {
+          "id": "2026-05-coffee-21",
+          "date": "2026-05-16",
+          "category": "Coffee",
+          "description": "condensed milk",
+          "quantity": 2.0,
+          "unitPrice": 2.125,
+          "total": 4.25
+        },
+        {
+          "id": "2026-05-coffee-22",
+          "date": "2026-05-16",
+          "category": "Coffee",
+          "description": "sugar",
+          "quantity": 1.0,
+          "unitPrice": 5.0,
+          "total": 5.0
+        },
+        {
+          "id": "2026-05-car-wash-25",
+          "date": "2026-05-16",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-05-other-10",
+          "date": "2026-05-16",
+          "category": "Other",
+          "description": "print paper",
+          "quantity": 1.0,
+          "unitPrice": 2.75,
+          "total": 2.75
+        },
+        {
+          "id": "2026-05-coffee-18",
+          "date": "2026-05-15",
+          "category": "Coffee",
+          "description": "Cafe bean",
+          "quantity": 3.0,
+          "unitPrice": 11.9,
+          "total": 35.7
+        },
+        {
+          "id": "2026-05-coffee-19",
+          "date": "2026-05-15",
+          "category": "Coffee",
+          "description": "strawberry syrup",
+          "quantity": 1.0,
+          "unitPrice": 8.19,
+          "total": 8.19
+        },
+        {
+          "id": "2026-05-car-wash-24",
+          "date": "2026-05-15",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-05-advertisement-17",
+          "date": "2026-05-15",
+          "category": "Advertisement",
+          "description": "Tiktok Ads",
+          "quantity": 1.0,
+          "unitPrice": 24.75,
+          "total": 24.75
+        },
+        {
+          "id": "2026-05-advertisement-18",
+          "date": "2026-05-15",
+          "category": "Advertisement",
+          "description": "Fb Ads",
+          "quantity": 1.0,
+          "unitPrice": 27.0,
+          "total": 27.0
+        },
+        {
+          "id": "2026-05-car-wash-23",
+          "date": "2026-05-14",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-05-car-wash-21",
+          "date": "2026-05-13",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-05-car-wash-22",
+          "date": "2026-05-13",
+          "category": "Car Wash",
+          "description": "viso",
+          "quantity": 1.0,
+          "unitPrice": 7.0,
+          "total": 7.0
+        },
+        {
+          "id": "2026-05-car-wash-20",
+          "date": "2026-05-12",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-05-advertisement-16",
+          "date": "2026-05-12",
+          "category": "Advertisement",
+          "description": "Tiktok Ads",
+          "quantity": 1.0,
+          "unitPrice": 16.5,
+          "total": 16.5
+        },
+        {
+          "id": "2026-05-salon-9",
+          "date": "2026-05-11",
+          "category": "Salon",
+          "description": "Keratin",
+          "quantity": 3.0,
+          "unitPrice": 20.0,
+          "total": 60.0
+        },
+        {
+          "id": "2026-05-salon-10",
+          "date": "2026-05-11",
+          "category": "Salon",
+          "description": "shampoo",
+          "quantity": 6.0,
+          "unitPrice": 6.5,
+          "total": 39.0
+        },
+        {
+          "id": "2026-05-salon-11",
+          "date": "2026-05-11",
+          "category": "Salon",
+          "description": "louchrch hair mask",
+          "quantity": 4.0,
+          "unitPrice": 6.5,
+          "total": 26.0
+        },
+        {
+          "id": "2026-05-salon-12",
+          "date": "2026-05-11",
+          "category": "Salon",
+          "description": "hair color 1 lo",
+          "quantity": 1.0,
+          "unitPrice": 25.0,
+          "total": 25.0
+        },
+        {
+          "id": "2026-05-salon-13",
+          "date": "2026-05-11",
+          "category": "Salon",
+          "description": "oc",
+          "quantity": 6.0,
+          "unitPrice": 3.2,
+          "total": 19.200000000000003
+        },
+        {
+          "id": "2026-05-salon-14",
+          "date": "2026-05-11",
+          "category": "Salon",
+          "description": "blue protein",
+          "quantity": 2.0,
+          "unitPrice": 29.5,
+          "total": 59.0
+        },
+        {
+          "id": "2026-05-car-wash-19",
+          "date": "2026-05-11",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 6.25,
+          "total": 6.25
+        },
+        {
+          "id": "2026-05-advertisement-14",
+          "date": "2026-05-11",
+          "category": "Advertisement",
+          "description": "Fb Ads",
+          "quantity": 1.0,
+          "unitPrice": 10.0,
+          "total": 10.0
+        },
+        {
+          "id": "2026-05-advertisement-15",
+          "date": "2026-05-11",
+          "category": "Advertisement",
+          "description": "Tiktok Ads",
+          "quantity": 1.0,
+          "unitPrice": 11.0,
+          "total": 11.0
+        },
+        {
+          "id": "2026-05-coffee-15",
+          "date": "2026-05-10",
+          "category": "Coffee",
+          "description": "Coffee Ingredient",
+          "quantity": 1.0,
+          "unitPrice": 2.9,
+          "total": 2.9
+        },
+        {
+          "id": "2026-05-coffee-16",
+          "date": "2026-05-10",
+          "category": "Coffee",
+          "description": "Choco Powder",
+          "quantity": 1.0,
+          "unitPrice": 8.5,
+          "total": 8.5
+        },
+        {
+          "id": "2026-05-coffee-17",
+          "date": "2026-05-10",
+          "category": "Coffee",
+          "description": "Straw and cup cover",
+          "quantity": 1.0,
+          "unitPrice": 34.0,
+          "total": 34.0
+        },
+        {
+          "id": "2026-05-car-wash-18",
+          "date": "2026-05-10",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 6.25,
+          "total": 6.25
+        },
+        {
+          "id": "2026-05-coffee-14",
+          "date": "2026-05-09",
+          "category": "Coffee",
+          "description": "Fresh Strawberry",
+          "quantity": 3.0,
+          "unitPrice": 7.083333333333,
+          "total": 21.249999999998998
+        },
+        {
+          "id": "2026-05-car-wash-17",
+          "date": "2026-05-09",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-05-car-wash-16",
+          "date": "2026-05-08",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-05-advertisement-12",
+          "date": "2026-05-08",
+          "category": "Advertisement",
+          "description": "Tiktok Ads",
+          "quantity": 1.0,
+          "unitPrice": 16.5,
+          "total": 16.5
+        },
+        {
+          "id": "2026-05-advertisement-13",
+          "date": "2026-05-08",
+          "category": "Advertisement",
+          "description": "Fb Ads",
+          "quantity": 1.0,
+          "unitPrice": 23.0,
+          "total": 23.0
+        },
+        {
+          "id": "2026-05-car-wash-15",
+          "date": "2026-05-07",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-05-coffee-13",
+          "date": "2026-05-06",
+          "category": "Coffee",
+          "description": "Cafe Ingredients",
+          "quantity": 1.0,
+          "unitPrice": 7.75,
+          "total": 7.75
+        },
+        {
+          "id": "2026-05-car-wash-14",
+          "date": "2026-05-06",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-05-utilities-10",
+          "date": "2026-05-06",
+          "category": "Utilities",
+          "description": "Wifi",
+          "quantity": 1.0,
+          "unitPrice": 50.0,
+          "total": 50.0
+        },
+        {
+          "id": "2026-05-utilities-11",
+          "date": "2026-05-06",
+          "category": "Utilities",
+          "description": "Popok pos",
+          "quantity": 1.0,
+          "unitPrice": 264.0,
+          "total": 264.0
+        },
+        {
+          "id": "2026-05-coffee-12",
+          "date": "2026-05-05",
+          "category": "Coffee",
+          "description": "Ice",
+          "quantity": 1.0,
+          "unitPrice": 23.625,
+          "total": 23.625
+        },
+        {
+          "id": "2026-05-car-wash-13",
+          "date": "2026-05-05",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 11.25,
+          "total": 11.25
+        },
+        {
+          "id": "2026-05-coffee-11",
+          "date": "2026-05-04",
+          "category": "Coffee",
+          "description": "Office Supplies",
+          "quantity": 1.0,
+          "unitPrice": 2.5,
+          "total": 2.5
+        },
+        {
+          "id": "2026-05-car-wash-12",
+          "date": "2026-05-04",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 12.5,
+          "total": 12.5
+        },
+        {
+          "id": "2026-05-advertisement-10",
+          "date": "2026-05-04",
+          "category": "Advertisement",
+          "description": "Tiktok Ads",
+          "quantity": 1.0,
+          "unitPrice": 44.0,
+          "total": 44.0
+        },
+        {
+          "id": "2026-05-advertisement-11",
+          "date": "2026-05-04",
+          "category": "Advertisement",
+          "description": "Fb Ads",
+          "quantity": 1.0,
+          "unitPrice": 11.0,
+          "total": 11.0
+        },
+        {
+          "id": "2026-05-car-wash-11",
+          "date": "2026-05-03",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 12.5,
+          "total": 12.5
+        },
+        {
+          "id": "2026-05-coffee-9",
+          "date": "2026-05-02",
+          "category": "Coffee",
+          "description": "Milk",
+          "quantity": 6.0,
+          "unitPrice": 3.9,
+          "total": 23.4
+        },
+        {
+          "id": "2026-05-coffee-10",
+          "date": "2026-05-02",
+          "category": "Coffee",
+          "description": "Nom sen",
+          "quantity": 1.0,
+          "unitPrice": 16.25,
+          "total": 16.25
+        },
+        {
+          "id": "2026-05-car-wash-10",
+          "date": "2026-05-02",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 12.5,
+          "total": 12.5
+        },
+        {
+          "id": "2026-05-utilities-9",
+          "date": "2026-05-02",
+          "category": "Utilities",
+          "description": "Fresha",
+          "quantity": 1.0,
+          "unitPrice": 11.84,
+          "total": 11.84
+        },
+        {
+          "id": "2026-05-car-wash-9",
+          "date": "2026-05-01",
+          "category": "Car Wash",
+          "description": "employee meal",
+          "quantity": 1.0,
+          "unitPrice": 12.5,
+          "total": 12.5
+        },
+        {
+          "id": "2026-05-advertisement-9",
+          "date": "2026-05-01",
+          "category": "Advertisement",
+          "description": "Fb Ads",
+          "quantity": 1.0,
+          "unitPrice": 25.0,
+          "total": 25.0
+        },
+        {
+          "id": "2026-05-other-9",
+          "date": "2026-05-01",
+          "category": "Other",
+          "description": "Trash Bag",
+          "quantity": 1.0,
+          "unitPrice": 15.0,
+          "total": 15.0
+        }
+      ]
+    }
+  ]
+}
