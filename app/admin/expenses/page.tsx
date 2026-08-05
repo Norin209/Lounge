@@ -228,16 +228,27 @@ export default function ExpensesPage() {
       employee.name.toLowerCase().includes(salarySearchValue) ||
       employee.role.toLowerCase().includes(salarySearchValue)
   );
-  const additionalEarnings = selectedSalaryMonth
-    ? selectedSalaryMonth.commissionTotal +
-      selectedSalaryMonth.overtimeTotal +
-      selectedSalaryMonth.paybackTotal +
-      selectedSalaryMonth.extraRewardTotal
-    : 0;
-  const payrollDeductions = selectedSalaryMonth
-    ? selectedSalaryMonth.borrowTotal +
-      selectedSalaryMonth.deductionTotal
-    : 0;
+  const grossPayroll = (selectedSalaryMonth?.employees ?? []).reduce(
+    (total, employee) => total + employee.grossSalary,
+    0
+  );
+  const additionalEarnings = (
+    selectedSalaryMonth?.employees ?? []
+  ).reduce(
+    (total, employee) =>
+      total +
+      employee.commission +
+      employee.overtime +
+      employee.extraReward,
+    0
+  );
+  const payrollDeductions = (
+    selectedSalaryMonth?.employees ?? []
+  ).reduce(
+    (total, employee) =>
+      total + employee.borrow + employee.deduction,
+    0
+  );
   const payrollChange = previousSalaryMonth
     ? (selectedSalaryMonth?.total ?? 0) - previousSalaryMonth.total
     : null;
@@ -471,7 +482,7 @@ export default function ExpensesPage() {
       <div className={styles.chartGrid}>
         {/* WEEKLY EXPENSES */}
 
-        <div className={`${styles.panel} ${styles.chartPanel}`}>
+        <div className={styles.panel}>
           <div
             className={
               styles.panelHeader
@@ -547,7 +558,7 @@ export default function ExpensesPage() {
 
         {/* CATEGORY BREAKDOWN */}
 
-        <div className={`${styles.panel} ${styles.categoryPanel}`}>
+        <div className={styles.panel}>
           <div
             className={
               styles.panelHeader
@@ -664,78 +675,36 @@ export default function ExpensesPage() {
           </div>
 
           <div className={styles.salarySummaryGrid}>
-            <div
-              className={`${styles.salaryMetric} ${styles.salaryMetricPrimary}`}
-            >
-              <div className={styles.salaryMetricTop}>
-                <span className={styles.salaryMetricLabel}>
-                  Salary Expense
-                </span>
-                <span className={styles.salaryMetricIcon}>$</span>
-              </div>
-              <strong className={styles.salaryMetricValue}>
-                {money(selectedSalaryMonth.total)}
-              </strong>
-              <small className={styles.salaryMetricNote}>
-                Workbook Total Salary · {selectedSalaryMonth.employeeCount}{' '}
-                employees
+            <div className={styles.salaryMetric}>
+              <span>Final Payroll</span>
+              <strong>{money(selectedSalaryMonth.total)}</strong>
+              <small>
+                {selectedSalaryMonth.employeeCount} employees
               </small>
             </div>
 
             <div className={styles.salaryMetric}>
-              <div className={styles.salaryMetricTop}>
-                <span className={styles.salaryMetricLabel}>
-                  Final Payments
-                </span>
-                <span className={styles.salaryMetricIcon}>✓</span>
-              </div>
-              <strong className={styles.salaryMetricValue}>
-                {money(selectedSalaryMonth.finalTotal)}
-              </strong>
-              <small className={styles.salaryMetricNote}>
-                After borrowing and deductions
-              </small>
+              <span>Gross Payroll</span>
+              <strong>{money(grossPayroll)}</strong>
+              <small>Before borrowing and deductions</small>
             </div>
 
             <div className={styles.salaryMetric}>
-              <div className={styles.salaryMetricTop}>
-                <span className={styles.salaryMetricLabel}>
-                  Extra Earnings
-                </span>
-                <span className={styles.salaryMetricIcon}>+</span>
-              </div>
-              <strong className={styles.salaryMetricValue}>
-                {money(additionalEarnings)}
-              </strong>
-              <small className={styles.salaryMetricNote}>
-                Commission, OT, payback and rewards
-              </small>
+              <span>Extra Earnings</span>
+              <strong>{money(additionalEarnings)}</strong>
+              <small>Commission, OT and rewards</small>
             </div>
 
             <div className={styles.salaryMetric}>
-              <div className={styles.salaryMetricTop}>
-                <span className={styles.salaryMetricLabel}>
-                  Borrow + Deductions
-                </span>
-                <span className={styles.salaryMetricIcon}>−</span>
-              </div>
-              <strong className={styles.salaryMetricValue}>
-                {money(payrollDeductions)}
-              </strong>
-              <small className={styles.salaryMetricNote}>
-                Removed from final payments
-              </small>
+              <span>Borrow + Deductions</span>
+              <strong>{money(payrollDeductions)}</strong>
+              <small>Removed from final payments</small>
             </div>
 
             <div className={styles.salaryMetric}>
-              <div className={styles.salaryMetricTop}>
-                <span className={styles.salaryMetricLabel}>
-                  Month Change
-                </span>
-                <span className={styles.salaryMetricIcon}>↔</span>
-              </div>
+              <span>Month Change</span>
               <strong
-                className={`${styles.salaryMetricValue} ${
+                className={
                   payrollChange === null
                     ? styles.changeNeutral
                     : payrollChange > 0
@@ -743,13 +712,13 @@ export default function ExpensesPage() {
                       : payrollChange < 0
                         ? styles.changeDown
                         : styles.changeNeutral
-                }`}
+                }
               >
                 {payrollChange === null
                   ? '—'
                   : `${payrollChange > 0 ? '+' : ''}${money(payrollChange)}`}
               </strong>
-              <small className={styles.salaryMetricNote}>
+              <small>
                 {payrollChangePercentage === null
                   ? 'No previous month available'
                   : `${payrollChangePercentage > 0 ? '+' : ''}${payrollChangePercentage.toFixed(1)}% vs previous month`}
@@ -766,11 +735,8 @@ export default function ExpensesPage() {
                   <th>Employee</th>
                   <th>Role</th>
                   <th className={styles.numericCell}>Base</th>
-                  <th className={styles.numericCell}>Adjusted</th>
-                  <th className={styles.numericCell}>Commission</th>
-                  <th className={styles.numericCell}>OT</th>
-                  <th className={styles.numericCell}>Reward</th>
                   <th className={styles.numericCell}>Gross</th>
+                  <th className={styles.numericCell}>Extra</th>
                   <th className={styles.numericCell}>Borrow</th>
                   <th className={styles.numericCell}>Deduction</th>
                   <th className={styles.numericCell}>Final Paid</th>
@@ -802,19 +768,14 @@ export default function ExpensesPage() {
                           {money(employee.baseSalary)}
                         </td>
                         <td className={styles.numericCell}>
-                          {money(employee.adjustedSalary)}
-                        </td>
-                        <td className={styles.numericCell}>
-                          {money(employee.commission)}
-                        </td>
-                        <td className={styles.numericCell}>
-                          {money(employee.overtime)}
-                        </td>
-                        <td className={styles.numericCell}>
-                          {money(employee.extraReward)}
-                        </td>
-                        <td className={styles.numericCell}>
                           {money(employee.grossSalary)}
+                        </td>
+                        <td className={styles.numericCell}>
+                          {money(
+                            employee.commission +
+                              employee.overtime +
+                              employee.extraReward
+                          )}
                         </td>
                         <td className={styles.numericCell}>
                           {money(employee.borrow)}
@@ -828,30 +789,26 @@ export default function ExpensesPage() {
                           {money(employee.finalSalary)}
                         </td>
                         <td
-                          className={styles.numericCell}
+                          className={`${styles.numericCell} ${
+                            employeeChange === null
+                              ? styles.changeNeutral
+                              : employeeChange > 0
+                                ? styles.changeUp
+                                : employeeChange < 0
+                                  ? styles.changeDown
+                                  : styles.changeNeutral
+                          }`}
                         >
-                          <span
-                            className={`${styles.changePill} ${
-                              employeeChange === null
-                                ? styles.changeNeutral
-                                : employeeChange > 0
-                                  ? styles.changeUp
-                                  : employeeChange < 0
-                                    ? styles.changeDown
-                                    : styles.changeNeutral
-                            }`}
-                          >
-                            {employeeChange === null
-                              ? 'New'
-                              : `${employeeChange > 0 ? '+' : ''}${money(employeeChange)}`}
-                          </span>
+                          {employeeChange === null
+                            ? 'New'
+                            : `${employeeChange > 0 ? '+' : ''}${money(employeeChange)}`}
                         </td>
                       </tr>
                     );
                   })
                 ) : (
                   <tr>
-                    <td colSpan={12} className={styles.emptyState}>
+                    <td colSpan={9} className={styles.emptyState}>
                       No payroll employees found.
                     </td>
                   </tr>
@@ -866,7 +823,7 @@ export default function ExpensesPage() {
           RECENT EXPENSES
       ============================== */}
 
-      <div className={`${styles.panel} ${styles.recentPanel}`}>
+      <div className={styles.panel}>
         <div
           className={
             styles.tableHeader
