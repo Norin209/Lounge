@@ -1,0 +1,111 @@
+.shell { min-height: 100vh; display: flex; flex-direction: column; }
+.pageContent { flex: 1; min-width: 0; }
+.shell :global(.bg-white) { background-color: var(--surface); }
+.shell :global(.bg-gray-50), .shell :global(.bg-zinc-50) { background-color: var(--paper); }
+.shell :global(.bg-gray-100) { background-color: var(--sand); }
+.shell :global(.text-gray-400), .shell :global(.text-gray-500), .shell :global(.text-gray-600), .shell :global(.text-zinc-400), .shell :global(.text-zinc-500) { color: var(--muted); }
+.shell :global([aria-current="page"]) { border-bottom-color: var(--bronze); }
+.intro { max-width: 1280px; margin: 0 auto; padding: 46px 48px 68px; }
+.introWithImage { display: grid; grid-template-columns: 1.1fr 1fr; gap: 64px; align-items: center; }
+.introCopy { padding-block: 8px; }
+.breadcrumb { display: inline-flex; align-items: center; gap: 12px; font-size: 11px; color: var(--muted) !important; margin-bottom: 40px; }
+.breadcrumb:hover { color: var(--ink) !important; }
+.eyebrow { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .17em; color: var(--bronze); }
+.intro h1 { font-size: clamp(50px, 6vw, 82px); line-height: 1.03; letter-spacing: -.045em; margin: 20px 0 24px; }
+.intro h1 em { color: var(--accent); }
+.introDescription { max-width: 440px; color: var(--muted); font-size: 14px; line-height: 1.9; }
+.introCompact { max-width: 900px; padding-block: 30px 36px; text-align: center; }
+.introCompact .breadcrumb { margin-bottom: 24px; }
+.introCompact h1 { font-size: clamp(42px, 4.5vw, 64px); margin-block: 14px 18px; }
+.introCompact .introDescription { max-width: 540px; margin-inline: auto; }
+.introImage { position: relative; height: 330px; overflow: hidden; border-radius: 140px 140px 5px 5px; background: var(--sand-strong); }
+.introImage img { object-fit: cover; }
+.catalogue, .formPage { padding-bottom: 80px; }
+.loading { min-height: 55vh; display: grid; place-items: center; color: var(--muted); background: var(--paper); }
+.filters { border-block: 1px solid var(--line); background: var(--sand); }
+.filters > div { max-width: 1248px; }
+.filters :global(button) { min-height: 44px; }
+.filters :global(button:focus-visible) { outline-offset: -3px; }
+.results { max-width: 1280px; margin: auto; padding: 36px 48px 0; position: relative; }
+.resultsHeading { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 30px; }
+.resultsHeading h2 { font-size: 32px; line-height: 1.2; letter-spacing: -.025em; }
+.resultsHeading p { font-size: 12px; color: var(--muted); margin-top: 7px; }
+.viewSwitch { display: flex; gap: 4px; border: 1px solid var(--line); padding: 4px; border-radius: 5px; background: var(--surface); }
+.viewSwitch button { min-width: 40px; min-height: 40px; }
+.catalogueCard { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; transition: border-color .2s, box-shadow .2s; }
+.catalogueCard:hover { border-color: var(--control-line); box-shadow: 0 10px 30px #4b352a08; }
+.cardHeading { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px 12px; }
+.cardHeading h3 { flex: 1 1 100px; overflow-wrap: anywhere; }
+.cardMeta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-top: auto; }
+.catalogue :global(.bg-black) { background-color: var(--button); }
+.catalogue :global(.border-black) { border-color: var(--ink); }
+.catalogue :global(.text-black) { color: var(--ink); }
+.cardTitle { font-family: var(--display); font-size: clamp(19px, 2vw, 25px); font-weight: 400; color: var(--ink); line-height: 1.2; }
+.cardDescription { color: var(--muted); font-size: 12px; line-height: 1.8; margin-block: 10px 16px !important; }
+.cardPrice { font-size: 14px; font-weight: 500; font-variant-numeric: tabular-nums; color: var(--ink); }
+.cardAction { min-height: 40px; padding: 9px 14px; font-size: 11px; border: 1px solid var(--control-line); border-radius: 3px; color: var(--ink); background: transparent; cursor: pointer; }
+.cardAction:hover { color: #fff; background: var(--button); }
+.cardAction:disabled { color: var(--muted); background: var(--sand); border-color: transparent; }
+.formContent { max-width: 1280px; padding: 0 48px; margin: auto; }
+.formCard { display: flex; overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+.formPrimary { min-width: 0; width: 60%; padding: 42px; }
+.formSecondary { min-width: 0; width: 40%; padding: 42px; border-left: 1px solid var(--line); background: var(--sand); }
+.formCard h3 { color: var(--ink); font-family: var(--display); font-size: 30px; line-height: 1.2; font-weight: 400; }
+.formCard label, .formCard h4 { color: var(--muted); font-size: 10px; font-weight: 600; letter-spacing: .1em; }
+.formCard input, .formCard textarea, .formCard select { color: var(--ink); border-color: var(--control-line); font-size: 14px; padding-block: 13px; }
+.formCard input::placeholder, .formCard textarea::placeholder { color: var(--muted); }
+.formCard input:focus-visible, .formCard textarea:focus-visible, .formCard select:focus-visible { outline: 2px solid var(--bronze); outline-offset: 3px; }
+.formCard button[type="submit"] { background: var(--button); font-size: 11px; letter-spacing: .08em; min-height: 52px; border-radius: 3px; }
+.formCard button[type="submit"]:hover { background: var(--button-hover); }
+.calendar { padding: 20px; width: 288px; max-width: 100%; border: 1px solid var(--line); background: var(--paper); border-radius: 8px; }
+.calendar h3 { font: 500 14px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+.calendar button { min-width: 36px; min-height: 36px; }
+.calendar :global(.grid-cols-7) button { width: 100%; min-width: 0; max-width: 36px; }
+.formPrimary .bookingDetails { display: flex; flex-direction: column; gap: 28px; }
+.bookingDetails > div { width: 100%; }
+.formSecondary > div { position: static; }
+.formSecondary :global(.text-gray-800) { color: var(--ink); }
+.formPage :global(.bg-black) { background-color: var(--button); }
+.formPage :global(.bg-\[\#E32626\]) { background-color: var(--button); }
+.formPage :global(.border-gray-100), .formPage :global(.border-gray-200) { border-color: var(--line); }
+.emptyState, .successCard { max-width: 680px; margin: auto; padding: 56px 36px; text-align: center; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
+.emptyState h2, .successCard h2 { font-size: 38px; line-height: 1.15; margin-bottom: 16px; }
+.emptyState p, .successCard p { color: var(--muted); font-size: 14px; line-height: 1.8; }
+.emptyState a { display: inline-flex; align-items: center; justify-content: center; margin-top: 26px; min-height: 48px; padding: 14px 24px; background: var(--button); color: #fff; font-size: 12px; }
+.emptyState a:hover { background: var(--button-hover); }
+.successCard a { margin-top: 20px; }
+.backToTop { background: var(--button); color: #fff; }
+@media (min-width: 1200px) { .formPrimary .bookingDetails { flex-direction: row; } .bookingDetails > div:first-child { width: auto; } }
+@media (max-width: 1000px) {
+  .introWithImage { gap: 32px; }
+  .intro, .results, .formContent { padding-inline: 30px; }
+  .introImage { height: 300px; }
+  .formCard { flex-direction: column; }
+  .formPrimary, .formSecondary { width: 100%; padding: 32px; }
+  .formSecondary { border-left: 0; border-top: 1px solid var(--line); }
+}
+@media (max-width: 760px) {
+  .shell { padding-bottom: 0; }
+  .intro { padding: 26px 24px 40px; }
+  .introWithImage { grid-template-columns: 1fr; gap: 28px; }
+  .breadcrumb { margin-bottom: 28px; }
+  .intro h1 { font-size: clamp(46px, 11vw, 68px); margin-block: 16px 20px; }
+  .introDescription { font-size: 14px; }
+  .introImage { height: 220px; border-radius: 100px 100px 4px 4px; }
+  .results, .formContent { padding-inline: 20px; }
+  .results { padding-top: 28px; }
+  .resultsHeading { gap: 10px; align-items: flex-end; }
+  .resultsHeading h2 { font-size: 26px; }
+  .viewSwitch { gap: 1px; padding: 3px; }
+  .viewSwitch button { min-width: 34px; min-height: 38px; }
+  .formPrimary, .formSecondary { padding: 28px 22px; }
+  .formCard h3 { font-size: 27px; }
+  .catalogue, .formPage { padding-bottom: 48px; }
+  .cardTitle { font-size: 20px; }
+  .cardDescription { font-size: 12px; }
+  .emptyState, .successCard { padding: 40px 24px; }
+}
+@media (max-width: 360px) {
+  .formPrimary, .formSecondary { padding-inline: 16px; }
+  .calendar { padding: 12px; }
+}

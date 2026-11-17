@@ -2,6 +2,8 @@
 
 import { useState, useMemo, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import PageIntro from '../_components/PageIntro';
+import styles from './public-pages.module.css';
 import Image from 'next/image';
 import { useBag } from '../_context/BagContext'; 
 import { db } from '../_utils/firebase'; 
@@ -205,7 +207,7 @@ ${discountApplied > 0 ? `🏷️ *Promo Applied:* ${promoCode.toUpperCase()} (${
       await addDoc(collection(db, "bookings"), bookingData);
       
       try {
-        await fetch('/.netlify/functions/booking', {
+        await fetch('/api/booking', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ message: telegramMessage })
@@ -229,13 +231,13 @@ ${discountApplied > 0 ? `🏷️ *Promo Applied:* ${promoCode.toUpperCase()} (${
     const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
 
     return (
-      <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-6 max-w-sm mx-auto select-none">
+      <div className={`${styles.calendar} mx-auto select-none`}>
         <div className="flex justify-between items-center mb-6 px-2">
-          <button type="button" onClick={handlePrevMonth} className="p-2 hover:bg-gray-100 rounded-full text-gray-400 hover:text-black">
+          <button type="button" aria-label="Previous month" onClick={handlePrevMonth} className="p-2 hover:bg-gray-100 rounded-full text-gray-400 hover:text-black">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"/></svg>
           </button>
           <h3 className="text-lg font-bold text-gray-800">{MONTHS[currentDate.getMonth()]} {currentDate.getFullYear()}</h3>
-          <button type="button" onClick={handleNextMonth} className="p-2 hover:bg-gray-100 rounded-full text-gray-400 hover:text-black">
+          <button type="button" aria-label="Next month" onClick={handleNextMonth} className="p-2 hover:bg-gray-100 rounded-full text-gray-400 hover:text-black">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"/></svg>
           </button>
         </div>
@@ -250,7 +252,7 @@ ${discountApplied > 0 ? `🏷️ *Promo Applied:* ${promoCode.toUpperCase()} (${
             const isPast = dateToCheck < todayInCambodia;
             return (
               <div key={day} className="flex justify-center">
-                <button type="button" disabled={isPast} onClick={() => handleDateClick(day)}
+                <button type="button" aria-label={`${MONTHS[currentDate.getMonth()]} ${day}, ${currentDate.getFullYear()}`} aria-pressed={isSelected} disabled={isPast} onClick={() => handleDateClick(day)}
                   className={`w-9 h-9 flex items-center justify-center rounded-full text-sm font-medium transition-all ${isSelected ? 'bg-[#E32626] text-white shadow-md scale-110' : isPast ? 'text-gray-300 cursor-not-allowed' : 'text-gray-600 hover:bg-gray-100'}`}
                 >
                   {day}
@@ -265,14 +267,11 @@ ${discountApplied > 0 ? `🏷️ *Promo Applied:* ${promoCode.toUpperCase()} (${
 
   if (isSuccess) {
     return (
-      <div className="bg-zinc-50 min-h-screen font-sans">
+      <div className={styles.formPage}>
         <div ref={topRef} />
-        <div className="bg-black pt-32 pb-32 px-6 text-center">
-          <h1 className="text-3xl md:text-5xl font-playfair text-white uppercase tracking-tight">Booking Received</h1>
-          <p className="text-zinc-400 text-[10px] mt-4 tracking-[0.2em] uppercase font-light">Premier Lounge Concierge</p>
-        </div>
-        <div className="max-w-md mx-auto px-6 -mt-20 relative z-10 mb-20">
-          <div className="bg-white p-10 shadow-xl border border-gray-100 text-center">
+        <PageIntro eyebrow="Your visit" title="A little you-time," accent="on its way." description="Your request is with our team. We’ll be in touch to confirm the details of your visit." />
+        <div className={styles.formContent}>
+          <div className={styles.successCard}>
             <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-6">
               <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
             </div>
@@ -309,37 +308,31 @@ ${discountApplied > 0 ? `🏷️ *Promo Applied:* ${promoCode.toUpperCase()} (${
   }
 
   return (
-    <div className="bg-zinc-50 min-h-screen pb-24 font-sans">
+    <div className={styles.formPage}>
       <div ref={topRef} />
-      <div className="bg-black pt-32 pb-32 px-6 text-center relative">
-        <div className="max-w-2xl mx-auto">
-          <h3 className="text-[10px] font-bold tracking-[0.3em] uppercase text-zinc-500 mb-4 font-sans">Final Step</h3>
-          <h1 className="text-3xl md:text-5xl font-playfair text-white uppercase tracking-tight">Secure Your Spot</h1>
-          <p className="text-zinc-400 text-[10px] mt-4 tracking-[0.2em] font-light uppercase">No Payment Required Online</p>
-        </div>
-      </div>
+      <PageIntro eyebrow="Your visit" title="Make a little" accent="time for you." description="Choose your date, pick a time, and leave the rest to us. Our team will confirm your appointment. No online payment needed." />
 
-      <div className="max-w-6xl mx-auto px-4 md:px-6 -mt-20 relative z-10">
+      <div className={styles.formContent}>
         {bag.length > 0 ? (
-          <div className="bg-white shadow-xl shadow-black/5 border border-gray-100 overflow-hidden flex flex-col lg:flex-row">
-            <div className="p-8 md:p-12 w-full lg:w-3/5 order-2 lg:order-1 border-r border-gray-100">
+          <div className={styles.formCard}>
+            <div className={styles.formPrimary}>
               <h3 className="text-xl font-playfair font-bold text-black mb-8 text-center md:text-left">Book an appointment</h3>
               <form onSubmit={handleSubmit} className="space-y-10">
-                <div className="flex flex-col md:flex-row gap-8 items-start">
+                <div className={styles.bookingDetails}>
                    <div className="w-full md:w-auto shrink-0">{renderCalendar()}</div>
                    <div className="w-full space-y-6">
                       <div className="grid grid-cols-1 gap-6">
                           <div className="space-y-2">
-                            <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-gray-400 font-sans">Full Name</label>
-                            <input required name="name" type="text" value={formData.name} onChange={handleChange} placeholder="e.g. Jane Doe" className="w-full border-b border-gray-200 py-3 text-sm focus:outline-none focus:border-black transition-colors bg-transparent placeholder:text-gray-300 font-sans" />
+                            <label htmlFor="booking-name" className="text-[10px] font-bold uppercase tracking-[0.15em] text-gray-400 font-sans">Full Name</label>
+                            <input id="booking-name" required name="name" type="text" value={formData.name} onChange={handleChange} placeholder="e.g. Jane Doe" className="w-full border-b border-gray-200 py-3 text-sm focus:outline-none focus:border-black transition-colors bg-transparent placeholder:text-gray-300 font-sans" />
                           </div>
                           <div className="space-y-2">
-                            <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-gray-400 font-sans">Phone Number</label>
-                            <input required name="phone" type="tel" value={formData.phone} onChange={handleChange} placeholder="e.g. 012 345 678" className="w-full border-b border-gray-200 py-3 text-sm focus:outline-none focus:border-black transition-colors bg-transparent placeholder:text-gray-300 font-sans" />
+                            <label htmlFor="booking-phone" className="text-[10px] font-bold uppercase tracking-[0.15em] text-gray-400 font-sans">Phone Number</label>
+                            <input id="booking-phone" required name="phone" type="tel" value={formData.phone} onChange={handleChange} placeholder="e.g. 012 345 678" className="w-full border-b border-gray-200 py-3 text-sm focus:outline-none focus:border-black transition-colors bg-transparent placeholder:text-gray-300 font-sans" />
                           </div>
                           <div className="space-y-2">
-                            <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-gray-400 font-sans">Special Requests</label>
-                            <textarea name="notes" value={formData.notes} onChange={handleChange} placeholder="Any specific needs..." className="w-full border-b border-gray-200 py-3 text-sm focus:outline-none focus:border-black bg-transparent text-gray-700 resize-none h-20 font-sans placeholder:text-gray-300" />
+                            <label htmlFor="booking-notes" className="text-[10px] font-bold uppercase tracking-[0.15em] text-gray-400 font-sans">Special Requests</label>
+                            <textarea id="booking-notes" name="notes" value={formData.notes} onChange={handleChange} placeholder="Any specific needs..." className="w-full border-b border-gray-200 py-3 text-sm focus:outline-none focus:border-black bg-transparent text-gray-700 resize-none h-20 font-sans placeholder:text-gray-300" />
                           </div>
                       </div>
                    </div>
@@ -353,7 +346,7 @@ ${discountApplied > 0 ? `🏷️ *Promo Applied:* ${promoCode.toUpperCase()} (${
                     {timeSlots.map((slot) => {
                        const disabled = isTimeDisabled(slot);
                        return (
-                        <button key={slot} type="button" disabled={disabled} onClick={() => handleTimeSelect(slot)}
+                        <button key={slot} type="button" aria-pressed={formData.time === slot} disabled={disabled} onClick={() => handleTimeSelect(slot)}
                           className={`py-3 px-2 rounded-lg text-xs font-medium transition-all duration-200 border ${formData.time === slot ? 'bg-black text-white border-black shadow-lg scale-105' : disabled ? 'bg-gray-100 text-gray-300 border-transparent cursor-not-allowed line-through' : 'bg-gray-50 text-gray-600 border-transparent hover:bg-gray-100'}`}
                         >
                           {slot}
@@ -371,7 +364,7 @@ ${discountApplied > 0 ? `🏷️ *Promo Applied:* ${promoCode.toUpperCase()} (${
               </form>
             </div>
 
-            <div className="w-full lg:w-2/5 bg-zinc-50 border-l border-gray-100 p-8 order-1 lg:order-2">
+            <div className={styles.formSecondary}>
               <div className="sticky top-8">
                 <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 font-sans mb-8">Summary</h3>
                 
@@ -452,9 +445,9 @@ ${discountApplied > 0 ? `🏷️ *Promo Applied:* ${promoCode.toUpperCase()} (${
             </div>
           </div>
         ) : (
-          <div className="bg-white shadow-xl shadow-black/5 border border-gray-100 text-center py-24 px-6">
-            <p className="text-gray-400 uppercase text-[10px] tracking-[0.2em] mb-8 font-medium font-sans">Your bag is currently empty</p>
-            <Link href="/treatments" className="inline-block border border-black px-10 py-3 text-[10px] font-bold tracking-[0.2em] uppercase text-black hover:bg-black hover:text-white transition-all duration-300 font-sans">Browse Menu</Link>
+          <div className={styles.emptyState}>
+            <h2>Your visit starts here.</h2><p>Add a treatment or product to your bag, then come back to choose your appointment.</p>
+            <Link href="/treatments">Browse Menu</Link>
           </div>
         )}
       </div>

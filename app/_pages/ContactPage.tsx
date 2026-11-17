@@ -2,6 +2,8 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import PageIntro from '../_components/PageIntro';
+import styles from './public-pages.module.css';
 
 const ContactPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -42,7 +44,7 @@ const ContactPage = () => {
     `;
 
     try {
-      const response = await fetch('/.netlify/functions/booking', {
+      const response = await fetch('/api/booking', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: telegramMessage })
@@ -51,11 +53,11 @@ const ContactPage = () => {
       if (response.ok) {
         setIsSuccess(true);
       } else {
-        alert('Status 404: Please ensure you are running "netlify dev" locally.');
+        alert('Your message could not be sent. Please try again or contact us on Telegram.');
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('Network error. Check your terminal logs.');
+      alert('Unable to connect. Please try again or contact us on Telegram.');
     } finally {
       setIsSubmitting(false);
     }
@@ -63,13 +65,11 @@ const ContactPage = () => {
 
   if (isSuccess) {
     return (
-      <div className="bg-zinc-50 min-h-screen font-sans">
+      <div className={styles.formPage}>
         <div ref={topRef} />
-        <div className="bg-black pt-32 pb-32 px-6 text-center">
-          <h1 className="text-3xl md:text-5xl font-playfair text-white uppercase tracking-tight">Message Sent</h1>
-        </div>
-        <div className="max-w-md mx-auto px-6 -mt-20 relative z-10 mb-20">
-          <div className="bg-white p-10 shadow-xl border border-gray-100 text-center">
+        <PageIntro eyebrow="Get in touch" title="A conversation," accent="started." description="Your message is with our team. We look forward to helping you plan your next visit." />
+        <div className={styles.formContent}>
+          <div className={styles.successCard}>
             <div className="w-16 h-16 bg-zinc-50 rounded-full flex items-center justify-center mx-auto mb-6">
               <svg className="w-8 h-8 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -89,42 +89,37 @@ const ContactPage = () => {
   }
 
   return (
-    <div className="bg-zinc-50 min-h-screen pb-24 font-sans text-left">
+    <div className={styles.formPage}>
       <div ref={topRef} />
       
-      <div className="bg-black pt-32 pb-48 px-6 text-center">
-        <div className="max-w-2xl mx-auto">
-          <h3 className="text-[10px] font-bold tracking-[0.3em] uppercase text-zinc-500 mb-4 font-sans">Premier Lounge</h3>
-          <h1 className="text-3xl md:text-5xl font-playfair text-white uppercase tracking-tight">Contact Us</h1>
-        </div>
-      </div>
+      <PageIntro eyebrow="Get in touch" title="Let’s plan" accent="a good day." description="A treatment in mind, a question, or just not sure where to start? We’re a conversation away." />
 
-      <div className="max-w-6xl mx-auto px-4 md:px-6 -mt-32 relative z-10">
-        <div className="bg-white shadow-xl border border-gray-100 flex flex-col lg:flex-row overflow-hidden">
+      <div className={styles.formContent}>
+        <div className={styles.formCard}>
           
-          <div className="p-8 md:p-12 w-full lg:w-3/5 border-r border-gray-100 text-left">
+          <div className={styles.formPrimary}>
             <h3 className="text-xl font-playfair font-bold text-black mb-8">Send a Message</h3>
             <form onSubmit={handleSubmit} className="space-y-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 font-sans block">Name</label>
-                  <input required name="name" type="text" value={formData.name} onChange={handleChange} placeholder="Full Name" className="w-full border-b border-gray-200 py-3 text-sm focus:outline-none focus:border-black transition-colors bg-transparent font-sans appearance-none rounded-none" />
+                  <label htmlFor="contact-name" className="text-[10px] font-bold uppercase tracking-widest text-gray-400 font-sans block">Name</label>
+                  <input id="contact-name" required name="name" type="text" value={formData.name} onChange={handleChange} placeholder="Full Name" className="w-full border-b border-gray-200 py-3 text-sm focus:outline-none focus:border-black transition-colors bg-transparent font-sans appearance-none rounded-none" />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 font-sans block">Email</label>
-                  <input required name="email" type="email" value={formData.email} onChange={handleChange} placeholder="lepremierlounge@gmail.com" className="w-full border-b border-gray-200 py-3 text-sm focus:outline-none focus:border-black transition-colors bg-transparent font-sans appearance-none rounded-none" />
+                  <label htmlFor="contact-email" className="text-[10px] font-bold uppercase tracking-widest text-gray-400 font-sans block">Email</label>
+                  <input id="contact-email" required name="email" type="email" value={formData.email} onChange={handleChange} placeholder="Your email address" className="w-full border-b border-gray-200 py-3 text-sm focus:outline-none focus:border-black transition-colors bg-transparent font-sans appearance-none rounded-none" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 font-sans block">Phone</label>
-                  <input required name="phone" type="tel" value={formData.phone} onChange={handleChange} placeholder="012 216 068" className="w-full border-b border-gray-200 py-3 text-sm focus:outline-none focus:border-black transition-colors bg-transparent font-sans appearance-none rounded-none" />
+                  <label htmlFor="contact-phone" className="text-[10px] font-bold uppercase tracking-widest text-gray-400 font-sans block">Phone</label>
+                  <input id="contact-phone" required name="phone" type="tel" value={formData.phone} onChange={handleChange} placeholder="012 216 068" className="w-full border-b border-gray-200 py-3 text-sm focus:outline-none focus:border-black transition-colors bg-transparent font-sans appearance-none rounded-none" />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 font-sans block">Subject</label>
+                  <label htmlFor="contact-subject" className="text-[10px] font-bold uppercase tracking-widest text-gray-400 font-sans block">Subject</label>
                   <div className="relative">
-                    <select name="subject" value={formData.subject} onChange={handleChange} className="w-full border-b border-gray-200 py-3 text-sm focus:outline-none focus:border-black bg-transparent font-sans text-gray-600 appearance-none rounded-none pr-8">
+                    <select id="contact-subject" name="subject" value={formData.subject} onChange={handleChange} className="w-full border-b border-gray-200 py-3 text-sm focus:outline-none focus:border-black bg-transparent font-sans text-gray-600 appearance-none rounded-none pr-8">
                       <option value="General Inquiry">General Inquiry</option>
                       <option value="Booking Help">Booking Assistance</option>
                       <option value="Feedback">Feedback</option>
@@ -137,8 +132,8 @@ const ContactPage = () => {
               </div>
 
               <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 font-sans block">Message</label>
-                <textarea required name="message" value={formData.message} onChange={handleChange} placeholder="How can our concierge assist you?" className="w-full border-b border-gray-200 py-3 text-sm focus:outline-none focus:border-black bg-transparent h-32 resize-none font-sans appearance-none rounded-none" />
+                <label htmlFor="contact-message" className="text-[10px] font-bold uppercase tracking-widest text-gray-400 font-sans block">Message</label>
+                <textarea id="contact-message" required name="message" value={formData.message} onChange={handleChange} placeholder="How can our concierge assist you?" className="w-full border-b border-gray-200 py-3 text-sm focus:outline-none focus:border-black bg-transparent h-32 resize-none font-sans appearance-none rounded-none" />
               </div>
 
               <button type="submit" disabled={isSubmitting} className="w-full bg-black text-white py-4 text-[10px] font-bold tracking-[0.25em] uppercase hover:bg-zinc-800 disabled:opacity-50 transition-all font-sans appearance-none rounded-none">
@@ -147,7 +142,7 @@ const ContactPage = () => {
             </form>
           </div>
 
-          <div className="w-full lg:w-2/5 bg-zinc-50 p-8 md:p-12 space-y-12 text-left">
+          <div className={`${styles.formSecondary} space-y-12 text-left`}>
             <div>
               <h4 className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-4 font-sans">Location</h4>
               <p className="text-sm text-black leading-relaxed font-sans">
@@ -160,8 +155,8 @@ const ContactPage = () => {
               <h4 className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-4 font-sans">Connect</h4>
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <p className="text-sm text-black font-sans">+855 12 216 068</p>
-                  <p className="text-sm text-black font-sans">lepremierlounge@gmail.com</p>
+                  <a href="tel:+85512216068" className="block text-sm text-black font-sans">+855 12 216 068</a>
+                  <a href="mailto:lepremierlounge@gmail.com" className="block text-sm text-black font-sans break-words">lepremierlounge@gmail.com</a>
                 </div>
                 
                 {/* Social Buttons Grid */}
@@ -177,7 +172,7 @@ const ContactPage = () => {
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M12 2C6.477 2 2 6.145 2 11.258c0 2.893 1.456 5.467 3.735 7.155V22l3.411-1.875c.91.254 1.867.391 2.854.391 5.523 0 10-4.145 10-9.258S17.523 2 12 2zm1.18 10.963l-2.585-2.76-5.045 2.76 5.52-5.86 2.613 2.76 4.978-2.76-5.48 5.86z"/>
                     </svg>
-                    Messenger
+                    Facebook
                   </a>
 
                   <a href="https://www.instagram.com/premierlounge_1/" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 w-full border border-black text-black py-3 text-[9px] font-bold tracking-[0.15em] uppercase hover:bg-black hover:text-white transition-all font-sans appearance-none rounded-none">

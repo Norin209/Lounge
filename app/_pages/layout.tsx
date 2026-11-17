@@ -1,25 +1,29 @@
 'use client';
 
+import { PublicHeader, PublicFooter } from '../_components/PublicChrome';
+import homeStyles from './modern-homepage.module.css';
+import styles from './public-pages.module.css';
 import Navbar from '../_components/Navbar';
 import Footer from '../_components/Footer';
 
 export default function PageLayout({
   children,
+  classic = false,
 }: {
   children: React.ReactNode;
+  classic?: boolean;
 }) {
+  if (classic) return <div className="flex flex-col min-h-screen bg-white"><Navbar /><main className="grow">{children}</main><Footer /></div>;
   return (
-    // 🟢 min-h-screen ensures the page is at least as tall as the browser window
-    <div className="flex flex-col min-h-screen bg-white">
+    <div className={`${homeStyles.home} ${styles.shell}`}>
       
-      <Navbar />
+      <PublicHeader />
       
-      {/* 🟢 flex-grow pushes the footer down if there isn't much content */}
-      <main className="grow">
+      <main id="main-content" className={styles.pageContent}>
         {children}
       </main>
 
-      <Footer />
+      <PublicFooter />
     </div>
   );
 }

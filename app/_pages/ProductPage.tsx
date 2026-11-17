@@ -3,6 +3,8 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import PageIntro from '../_components/PageIntro';
+import styles from './public-pages.module.css';
 import { useBag } from '../_context/BagContext'; 
 import { db } from '../_utils/firebase';
 import { collection, getDocs } from 'firebase/firestore';
@@ -129,7 +131,7 @@ const ProductPage = () => {
 
   if (loading) {
     return (
-      <div className="h-screen bg-white flex items-center justify-center">
+      <div className={styles.loading}>
         <div className="animate-pulse flex flex-col items-center gap-4">
           <div className="h-10 w-10 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
           <p className="text-[10px] uppercase tracking-[0.3em] text-gray-400">Loading Boutique...</p>
@@ -139,21 +141,15 @@ const ProductPage = () => {
   }
 
   return (
-    <div className="bg-white min-h-screen pb-24 relative">
+    <div className={styles.catalogue}>
       
-      <section className="relative h-[45vh] md:h-[50vh] w-full flex items-center justify-center overflow-hidden">
-        <Image src={HERO_IMAGE} alt="Header" fill priority className="object-cover brightness-[0.4]" />
-        <div className="relative z-0 text-center px-6">
-          <h1 className="text-3xl md:text-5xl font-playfair text-white mb-4 uppercase tracking-[0.3em]">The Boutique</h1>
-          <div className="w-12 h-px bg-white/50 mx-auto mb-4" />
-          <p className="text-white/70 text-[9px] md:text-[10px] tracking-[0.4em] uppercase font-light">Handcrafted Cambodian Wellness</p>
-        </div>
-      </section>
+      <PageIntro eyebrow="Our products" title="A little care," accent="to take home." description="Keep your favourite rituals close. Explore our selection of body care, aromatherapy and everyday wellness essentials." image={HERO_IMAGE} imageAlt="A quiet spa setting for everyday wellness" />
 
-      <div className="sticky top-0 z-1 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
+      <div className={styles.filters}>
         <div className="relative max-w-7xl mx-auto px-4 py-4 group">
           
           <button 
+            aria-label="Scroll categories left"
             onClick={() => scrollTabs('left')} 
             className="md:hidden absolute left-0 top-0 bottom-0 z-20 bg-linear-to-r from-white via-white/80 to-transparent w-10 flex items-center justify-center text-black hover:text-gray-600"
           >
@@ -184,6 +180,7 @@ const ProductPage = () => {
           </div>
 
           <button 
+            aria-label="Scroll categories right"
             onClick={() => scrollTabs('right')} 
             className="md:hidden absolute right-0 top-0 bottom-0 z-20 bg-linear-to-l from-white via-white/80 to-transparent w-10 flex items-center justify-center text-black hover:text-gray-600"
           >
@@ -192,10 +189,11 @@ const ProductPage = () => {
         </div>
       </div>
 
-      <main className="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-16 relative">
+      <div className={styles.results}>
         
-        <div className="flex justify-start mb-6">
-          <div className="flex border border-gray-200 rounded-lg p-1 gap-1 bg-white shadow-sm">
+        <div className={styles.resultsHeading}>
+          <div><h2>{activeTab === 'ALL' ? 'The collection' : activeTab.toLowerCase()}</h2><p>{filteredItems.length} products to explore</p></div>
+          <div className={styles.viewSwitch}>
             <button 
               onClick={() => setViewMode('list')} 
               className={`p-2 rounded transition-colors ${viewMode === 'list' ? 'bg-black text-white' : 'text-gray-300 hover:text-black'}`}
@@ -255,7 +253,7 @@ const ProductPage = () => {
                 <div 
                   key={item.id} 
                   className={`
-                    group bg-white rounded-lg border border-gray-100 shadow-sm overflow-hidden md:hover:shadow-md transition-shadow
+                    group ${styles.catalogueCard}
                     ${isList ? 'flex flex-row p-3 items-stretch min-h-36 h-auto' : 'flex flex-col'}
                     ${isCarousel ? 'w-72 md:w-80 shrink-0 snap-start' : 'w-full'}
                   `}
@@ -266,7 +264,7 @@ const ProductPage = () => {
                     ${!isList ? 'w-full aspect-4/5' : ''}
                   `}>
                     {hasPromo && (
-                      <div className="absolute top-0 left-0 z-10 bg-[#D4AF37] text-white text-[8px] font-bold px-2 py-1 uppercase tracking-widest shadow-sm">
+                      <div className="absolute top-0 left-0 z-10 bg-[#8d6549] text-white text-[8px] font-bold px-2 py-1 uppercase tracking-widest shadow-sm">
                         {item.discountType === 'percent' ? `${item.discountValue}% OFF` : `-${item.discountValue}`}
                       </div>
                     )}
@@ -288,42 +286,38 @@ const ProductPage = () => {
                     ${isList ? 'pl-4 py-1' : 'p-3 md:p-4'}
                   `}>
                     <div>
-                      <div className="flex justify-between items-start mb-1">
-                        <h3 className={`font-bold text-black uppercase tracking-wider leading-tight pr-1 line-clamp-2 ${isList ? 'text-[11px] md:text-[13px]' : 'text-[11px] md:text-[13px]'}`}>
+                      <div className={styles.cardHeading}>
+                        <h3 className={styles.cardTitle}>
                           {item.name}
                         </h3>
                         
                         <div className="text-right shrink-0">
                           {hasPromo ? (
                             <div className="flex flex-col items-end">
-                              <span className="text-[12px] font-playfair text-[#D4AF37] font-bold italic">{finalPrice}</span>
+                              <span className="text-[12px] font-playfair text-[#8d6549] font-bold italic">{finalPrice}</span>
                               {!isGrid && <span className="text-[9px] line-through text-gray-400">{item.price}</span>}
                             </div>
                           ) : (
-                            <span className="text-[12px] font-playfair text-black italic">{item.price}</span>
+                            <span className={styles.cardPrice}>{item.price}</span>
                           )}
                         </div>
                       </div>
 
                       <p className={`
-                        text-gray-500 leading-relaxed font-light line-clamp-2 mb-2
-                        ${isList ? 'text-[10px] md:text-[11px] block' : 'hidden md:block text-[11px]'}
+                        ${styles.cardDescription} line-clamp-2
                       `}>
                         {item.description || "Handcrafted botanical wellness."}
                       </p>
                     </div>
 
-                    <div className="flex justify-between items-center mt-auto">
-                      <span className="text-[8px] uppercase tracking-widest text-gray-400 font-medium">{item.size || "100ml"}</span>
+                    <div className={styles.cardMeta}>
+                      <span className="text-[11px] text-gray-500 font-medium">{item.size || "100ml"}</span>
                       
                       {/* 🟢 CHANGED: md:hidden -> xl:hidden */}
                       <button 
-                        onClick={() => isInBag ? null : handleAddToBag(item)}
-                        className={`xl:hidden text-[9px] font-bold uppercase tracking-widest rounded-sm transition-all
-                          ${isInBag ? 'bg-gray-100 text-gray-400 cursor-default border-transparent px-3 py-2' : 
-                            (isGrid ? 'w-full mt-2 py-2 border border-gray-200 active:bg-black active:text-white' : 'bg-black text-white px-3 py-2 active:scale-95')
-                          }
-                        `}
+                        disabled={isInBag}
+                        onClick={() => handleAddToBag(item)}
+                        className={styles.cardAction}
                       >
                         {isInBag ? 'Added' : (isGrid ? 'Add' : 'Add +')}
                       </button>
@@ -339,11 +333,13 @@ const ProductPage = () => {
              </div>
           )}
         </div>
-      </main>
+      </div>
 
       <button 
+        tabIndex={showScrollTop ? 0 : -1}
+        aria-hidden={!showScrollTop}
         onClick={scrollToTop}
-        className={`fixed bottom-6 right-6 z-40 bg-black text-white px-6 py-3 rounded-full shadow-xl flex items-center gap-2 transition-all duration-500 transform hover:bg-gray-800 ${showScrollTop ? 'translate-y-0 opacity-100' : 'translate-y-16 opacity-0'}`}
+        className={`${styles.backToTop} fixed bottom-6 right-6 z-30 px-6 py-3 rounded-full shadow-xl flex items-center gap-2 transition-all duration-500 transform hover:bg-gray-800 ${showScrollTop ? 'translate-y-0 opacity-100' : 'translate-y-16 opacity-0'}`}
       >
         <span className="text-[10px] font-bold uppercase tracking-widest">Back to Top</span>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
