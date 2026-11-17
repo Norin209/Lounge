@@ -55,3 +55,65 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+
+## Earnings uploads
+
+Open **Admin → Finance** (`/admin/finance`) and expand **Import sales report** to import HangPopok sales reports.
+Excel `.xlsx`, legacy `.xls`, and CSV exports up to 10 MB are supported. No POS
+API credentials or Telegram connection are needed.
+
+1. Choose or drop a report. A report can contain one month, several dated months
+   in one table, or separate monthly worksheets.
+2. Select the data worksheets, header row, date/month column, and the USD amount
+   column to track (for example, Net Sales or Paid Amount). Use the report-month
+   field for day numbers or exports without a date column. Text dates use
+   day–month–year; timestamp dates use Asia/Phnom_Penh time.
+3. Review the monthly totals. Summary and subtotal rows are excluded. Source
+   errors must be resolved before saving. Two selected worksheets covering the
+   same month are blocked to prevent adding a summary and its details together.
+4. Save earnings. The selected months are saved atomically to the
+   `earningsMonths` Firestore collection through the existing admin session.
+   When a month already exists, confirm its replacement in the preview. Always
+   import a complete report for the month: a partial report replaces the full
+   saved month. Re-importing a report never adds its total a second time.
+
+The dashboard shows USD revenue and daily totals when dates are available.
+Month-only reports stay at monthly granularity. Workbook contents are processed
+in the browser; the original file is not uploaded or publicly stored. Only
+monthly totals, daily aggregates, source filenames/worksheet names, row counts,
+and import metadata are saved. Existing Firestore rules must allow the admin
+account to read and write `earningsMonths`; this feature does not change or
+publish database permissions.
+
+Run `npm run test:earnings` for the Excel/CSV parser regression checks. Validation
+covers both Excel formats, header offsets, combined months, overlapping sheets,
+Excel date systems, Phnom Penh timestamps, refunds, totals, and invalid data.
+
+
+## Combined Finance dashboard
+
+Admin → Finance combines the saved sales imports with live expenses and payroll.
+The old `/admin/earnings` and `/admin/expenses` links redirect to `/admin/finance`.
+One month selector controls the summary cards, comparison table, sales details,
+and the expandable expense/payroll section. All display amounts use USD.
+
+- **Sales revenue** is the amount imported from the sales report before the
+  recorded expenses are deducted. The importer preserves the selected report
+  column; this is not a separately calculated accounting gross-profit metric.
+- **Recorded expenses** include daily expenses and the salary workbook's Payment
+  total. Salary payments are shown separately as a reference and deducted once.
+- **After recorded expenses** is reported revenue minus those recorded expenses.
+  It displays a provisional balance when daily expenses or payroll have not yet
+  been recorded, with missing-source notes retained. With no recorded expenses,
+  the provisional balance equals reported sales. A missing sales report or a
+  failed/pending source request keeps the balance unavailable.
+- Source discrepancies remain visible in the expense/payroll details. Months
+  with complete source coverage may still contain source data requiring review.
+
+The monthly comparison and expense/payroll tables become labeled cards on
+mobile; wide import previews scroll within their panels. The import reader and
+saved Firestore records are unchanged by the page consolidation.
+
+Run `npm run test:finance` to verify matching periods, missing sources, valid
+zero totals, negative balances, and payroll being included only once.

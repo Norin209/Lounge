@@ -112,9 +112,9 @@ export default function AdminLayout({
       icon: '📅',
     },
     {
-      name: 'Expenses',
-      path: '/admin/expenses',
-      icon: '💸',
+      name: 'Finance',
+      path: '/admin/finance',
+      icon: '📈',
     },
     {
       name: 'Services',
@@ -201,8 +201,12 @@ export default function AdminLayout({
               key={link.path}
               href={link.path}
               className={`
+                inline-flex
+                min-h-11
+                items-center
                 whitespace-nowrap
-                pb-1
+                px-2
+                py-1
                 transition-all
                 ${
                   isActive(link.path)
@@ -300,8 +304,8 @@ export default function AdminLayout({
       {/* =========================
           ADMIN PAGE CONTENT
       ========================== */}
-      <main className="flex-1 md:ml-64 p-4 md:p-10">
-        <div className="max-w-7xl mx-auto">
+      <main className="flex-1 min-w-0 w-full md:ml-64 p-3 sm:p-4 md:p-8">
+        <div className="max-w-7xl min-w-0 mx-auto">
           {children}
         </div>
       </main>

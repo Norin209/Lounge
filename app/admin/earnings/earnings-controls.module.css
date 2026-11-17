@@ -1,0 +1,125 @@
+/* Share the expense page's accessible select; only sizing differs here. */
+.surface .selectControl {
+  position: relative !important;
+  display: flex !important;
+  align-items: center;
+  width: 100% !important;
+  min-width: 0;
+  height: 44px !important;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: 0 38px 0 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.surface .nativeSelect {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  opacity: 0 !important;
+  cursor: pointer;
+}
+
+.surface .selectControl[data-disabled] {
+  background: #f6f3ef;
+  color: #93897d;
+  cursor: not-allowed;
+}
+
+.surface input[type='number'],
+.surface input[type='month'] {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  height: 44px !important;
+  min-height: 44px;
+  margin: 0;
+  border: 1px solid #ddd6cd;
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: #fff;
+  color: #302a24;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: normal;
+  box-shadow: none !important;
+}
+
+.surface input[type='number'] {
+  -moz-appearance: textfield !important;
+  appearance: textfield !important;
+}
+
+.surface input[type='number']::-webkit-inner-spin-button,
+.surface input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  display: none !important;
+  margin: 0;
+}
+
+.surface input[type='month']::-webkit-date-and-time-value {
+  text-align: left;
+}
+
+.surface input[type='month']::-webkit-datetime-edit {
+  padding: 0;
+}
+
+.surface input[type='number']:disabled,
+.surface input[type='month']:disabled {
+  background: #f6f3ef;
+  color: #93897d;
+  -webkit-text-fill-color: #93897d;
+  opacity: 1;
+}
+
+.surface input[type='checkbox'] {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  display: inline-grid !important;
+  place-content: center;
+  box-sizing: border-box;
+  width: 18px !important;
+  height: 18px !important;
+  min-width: 18px;
+  flex-shrink: 0;
+  margin: 0 !important;
+  border: 1px solid #c9bcad;
+  border-radius: 5px;
+  background: #fff;
+  box-shadow: none !important;
+  cursor: pointer;
+}
+
+.surface input[type='checkbox']:checked {
+  background: #755239;
+  border-color: #755239;
+}
+
+.surface input[type='checkbox']:checked::after {
+  content: '';
+  display: block;
+  width: 5px;
+  height: 9px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: translateY(-1px) rotate(45deg);
+}
+
+.surface input[type='checkbox']:focus-visible {
+  outline: 3px solid #a58363;
+  outline-offset: 3px;
+}

@@ -25,6 +25,8 @@ export type ExpenseMonth = {
   key: string;
   label: string;
   expenses: ExpenseRecord[];
+  hasExpenseSheet?: boolean;
+  warnings?: string[];
 };
 
 export type SalaryEmployee = {
@@ -58,6 +60,7 @@ export type SalaryMonthDetail = {
   finalTotal: number;
   employeeCount: number;
   employees: SalaryEmployee[];
+  warnings?: string[];
 };
 
 export type ExpenseData = {

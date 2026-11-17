@@ -16,6 +16,7 @@ export type SalaryMonth = {
   finalTotal: number;
   employeeCount: number;
   employees: SalaryEmployee[];
+  warnings: string[];
 };
 
 export type SalaryEmployee = {
@@ -124,7 +125,7 @@ function readCells(
   const xml = strFromU8(file);
 
   for (const match of xml.matchAll(
-    /<c\b([^>]*\br="([A-P]\d+)"[^>]*)(?<!\/)>([\s\S]*?)<\/c>/g
+    /<c\b([^>]*\br="([A-Z]+\d+)"[^>]*)(?<!\/)>([\s\S]*?)<\/c>/g
   )) {
     const reference = match[2];
 
@@ -227,14 +228,36 @@ function parseSalaryMonth(
     throw new Error(`Final salary column was not found in ${title}.`);
   }
 
+  const summaryEntry = [...rows.entries()]
+    .filter(([row]) => row > headerRow)
+    .find(([, values]) => {
+      const hasNoEmployee = !String(values.get(nameColumn) ?? '').trim();
+      const gross = values.get(grossSalaryColumn);
+      const final = values.get(finalSalaryColumn);
+      return (
+        hasNoEmployee &&
+        typeof gross === 'number' &&
+        typeof final === 'number' &&
+        gross > 0
+      );
+    });
+
+  if (!summaryEntry) {
+    throw new Error(`Salary summary row was not found in ${title}.`);
+  }
+
+  const [summaryRow, summary] = summaryEntry;
+
   const employees: SalaryEmployee[] = [];
+  let employeeGrossTotal = 0;
+  let employeeFinalTotal = 0;
 
   for (const [row, values] of rows) {
-    if (row <= headerRow) continue;
+    if (row <= headerRow || row >= summaryRow) continue;
 
-    const employeeNumber = numberValue(values.get(nameColumn - 1));
     const name = String(values.get(nameColumn) ?? '').trim();
-    if (employeeNumber <= 0 || !name) continue;
+    // Some tabs use department labels instead of numbers beside employee names.
+    if (!name || !(values.has(roleColumn) || values.has(baseSalaryColumn) || values.has(grossSalaryColumn) || values.has(finalSalaryColumn))) continue;
 
     const employee: SalaryEmployee = {
       id: `${title.toLowerCase()}-${row}`,
@@ -251,25 +274,9 @@ function parseSalaryMonth(
       finalSalary: rounded(values.get(finalSalaryColumn)),
     };
 
+    employeeGrossTotal += numberValue(values.get(grossSalaryColumn));
+    employeeFinalTotal += numberValue(values.get(finalSalaryColumn));
     employees.push(employee);
-  }
-
-  const summary = [...rows.entries()]
-    .filter(([row]) => row > headerRow)
-    .find(([, values]) => {
-      const hasNoEmployee = !String(values.get(nameColumn) ?? '').trim();
-      const gross = values.get(grossSalaryColumn);
-      const final = values.get(finalSalaryColumn);
-      return (
-        hasNoEmployee &&
-        typeof gross === 'number' &&
-        typeof final === 'number' &&
-        gross > 0
-      );
-    })?.[1];
-
-  if (!summary) {
-    throw new Error(`Salary summary row was not found in ${title}.`);
   }
 
   const baseTotal = rounded(summary.get(baseSalaryColumn));
@@ -283,6 +290,16 @@ function parseSalaryMonth(
   const deductionTotal = rounded(summary.get(deductionColumn ?? -1));
   const finalTotal = rounded(summary.get(finalSalaryColumn));
 
+  const warnings: string[] = [];
+  for (const [label, detail, summaryTotal] of [
+    ['gross', employeeGrossTotal, grossTotal],
+    ['final', employeeFinalTotal, finalTotal],
+  ] as const) {
+    if (Math.abs(rounded(detail) - summaryTotal) > 0.01) {
+      warnings.push(`${title}: employee ${label} salaries total ${rounded(detail).toFixed(2)}, but the workbook summary shows ${summaryTotal.toFixed(2)}. The dashboard keeps the workbook summary.`);
+    }
+  }
+
   const monthDate = new Date(Date.UTC(month.year, month.month - 1, 1));
   const finalDay = new Date(Date.UTC(month.year, month.month, 0));
 
@@ -294,7 +311,9 @@ function parseSalaryMonth(
       timeZone: 'UTC',
     }),
     date: finalDay.toISOString().slice(0, 10),
+    // Keep gross payroll separate from finalTotal, the workbook Payment total.
     total: grossTotal,
+    warnings,
     baseTotal,
     adjustedTotal,
     commissionTotal,

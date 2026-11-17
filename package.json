@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:earnings": "node scripts/test-earnings-import.cjs",
+    "test:finance": "node scripts/test-finance-summary.cjs"
   },
   "dependencies": {
     "@netlify/functions": "^5.1.1",
@@ -15,7 +17,8 @@
     "firebase": "^12.7.0",
     "next": "16.0.10",
     "react": "19.2.1",
-    "react-dom": "19.2.1"
+    "react-dom": "19.2.1",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

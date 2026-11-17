@@ -1,0 +1,119 @@
+.page { max-width: 1720px; min-height: 100vh; margin: 0 auto; padding: clamp(20px, 3vw, 42px); background: #f8f7f4; color: #26211d; }
+.header { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; margin-bottom: 30px; }
+.eyebrow { color: #94745b; letter-spacing: 1.6px; font-size: 11px; font-weight: 700; margin-bottom: 8px; }
+.header h1 { font-size: clamp(30px, 3vw, 40px); line-height: 1.1; letter-spacing: -1.3px; font-weight: 750; margin: 0; }
+.subtitle, .sectionHeading p, .help { color: #716b64; font-size: 13px; line-height: 1.7; margin: 10px 0 0; }
+.monthPicker, .mappingGrid label { display: flex; flex-direction: column; gap: 8px; color: #5d554d; font-size: 12px; font-weight: 600; }
+.mappingGrid input { min-height: 44px; border: 1px solid #ddd6cd; border-radius: 8px; background: #fff; padding: 10px 12px; color: #302a24; font-size: 13px; min-width: 0; width: 100%; }
+.monthPicker { min-width: 190px; }
+.metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; margin-bottom: 26px; }
+.card { padding: 23px; background: #fff; border: 1px solid #e7e1d9; border-radius: 16px; display: flex; flex-direction: column; gap: 14px; }
+.card span { color: #777067; font-size: 12px; font-weight: 650; }
+.card strong { font-size: clamp(24px, 2.4vw, 36px); letter-spacing: -1px; line-height: 1.2; overflow-wrap: anywhere; }
+.card small { color: #827a71; font-size: 11px; line-height: 1.5; }
+.panel { padding: clamp(18px, 2vw, 28px); border: 1px solid #e7e1d9; background: #fff; border-radius: 18px; margin-bottom: 24px; }
+.sectionHeading { margin-bottom: 22px; }
+.sectionHeading h2 { font-size: 19px; font-weight: 700; letter-spacing: -.3px; margin: 0; }
+.dropZone { border: 1px dashed #b9a48f; border-radius: 14px; background: #fcfaf7; padding: 30px 20px; text-align: center; transition: background .15s; }
+.dragging { background: #eee6dc; border-color: #71523c; }
+.fileIcon { display: grid; place-items: center; width: 48px; height: 54px; background: #efe7dd; color: #76553c; font-size: 11px; font-weight: 800; border-radius: 8px; margin: 0 auto 15px; }
+.dropZone h3 { font-size: 16px; font-weight: 650; overflow-wrap: anywhere; }
+.dropZone p { margin: 9px 0 20px; color: #81766b; font-size: 12px; }
+.button { border: 0; border-radius: 9px; background: #30271f; color: #fff; padding: 12px 22px; font-size: 13px; font-weight: 650; cursor: pointer; min-height: 44px; }
+.button:hover { background: #4a392b; }
+.button:disabled { opacity: .45; cursor: not-allowed; }
+.button:focus-visible, .mappingGrid input:focus-visible { outline: 3px solid #a58363; outline-offset: 3px; }
+.hiddenInput { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
+.mappingArea { margin-top: 28px; }
+.mappingArea h3 { font-size: 16px; font-weight: 700; }
+.sheet { border: 1px solid #e6e0d9; border-radius: 12px; padding: 18px; margin: 18px 0; min-width: 0; }
+.sheetCheck { display: flex; align-items: center; gap: 10px; font-size: 14px; cursor: pointer; flex-wrap: wrap; }
+.sheetCheck span { color: #8b8074; font-size: 11px; margin-left: auto; }
+.mappingGrid { display: grid; grid-template-columns: 110px 1fr 1fr 180px; gap: 16px; margin: 22px 0; }
+.mappingGrid small { color: #82776b; font-weight: 400; line-height: 1.5; }
+.tableScroll { overflow-x: auto; max-width: 100%; }
+.tableScroll table { border-collapse: collapse; width: 100%; font-size: 13px; }
+.tableScroll th, .tableScroll td { padding: 14px 15px; border-bottom: 1px solid #eee9e3; text-align: left; white-space: nowrap; max-width: 380px; overflow: hidden; text-overflow: ellipsis; }
+.tableScroll th { background: #faf8f5; color: #7b6b5c; font-size: 11px; font-weight: 650; }
+.tableScroll caption { text-align: left; color: #8b8074; padding: 4px 0 10px; font-size: 11px; }
+.tableScroll tfoot th { color: #30271f; font-size: 13px; }
+.tableScroll .amount { font-weight: 700; font-variant-numeric: tabular-nums; }
+.previewTitle { margin: 26px 0 14px; }
+.replaceCheck { display: flex; align-items: flex-start; gap: 10px; padding: 16px; background: #fff7e9; border-radius: 9px; color: #735723; font-size: 13px; line-height: 1.6; margin-top: 18px; }
+.saveBar { display: flex; justify-content: space-between; align-items: center; gap: 18px; margin-top: 24px; padding-top: 20px; border-top: 1px solid #e8e0d6; }
+.saveBar span { font-size: 14px; font-weight: 650; }
+.error, .success, .notice { border-radius: 10px; padding: 14px 18px; margin: 16px 0; font-size: 13px; line-height: 1.7; overflow-wrap: anywhere; }
+.error { border: 1px solid #e9c6ba; background: #fff4ef; color: #943e29; }
+.error ul { list-style: disc; padding-left: 20px; margin-top: 6px; }
+.success { border: 1px solid #cbdcca; background: #f3f9f1; color: #3f6839; }
+.notice { border: 1px solid #e4d3aa; background: #fffaee; color: #756033; }
+.tableScroll .empty { text-align: center; color: #8b8074; padding: 36px 18px; white-space: normal; }
+@media (max-width: 1100px) { .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); } .mappingGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) { .header { flex-direction: column; } .monthPicker { width: 100%; } .metrics { gap: 10px; } .card { padding: 16px; } .mappingGrid { grid-template-columns: 1fr; } .sheetCheck span { margin-left: 28px; width: 100%; } .saveBar { align-items: stretch; flex-direction: column; } .button { width: 100%; } .sheet { padding: 12px; } }
+
+/* Combined finance page: constrain content before allowing tables to scroll. */
+.page { width: 100%; min-width: 0; padding: 0; box-sizing: border-box; background: transparent; }
+.page *, .page *::before, .page *::after { box-sizing: border-box; }
+.header { align-items: flex-end; }
+.header > div { min-width: 0; }
+.monthPicker { flex: 0 0 230px; max-width: 100%; }
+.metrics { align-items: stretch; }
+.card { min-width: 0; }
+.card small { overflow-wrap: anywhere; }
+.balanceCard { background: #f2f6ef; border-color: #d4dfcc; }
+.negativeCard { background: #fff4ef; border-color: #e9c6ba; }
+.panel, .mappingArea, .sheet, .tableScroll { min-width: 0; max-width: 100%; }
+.tableScroll { -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
+.mappingGrid { grid-template-columns: 100px minmax(0, 1fr) minmax(0, 1fr) 170px; }
+.mappingGrid label { min-width: 0; }
+.monthLink { background: transparent; border: 0; color: #755239; text-align: left; font: inherit; font-weight: 650; min-height: 44px; padding: 6px 0; cursor: pointer; }
+.monthLink:focus-visible, .details summary:focus-visible { outline: 3px solid #a58363; outline-offset: 3px; }
+.selectedRow { background: #fcf6ef; }
+.partialBadge, .readyBadge { display: inline-block; border-radius: 6px; padding: 5px 8px; font-size: 11px; white-space: normal; line-height: 1.6; }
+.partialBadge { color: #856329; background: #fff5df; }
+.readyBadge { color: #48683d; background: #edf4e8; }
+.details { background: #fff; border: 1px solid #e7e1d9; border-radius: 16px; margin-bottom: 24px; min-width: 0; max-width: 100%; }
+.details > summary { display: flex; align-items: center; gap: 16px; position: relative; list-style: none; padding: 20px 48px 20px 22px; cursor: pointer; font-size: 16px; font-weight: 650; }
+.details > summary::-webkit-details-marker { display: none; }
+.details > summary::after { content: ''; position: absolute; right: 23px; top: 25px; width: 8px; height: 8px; border-right: 2px solid #846b55; border-bottom: 2px solid #846b55; transform: rotate(45deg); }
+.details[open] > summary::after { transform: rotate(225deg); top: 29px; }
+.details > summary > small { margin-left: auto; font-size: 12px; color: #867567; font-weight: 500; }
+.details > .panel { border: 0; margin: 0; padding-top: 0; }
+.details > .help { padding: 0 22px 20px; }
+@media (max-width: 1100px) {
+  .mappingGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+  .header { gap: 16px; align-items: stretch; margin-bottom: 20px; }
+  .header h1 { font-size: 30px; }
+  .monthPicker { width: 100%; flex-basis: auto; min-width: 0; }
+  .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 18px; }
+  .card { padding: 16px 12px; gap: 10px; border-radius: 12px; }
+  .card strong { font-size: 23px; letter-spacing: -.6px; }
+  .card small { font-size: 11px; line-height: 1.55; }
+  .panel { padding: 16px; border-radius: 12px; margin-bottom: 18px; }
+  .mappingGrid { grid-template-columns: 1fr; gap: 14px; }
+  .sheet { padding: 12px; }
+  .page input, .page select { font-size: 16px !important; }
+  .sheetCheck { align-items: flex-start; }
+  .sheetCheck strong { overflow-wrap: anywhere; min-width: 0; }
+  .dropZone { padding: 22px 14px; }
+  .dropZone h3 { font-size: 14px; }
+  .details { border-radius: 12px; margin-bottom: 18px; }
+  .details > summary { flex-wrap: wrap; gap: 5px; padding: 17px 40px 17px 16px; font-size: 15px; }
+  .details > summary > small { flex-basis: 100%; margin-left: 0; }
+  .details > summary::after { right: 18px; top: 22px; }
+  .details[open] > summary::after { top: 27px; }
+  .tableScroll th, .tableScroll td { padding: 12px; }
+  .overviewTable table, .overviewTable tbody { display: block; }
+  .overviewTable thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .overviewTable tbody { display: grid; gap: 12px; }
+  .overviewTable tr { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border: 1px solid #e7e1d9; border-radius: 10px; overflow: hidden; }
+  .overviewTable td { display: flex; flex-direction: column; align-items: flex-start; min-width: 0; max-width: none; padding: 10px 12px; border: 0; white-space: normal; overflow-wrap: anywhere; }
+  .overviewTable td::before { content: attr(data-label); font-size: 10px; color: #867567; margin-bottom: 5px; font-weight: 500; }
+  .overviewTable td:first-child, .overviewTable td:last-child, .overviewTable td[colspan] { grid-column: 1 / -1; }
+  .overviewTable td:first-child { border-bottom: 1px solid #eee9e3; }
+  .overviewTable td:first-child::before, .overviewTable td[colspan]::before { display: none; }
+  .overviewTable .monthLink { min-height: 36px; }
+}
+@media (max-width: 360px) { .metrics { grid-template-columns: 1fr; } }

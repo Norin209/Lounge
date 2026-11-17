@@ -1058,3 +1058,49 @@
     grid-template-columns: 1fr;
   }
 }
+
+.sourceWarnings {
+  margin-bottom: 24px;
+  padding: 16px 20px;
+  border: 1px solid #e5cf9c;
+  border-radius: 12px;
+  background: #fff9eb;
+  color: #695020;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.sourceWarnings ul {
+  margin: 8px 0 0;
+  padding-left: 20px;
+}
+
+/* Embedded inside Finance, with the shared month selected by the parent. */
+.page.embedded { min-height: 0; padding: 0 22px 22px; background: transparent; max-width: 100%; min-width: 0; }
+.embedded .header { margin-bottom: 20px; }
+.embedded .header h2 { font-size: 20px; font-weight: 700; margin: 0; }
+.embedded .subtitle { display: block; border: 0; padding: 0; background: transparent; white-space: normal; overflow-wrap: anywhere; }
+.embedded .summaryGrid { display: none; }
+.embedded .chartGrid, .embedded .panel, .embedded .tableHeader, .embedded .filters { min-width: 0; max-width: 100%; }
+.embedded .tableWrapper { max-width: 100%; min-width: 0; -webkit-overflow-scrolling: touch; }
+.embedded .sourceWarnings { overflow-wrap: anywhere; }
+.embedded .salarySummaryGrid { grid-template-columns: repeat(auto-fit, minmax(145px, 1fr)); }
+@media (max-width: 700px) {
+  .page.embedded { padding: 0 14px 14px; }
+  .embedded .panel { padding: 16px 12px; }
+  .embedded .sourceWarnings { padding: 12px; font-size: 12px; }
+  .embedded .salarySearch, .embedded .searchInput { width: 100%; max-width: 100%; min-height: 44px; font-size: 16px; }
+  .embedded .tableFooter { flex-wrap: wrap; gap: 12px; }
+  .embedded .tableFooter button { min-height: 44px; }
+  .embedded .salaryTable table { min-width: 0; }
+  .embedded .salaryTable table, .embedded .salaryTable tbody, .embedded .expenseTable table, .embedded .expenseTable tbody { display: block; }
+  .embedded .salaryTable thead, .embedded .expenseTable thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .embedded .salaryTable tbody, .embedded .expenseTable tbody { display: grid; gap: 12px; }
+  .embedded .salaryTable tr, .embedded .expenseTable tr { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border: 1px solid #e7e1d9; border-radius: 10px; overflow: hidden; }
+  .embedded .salaryTable td, .embedded .expenseTable td { display: flex; flex-direction: column; align-items: flex-start; text-align: left; min-width: 0; width: auto; max-width: none; padding: 10px; border: 0; white-space: normal; overflow-wrap: anywhere; }
+  .embedded .salaryTable td::before, .embedded .expenseTable td::before { content: attr(data-label); color: #867567; font-size: 10px; font-weight: 500; margin-bottom: 5px; }
+  .embedded .salaryTable td:first-child, .embedded .salaryTable td:nth-child(2), .embedded .expenseTable td:nth-child(3), .embedded td[colspan] { grid-column: 1 / -1; }
+  .embedded td[colspan]::before { display: none; }
+  .embedded .employeeName { max-width: 100%; width: auto; white-space: normal; }
+  .embedded .roleCell { width: auto; white-space: normal; }
+}
