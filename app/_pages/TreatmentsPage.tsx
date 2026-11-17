@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useRef, useEffect } from 'react';
-import Image from 'next/image';
+import Image from '../_components/StoreImage';
 import Link from 'next/link';
 import PageIntro from '../_components/PageIntro';
 import styles from './public-pages.module.css';
@@ -9,8 +9,8 @@ import { useBag } from '../_context/BagContext';
 import { db } from '../_utils/firebase';
 import { collection, doc, getDoc, onSnapshot } from 'firebase/firestore'; 
 
-const HERO_IMAGE = "https://images.unsplash.com/photo-1600334129128-685c5582fd35?q=80&w=2000&auto=format&fit=crop";
-const PLACEHOLDER_IMG = "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=800&auto=format&fit=crop";
+const HERO_IMAGE = '/images/treatments-hero.webp';
+const PLACEHOLDER_IMG = '/images/treatment-fallback.webp';
 
 // 1. STATIC TABS (Virtual Categories)
 const STATIC_TABS = [
@@ -351,7 +351,7 @@ const TreatmentsPage = () => {
                     )}
                     
                     {/* Image set to object-contain so nothing gets cut off */}
-                    <Image src={item.image || PLACEHOLDER_IMG} alt={item.name} fill className="object-contain transition-transform duration-700 md:group-hover:scale-105" />
+                    <Image src={item.image || PLACEHOLDER_IMG} alt={item.name} fill sizes={isList ? '(max-width: 767px) 112px, 160px' : isCarousel ? '(max-width: 767px) 288px, 320px' : '(max-width: 767px) 50vw, (max-width: 1279px) 33vw, 25vw'} className="object-contain transition-transform duration-700 md:group-hover:scale-105" />
                     
                     <div className="hidden xl:flex absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-end pb-4 justify-center px-4">
                       {isInBag ? (

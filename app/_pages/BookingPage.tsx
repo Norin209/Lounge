@@ -4,7 +4,7 @@ import { useState, useMemo, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import PageIntro from '../_components/PageIntro';
 import styles from './public-pages.module.css';
-import Image from 'next/image';
+import Image from '../_components/StoreImage';
 import { useBag } from '../_context/BagContext'; 
 import { db } from '../_utils/firebase'; 
 import { collection, addDoc, query, where, getDocs } from 'firebase/firestore'; 
@@ -373,7 +373,7 @@ ${discountApplied > 0 ? `🏷️ *Promo Applied:* ${promoCode.toUpperCase()} (${
                   {bag.map((item: any) => (
                     <div key={item.id} className="flex gap-4 items-start group border-b border-gray-100 pb-4 last:border-0">
                        <div className="relative w-14 h-14 shrink-0 bg-white shadow-sm overflow-hidden">
-                         <Image src={item.image || "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=200"} alt={item.name} fill className="object-cover" />
+                         <Image src={item.image || '/images/treatment-fallback.webp'} alt={item.name} fill sizes="56px" className="object-cover" />
                        </div>
                        <div className="grow">
                           <p className="text-xs font-bold text-black leading-tight mb-1 uppercase font-sans tracking-wide">{item.name}</p>

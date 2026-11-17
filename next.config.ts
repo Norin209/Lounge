@@ -4,11 +4,16 @@ const nextConfig = {
     root: process.cwd(),
   },
   images: {
-    unoptimized: true, // Crucial for Netlify/local dev without a Sharp server
+    // Netlify's Next.js adapter serves responsive images through its Image CDN.
     remotePatterns: [
       {
         protocol: "https",
         hostname: "images.unsplash.com",
+      },
+      {
+        protocol: "https",
+        hostname: "firebasestorage.googleapis.com",
+        pathname: "/v0/b/glistenlounge-f217f.firebasestorage.app/o/**",
       },
     ],
   },

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useRef, useEffect } from 'react';
-import Image from 'next/image';
+import Image from '../_components/StoreImage';
 import Link from 'next/link';
 import PageIntro from '../_components/PageIntro';
 import styles from './public-pages.module.css';
@@ -9,8 +9,8 @@ import { useBag } from '../_context/BagContext';
 import { db } from '../_utils/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 
-const HERO_IMAGE = "https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=2070&auto=format&fit=crop";
-const PLACEHOLDER_IMG = "https://images.unsplash.com/photo-1612196808214-b7e239e5f6b7?q=80&w=800&auto=format&fit=crop";
+const HERO_IMAGE = '/images/shop-hero.webp';
+const PLACEHOLDER_IMG = '/images/ritual.webp';
 
 const TABS = ["ALL", "BODY CARE", "AROMATHERAPY", "APOTHECARY", "WELLNESS"];
 
@@ -269,7 +269,7 @@ const ProductPage = () => {
                       </div>
                     )}
                     
-                    <Image src={displayImage} alt={item.name} fill className="object-cover transition-transform duration-700 md:group-hover:scale-105" />
+                    <Image src={displayImage} alt={item.name} fill sizes={isList ? '(max-width: 767px) 112px, 160px' : isCarousel ? '(max-width: 767px) 288px, 320px' : '(max-width: 767px) 50vw, (max-width: 1279px) 33vw, 25vw'} className="object-cover transition-transform duration-700 md:group-hover:scale-105" />
                     
                     {/* 🟢 CHANGED: md:flex -> xl:flex */}
                     <div className="hidden xl:flex absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-end pb-4 justify-center px-4">

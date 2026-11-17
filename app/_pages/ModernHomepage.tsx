@@ -2,16 +2,16 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import Image from '../_components/StoreImage';
 import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
 import { db } from '../_utils/firebase';
 import { useBag } from '../_context/BagContext';
 import styles from './modern-homepage.module.css';
 import { PublicHeader, PublicFooter } from '../_components/PublicChrome';
 
-const HERO_IMAGE = 'https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?q=85&w=1600&auto=format&fit=crop';
-const TREATMENT_IMAGE = 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=85&w=1000&auto=format&fit=crop';
-const RITUAL_IMAGE = 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=85&w=900&auto=format&fit=crop';
+const HERO_IMAGE = '/images/home-hero.webp';
+const TREATMENT_IMAGE = '/images/treatment-fallback.webp';
+const RITUAL_IMAGE = '/images/ritual.webp';
 const TELEGRAM = 'https://t.me/premierlounge1';
 const DIRECTIONS = 'https://www.google.com/maps/search/?api=1&query=Premier+Lounge+HV8C%2B9C8+Phnom+Penh';
 
